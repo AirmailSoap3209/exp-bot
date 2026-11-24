@@ -131,6 +131,21 @@ export function evaluateProgress(catalogue: Catalogue, profile: NormalizedProfil
   return { progress, ticksToClear };
 }
 
+export type TickDecision =
+  | { ok: true }
+  | { ok: false; why: 'already_complete' | 'api_incomplete'; progress: TaskProgress };
+
+/**
+ * Whether a manual tick makes sense: not for tasks the API already proves done,
+ * and not for tasks it proves undone (the API would clear the tick straight away).
+ */
+export function decideTick(task: Task, profile: NormalizedProfile): TickDecision {
+  const { progress } = evaluateTask(task, profile, false);
+  if (progress.status === 'verified_complete') return { ok: false, why: 'already_complete', progress };
+  if (progress.status === 'verified_incomplete') return { ok: false, why: 'api_incomplete', progress };
+  return { ok: true };
+}
+
 export interface XpBuckets {
   /** Verified complete or ticked. */
   earned: number;
@@ -169,12 +184,15 @@ function add(b: CategorySummary, p: TaskProgress): void {
   else b.remaining += xp;
 }
 
-/** Totals for /xp overview. Monetary tasks never count toward eligible XP. */
-export function summarize(progress: TaskProgress[]): ProgressSummary {
+/**
+ * Totals for /xp overview. Monetary tasks never count toward eligible XP,
+ * and neither do categories the user excluded with /xp exclude.
+ */
+export function summarize(progress: TaskProgress[], excludedCategories: ReadonlySet<string> = new Set()): ProgressSummary {
   const total = emptyBuckets();
   const byCategory = new Map<string, CategorySummary>();
   for (const p of progress) {
-    if (p.task.monetary) continue;
+    if (p.task.monetary || excludedCategories.has(p.task.category)) continue;
     add(total, p);
     let cat = byCategory.get(p.task.category);
     if (!cat) byCategory.set(p.task.category, (cat = emptyBuckets()));

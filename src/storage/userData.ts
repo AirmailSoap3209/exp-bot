@@ -1,0 +1,125 @@
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { JsonStore } from './jsonStore.js';
+
+export const STORAGE_DIR = fileURLToPath(new URL('../../storage-data/', import.meta.url));
+
+export interface Link {
+  uuid: string;
+  name: string;
+  profileId: string;
+  profileName: string;
+  linkedAt: string;
+}
+
+/** A rate override: a named bracket, or a number in the activity's own unit. */
+export type RateOverride = { bracket: string; setAt: string } | { rate: number; setAt: string };
+
+export const BRACKETS = ['early', 'mid', 'late'] as const;
+
+/** Ticks and rate overrides belong to one profile of one player. */
+export const profileKey = (uuid: string, profileId: string) => `${uuid}:${profileId.replace(/-/g, '')}`;
+
+interface Stores {
+  links: JsonStore<Record<string, Link>>;
+  settings: JsonStore<Record<string, { excludedCategories: string[] }>>;
+  ticks: JsonStore<Record<string, string[]>>;
+  rates: JsonStore<Record<string, Record<string, RateOverride>>>;
+}
+
+/** Everything the bot remembers, keyed by Discord user ID or profile key. */
+export class UserData {
+  private readonly s: Stores;
+
+  constructor(dir = STORAGE_DIR) {
+    this.s = {
+      links: new JsonStore(join(dir, 'links.json'), () => ({})),
+      settings: new JsonStore(join(dir, 'settings.json'), () => ({})),
+      ticks: new JsonStore(join(dir, 'ticks.json'), () => ({})),
+      rates: new JsonStore(join(dir, 'rate-overrides.json'), () => ({})),
+    };
+  }
+
+  // ---- links ----
+  async getLink(discordId: string): Promise<Link | undefined> {
+    return (await this.s.links.read())[discordId];
+  }
+
+  setLink(discordId: string, link: Omit<Link, 'linkedAt'>): Promise<Link> {
+    return this.s.links.update((d) => (d[discordId] = { ...link, linkedAt: new Date().toISOString() }));
+  }
+
+  // ---- category filter ----
+  async getExcluded(discordId: string): Promise<Set<string>> {
+    return new Set((await this.s.settings.read())[discordId]?.excludedCategories ?? []);
+  }
+
+  /** Adds or removes one category; returns the new exclusion list. */
+  setExcluded(discordId: string, category: string, excluded: boolean): Promise<string[]> {
+    return this.s.settings.update((d) => {
+      const set = new Set(d[discordId]?.excludedCategories ?? []);
+      if (excluded) set.add(category);
+      else set.delete(category);
+      d[discordId] = { excludedCategories: [...set].sort() };
+      return d[discordId].excludedCategories;
+    });
+  }
+
+  // ---- ticks ----
+  async getTicks(key: string): Promise<Set<string>> {
+    return new Set((await this.s.ticks.read())[key] ?? []);
+  }
+
+  /** Returns false if the task was already ticked. */
+  addTick(key: string, taskId: string): Promise<boolean> {
+    return this.s.ticks.update((d) => {
+      const list = d[key] ?? [];
+      if (list.includes(taskId)) return false;
+      d[key] = [...list, taskId].sort();
+      return true;
+    });
+  }
+
+  /** Removes ticks; returns the IDs that were actually removed. */
+  removeTicks(key: string, taskIds: string[]): Promise<string[]> {
+    return this.s.ticks.update((d) => {
+      const list = d[key] ?? [];
+      const removed = list.filter((t) => taskIds.includes(t));
+      if (removed.length) d[key] = list.filter((t) => !taskIds.includes(t));
+      if (d[key]?.length === 0) delete d[key];
+      return removed;
+    });
+  }
+
+  // ---- rate overrides ----
+  async getRateOverrides(key: string): Promise<Record<string, RateOverride>> {
+    return { ...((await this.s.rates.read())[key] ?? {}) };
+  }
+
+  /** `override` undefined clears it. Returns whether anything changed. */
+  setRateOverride(key: string, activity: string, override: RateOverride | undefined): Promise<boolean> {
+    return this.s.rates.update((d) => {
+      const map = d[key] ?? {};
+      if (!override) {
+        if (!(activity in map)) return false;
+        delete map[activity];
+      } else map[activity] = override;
+      if (Object.keys(map).length) d[key] = map;
+      else delete d[key];
+      return true;
+    });
+  }
+}
+
+/** Parses the /xp rate value: a bracket name, a positive number, or "default" to clear. */
+export function parseRateValue(raw: string): { ok: true; override: RateOverride | undefined } | { ok: false; error: string } {
+  const v = raw.trim().toLowerCase();
+  const setAt = new Date().toISOString();
+  if (v === 'default' || v === 'reset' || v === 'clear') return { ok: true, override: undefined };
+  if ((BRACKETS as readonly string[]).includes(v)) return { ok: true, override: { bracket: v, setAt } };
+  const n = Number(v);
+  if (Number.isFinite(n) && n > 0) return { ok: true, override: { rate: n, setAt } };
+  return { ok: false, error: `"${raw}" isn't a bracket (${BRACKETS.join(', ')}), a positive number, or "default".` };
+}
+
+export const userData = new UserData();

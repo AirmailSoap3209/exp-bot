@@ -33,7 +33,11 @@ cp .env.example .env   # fill in HYPIXEL_API_KEY (and Discord values once comman
     5. Approximate → estimated.
     6. No data → unavailable.
 - [ ] 5. Estimates and ranking + `/xp optimize`
-- [ ] 6. Settings: link, exclude, tick, rate
+- [x] 6. Settings: `/xp link`, `/xp exclude`/`include`, `/xp tick`/`untick`, `/xp rate`. Saved as JSON in `storage-data/` (gitignored).
+  - Links and category exclusions are keyed by Discord user. Exclusions apply to every lookup.
+  - Ticks and rate overrides are keyed by player UUID + profile ID, and only apply when looking at your linked profile.
+  - `/xp tick` refuses tasks the API already proves done or not done. Ticks the API later contradicts are cleared on the next `/xp overview`.
+  - `/xp rate` overrides are stored and validated against catalogue activities, but nothing reads them until step 5's `/xp optimize`.
 - [ ] 7. Sessions
 - [ ] 8. `/xp category`, `/xp task`
 

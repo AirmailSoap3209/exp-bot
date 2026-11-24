@@ -4,7 +4,7 @@ import type { ProfilesResponse } from '../../src/hypixel/client.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
 import type { NormalizedProfile } from '../../src/profile/types.js';
 import { loadCatalogue } from '../../src/tasks/catalogue.js';
-import { evaluateProgress, evaluateTask, STATUSES, summarize, type TaskProgress } from '../../src/tasks/progress.js';
+import { decideTick, evaluateProgress, evaluateTask, STATUSES, summarize, type TaskProgress } from '../../src/tasks/progress.js';
 import { overviewEmbed } from '../../src/commands/overview.js';
 
 const catalogue = loadCatalogue();
@@ -114,8 +114,30 @@ describe('summarize', () => {
   });
 
   it('builds an overview embed that fits Discord limits', () => {
-    const json = overviewEmbed('Floor7Sweat', lime, summarize(evalLime.progress), catalogue, 30_000).toJSON();
-    expect(json.footer?.text).toBe('Lime · data 30s old · monetary tasks excluded');
+    const json = overviewEmbed('Floor7Sweat', lime, summarize(evalLime.progress), catalogue, { now: 30_000 }).toJSON();
+    expect(json.footer?.text).toBe('Lime · data 30s old · ticks not applied · monetary tasks excluded');
     for (const f of json.fields ?? []) expect(f.value.length).toBeLessThanOrEqual(1024);
+  });
+
+  it('leaves excluded categories out of eligible XP', () => {
+    const all = summarize(evalLime.progress);
+    const noBestiary = summarize(evalLime.progress, new Set(['bestiary']));
+    const best = all.byCategory.get('bestiary')!;
+    expect(noBestiary.byCategory.has('bestiary')).toBe(false);
+    expect(noBestiary.earned).toBe(all.earned - best.earned);
+    expect(noBestiary.remaining).toBe(all.remaining - best.remaining);
+    const json = overviewEmbed('Floor7Sweat', lime, noBestiary, catalogue, { excluded: new Set(['bestiary']), isLinked: true }).toJSON();
+    expect(json.description).toContain('Excluded by you: Bestiary');
+    expect(json.footer?.text).toContain('your linked profile');
+  });
+});
+
+describe('decideTick', () => {
+  const task = (id: string) => catalogue.byId.get(id)!;
+  it('refuses tasks the API already decides, allows the rest', () => {
+    expect(decideTick(task('slayer.zombie.level7'), lime)).toMatchObject({ ok: false, why: 'already_complete' });
+    expect(decideTick(task('slayer.zombie.level8'), lime)).toMatchObject({ ok: false, why: 'api_incomplete', progress: { current: 104305 } });
+    expect(decideTick(task('bestiary.hub.crypt_ghoul.tier20'), lime)).toEqual({ ok: true });
+    expect(decideTick(task('fairy_souls.exchange1'), profile('floor7sweat', 'pineapple'))).toEqual({ ok: true });
   });
 });

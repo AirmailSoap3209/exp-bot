@@ -10,6 +10,7 @@ export interface CoverageRow {
   xp: number;
   tracking: Record<Tracking, number>;
   wikiMaxXp?: number;
+  defaultExcluded?: boolean;
   note?: string;
 }
 
@@ -51,7 +52,7 @@ export function buildCoverage(catalogue: Catalogue): Coverage {
     return {
       id: c.id, name: c.name, status: c.status, guide: c.guide,
       tasks: tasks.length, xp: tasks.reduce((a, t) => a + t.xp, 0), tracking,
-      wikiMaxXp: c.wikiMaxXp, note: c.note,
+      wikiMaxXp: c.wikiMaxXp, defaultExcluded: c.defaultExcluded, note: c.note,
     };
   });
   rows.sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || b.xp - a.xp);
@@ -90,7 +91,7 @@ export function formatRow(r: CoverageRow): string {
   if (r.tasks === 0) return `${r.name} · ${r.status === 'never' ? 'excluded (monetary)' : 'not catalogued yet'}`;
   const tracked = (['api', 'manual', 'none'] as const).filter((k) => r.tracking[k]).map((k) => `${k} ${fmt(r.tracking[k])}`).join(', ');
   const wiki = r.wikiMaxXp !== undefined && r.wikiMaxXp !== r.xp ? ` (wiki says ${fmt(r.wikiMaxXp)})` : '';
-  return `${r.name} · ${fmt(r.tasks)} tasks · ${fmt(r.xp)} XP${wiki} · ${tracked}`;
+  return `${r.name} · ${fmt(r.tasks)} tasks · ${fmt(r.xp)} XP${wiki} · ${tracked}${r.defaultExcluded ? ' · not ranked by default' : ''}`;
 }
 
 export function formatTotal(t: CoverageTotal, checked: string): string {

@@ -17,6 +17,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
     return;
   }
+  if (interaction.isButton()) {
+    try {
+      // Button IDs start with "xp" for the /xp command.
+      if (interaction.customId.startsWith('xp')) await commands.get('xp')?.button?.(interaction);
+    } catch (err) {
+      console.error('button failed', err);
+    }
+    return;
+  }
   if (!interaction.isChatInputCommand()) return;
   const command = commands.get(interaction.commandName);
   if (!command) return;

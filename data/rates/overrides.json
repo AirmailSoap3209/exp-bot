@@ -1,0 +1,4 @@
+{
+  "note": "Hand-tuned rates. Entries here replace the generated rate for that activity, and catalogue:build never touches this file. Same shape as entries in the other rate files.",
+  "rates": []
+}

@@ -54,6 +54,8 @@ export interface CollectionAmounts {
   activeMembers: number;
   /** Active members whose collections are hidden; their share is missing from byItem. */
   hiddenMembers: number;
+  /** This player's own share, for measuring their own gathering rate. */
+  ownByItem: Record<string, number>;
 }
 
 export interface NormalizedProfile {

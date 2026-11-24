@@ -7,7 +7,7 @@ import { unknownMetric } from './util.js';
 interface Family { id: string; mobs: string[] }
 
 let families: Map<string, string[]> | undefined;
-function familyMobs(): Map<string, string[]> {
+export function familyMobs(): Map<string, string[]> {
   families ??= new Map(
     (JSON.parse(readFileSync(join(DATA_DIR, 'bestiary', 'families.json'), 'utf8')) as Family[]).map((f) => [f.id, f.mobs]),
   );

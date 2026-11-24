@@ -15,6 +15,7 @@
     "catalogue:build": "tsx scripts/build-catalogue.ts",
     "coverage": "tsx scripts/coverage.ts",
     "overview": "tsx scripts/overview.ts",
+    "optimize": "tsx scripts/optimize.ts",
     "deploy-commands": "tsx scripts/deploy-commands.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"

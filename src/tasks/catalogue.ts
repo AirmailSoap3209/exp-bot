@@ -63,6 +63,7 @@ function validateMeta(meta: Meta): string[] {
     seen.add(c.id);
     if (!CATEGORY_STATUS.includes(c.status)) p.push(`meta.json: category ${c.id} has bad status ${c.status}`);
     if (!guides.has(c.guide)) p.push(`meta.json: category ${c.id} points at unknown guide category ${c.guide}`);
+    if (c.defaultExcluded !== undefined && typeof c.defaultExcluded !== 'boolean') p.push(`meta.json: category ${c.id} defaultExcluded must be true or false`);
   }
   return p;
 }
@@ -126,6 +127,11 @@ function findCycles(tasks: Task[], byId: Map<string, Task>): string[] {
   };
   for (const t of tasks) visit(t.id, []);
   return problems;
+}
+
+/** Categories meta.json leaves out of overview and rankings until the user includes them. */
+export function defaultExcluded(catalogue: Catalogue): string[] {
+  return catalogue.meta.categories.filter((c) => c.defaultExcluded).map((c) => c.id);
 }
 
 /** Loads data/meta.json and every data/tasks/*.json, validating all of it. */

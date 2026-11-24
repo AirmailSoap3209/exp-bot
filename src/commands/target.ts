@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { loadProfile, type LoadedProfile } from '../profile/load.js';
 import { profileKey, userData, type Link } from '../storage/userData.js';
+import { defaultExcluded } from '../tasks/catalogue.js';
 import { catalogue } from '../tasks/instance.js';
 import { evaluateProgress, type Evaluation } from '../tasks/progress.js';
 
@@ -30,7 +31,7 @@ export async function resolveTarget(interaction: ChatInputCommandInteraction, op
   const discordId = interaction.user.id;
   const player = interaction.options.getString('player') ?? undefined;
   const profileOpt = interaction.options.getString('profile') ?? undefined;
-  const [link, excluded] = await Promise.all([userData.getLink(discordId), userData.getExcluded(discordId)]);
+  const [link, excluded] = await Promise.all([userData.getLink(discordId), userData.getExcluded(discordId, defaultExcluded(catalogue))]);
 
   let loaded: LoadedProfile;
   if (player) {

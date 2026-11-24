@@ -1,0 +1,33 @@
+{
+  "note": "Bracket cut-offs, the one place to tune them. [midFrom, lateFrom]: below midFrom is early, from lateFrom up is late. Set from user answers 2026-11-24: late means real endgame.",
+  "cutoffs": {
+    "skill": [
+      25,
+      45
+    ],
+    "slayer": [
+      5,
+      8
+    ],
+    "catacombs": [
+      30,
+      45
+    ]
+  },
+  "groups": {
+    "combat": {
+      "inputs": [
+        "skill.combat",
+        "slayer.highest"
+      ],
+      "combine": "min",
+      "note": "Combat level + highest Slayer level; the weaker one decides"
+    },
+    "dungeons": {
+      "inputs": [
+        "catacombs"
+      ],
+      "combine": "min"
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "note": "Default rates per minute, [low, high] per bracket. Researched 2026-11-24 where 'basis' says so; anything marked PLACEHOLDER is unresearched. Tune with sessions, /xp rate, or data/rates/overrides.json.",
+  "sources": {
+    "userAnswers": "Tuning answers from the bot owner, 2026-11-24",
+    "wikiFarming": "hypixelskyblock.minecraft.wiki/w/Farming: Farming XP is per crop block broken (+4 most crops, +2 sugar cane/cactus, +6 mushrooms); Farming Fortune multiplies drops, not XP",
+    "wikiMining": "hypixelskyblock.minecraft.wiki/w/Mining: Mining XP per block (cobblestone +1, coal/iron +5, diamond +10, mithril +45, gemstone +70, titanium +100)",
+    "farmingSpeed": "totalcalchub farming calculator: ~20 blocks/sec typical for efficient farming, up to ~23",
+    "wikiRevenant": "hypixelskyblock.minecraft.wiki/w/Revenant_Horror: Slayer XP per tier 5/25/100/500/1,500; each tier needs the previous one defeated; tier V needs Zombie Slayer VII",
+    "wikiDungeonScore": "hypixelskyblock.minecraft.wiki/w/Dungeon_Score: Speed time limits F1-3 10 min, F4 12, F5 10, F6 12, F7 14; M1-5 8, M6 10, M7 14",
+    "wikiFloors": "hypixelskyblock.minecraft.wiki floor pages: base XP F1 80 (M1 10k), F5 2,400, F7 30k; first 5 completions a day +40% Catacombs XP",
+    "skykingsCombat": "SkyKings combat XP guide (older): Endermen ~100-200k/h until ~Combat 20; T3 Revenants 600-700k/h; F6 golem rushing 0.8-1.4M/h; ghosts up to 900k/h",
+    "wikiForagingNerf": "hypixelskyblock.minecraft.wiki Changelog/2026/July_22/Alpha: Fig Foraging XP lowered from 1,000 to 100",
+    "wikiExperiments": "hypixelskyblock.minecraft.wiki/w/Experiments: 3 charges per day; enchanting table/anvil XP capped at 500k/day"
+  },
+  "bestiary": {
+    "unit": "kills/min",
+    "bracketBy": "combat",
+    "baseBracket": 1,
+    "base": { "early": [5, 10], "mid": [12, 25], "late": [50, 100] },
+    "basis": "Common mobs (NEU kill bracket 1). Late: 50-100/min with AoE clears (user answers 2026-11-24). Early and mid are estimates; spawn caps limit it.",
+    "scaleNote": "Other NEU kill brackets scale by their tier-10 kill threshold relative to bracket 1, so each tier takes roughly the same time"
+  },
+  "bestiaryMilestone": {
+    "unit": "milestones/min", "bracketBy": "combat",
+    "brackets": { "early": [0.01, 0.03], "mid": [0.02, 0.05], "late": [0.03, 0.08] },
+    "basis": "PLACEHOLDER: one milestone is 10 family tiers"
+  },
+  "collections": {
+    "unit": "items/min",
+    "byResourceCategory": {
+      "FARMING": {
+        "bracketBy": "skill.farming", "brackets": { "early": [400, 900], "mid": [2000, 5000], "late": [10000, 20000] },
+        "basis": "blocks/sec x (1 + fortune/100): early ~8 bps, <100 fortune; mid ~15 bps, ~300 fortune; late ~20 bps, ~1,400 fortune (farmingSpeed, wikiFarming)"
+      },
+      "MINING": {
+        "bracketBy": "skill.mining", "brackets": { "early": [60, 150], "mid": [150, 500], "late": [600, 1500] },
+        "basis": "early ~1.5 blocks/sec cobblestone/coal with low fortune; mid ~0.7 mithril/sec x ~3; late ~2 gemstones/sec x ~10 (estimate)"
+      },
+      "COMBAT": {
+        "bracketBy": "combat", "brackets": { "early": [5, 15], "mid": [30, 80], "late": [100, 300] },
+        "basis": "kills/min x 1-3 drops: single target early, AoE weapons clear 50-100+ mobs/min later (estimate)"
+      },
+      "FORAGING": {
+        "bracketBy": "skill.foraging", "brackets": { "early": [60, 120], "mid": [200, 400], "late": [600, 1200] },
+        "basis": "logs/min: single logs early, multi-log axes mid, tree-felling late (estimate)"
+      },
+      "FISHING": {
+        "bracketBy": "skill.fishing", "brackets": { "early": [2, 4], "mid": [4, 8], "late": [8, 15] },
+        "basis": "catches/min (estimate)"
+      },
+      "ANIMAL": {
+        "bracketBy": "skill.farming", "brackets": { "early": [10, 25], "mid": [25, 60], "late": [60, 150] },
+        "basis": "farm animals killed/min x 1-3 drops (estimate); these are FARMING collections but come from killing mobs, not harvesting crops"
+      }
+    },
+    "itemClass": {
+      "RAW_CHICKEN": "ANIMAL", "RABBIT": "ANIMAL", "MUTTON": "ANIMAL", "LEATHER": "ANIMAL", "PORK": "ANIMAL", "FEATHER": "ANIMAL"
+    }
+  },
+  "skills": {
+    "unit": "XP/min",
+    "bySkill": {
+      "farming": { "early": [1200, 2400], "mid": [5000, 10000], "late": [13300, 25000], "basis": "mid 300-600k/h, late 0.8-1.5M/h incl. pests and visitors (user answers 2026-11-24); early from ~8 blocks/sec x 4 XP (wikiFarming, farmingSpeed)" },
+      "mining": { "early": [300, 800], "mid": [1500, 3500], "late": [8000, 16000], "basis": "coal/iron/gold (+5-6) ~1-2 blocks/sec early; mithril +45 ~0.7/sec mid; gemstones +70 ~2/sec with wisdom late (wikiMining)" },
+      "combat": { "early": [800, 2500], "mid": [5000, 12000], "late": [12000, 25000], "basis": "Endermen 100-200k/h early; T3 Revenants 600-700k/h mid; golem rushing/ghosts 0.8-1.4M/h late (skykingsCombat)" },
+      "foraging": { "early": [1000, 1670], "mid": [3330, 5000], "late": [8330, 16700], "basis": "60-100k / 200-300k / 0.5-1M per hour after the July 2026 Fig nerf (user answers 2026-11-24, wikiForagingNerf)" },
+      "fishing": { "early": [167, 500], "mid": [1670, 4170], "late": [6670, 16700], "basis": "10-30k / 100-250k / 0.4-1M per hour (user answers 2026-11-24)" },
+      "enchanting": { "early": [10000, 29000], "mid": [40000, 160000], "late": [130000, 190000], "basis": "experiments: 3 charges/day, each = Chronomatron + Ultrasequencer + Superpairs at the best tier your level allows (early ~50-97k/game, mid ~207-530k, late ~530-630k incl. Metaphysical at 50), done in ~10 min/day (user answers 2026-11-24, wikiExperiments). Per active minute: a long goal spans many days of 10 minutes. Bought extra games (Bits) not counted." },
+      "alchemy": { "early": [200, 800], "mid": [2000, 6000], "late": [10000, 30000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" },
+      "carpentry": { "early": [100, 500], "mid": [1000, 3000], "late": [5000, 15000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" },
+      "taming": { "early": [200, 800], "mid": [1500, 5000], "late": [8000, 25000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" },
+      "hunting": { "early": [200, 800], "mid": [1500, 5000], "late": [8000, 25000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" }
+    }
+  },
+  "slayerXp": {
+    "unit": "slayer XP/min",
+    "basis": "tier XP / minutes per boss incl. spawning. Late (slayer 8+): T5 Revenant is a one-tap with ~15 s spawns, under a minute end to end, so 1,500-2,000 slayer XP/min (user answers 2026-11-24). Mid: T4 (500 XP) ~1.5-3 min. Early: T3 (100 XP) ~2-4 min. Other bosses are scaled from Revenant (estimate).",
+    "default": { "early": [25, 50], "mid": [170, 330], "late": [1500, 2000] },
+    "byBoss": {
+      "spider": { "early": [25, 50], "mid": [150, 300], "late": [1000, 2000] },
+      "wolf": { "early": [20, 40], "mid": [120, 250], "late": [600, 1000] },
+      "enderman": { "early": [20, 40], "mid": [100, 200], "late": [500, 900] },
+      "blaze": { "early": [15, 30], "mid": [80, 170], "late": [250, 450] },
+      "vampire": { "early": [8, 20], "mid": [30, 70], "late": [100, 150] }
+    },
+    "byBossNote": "Sven, Voidgloom and Inferno top out at tier IV (500 XP); Riftstalker gives 10/25/60/120/150 (NEU leveling.json)"
+  },
+  "slayerBoss": {
+    "unit": "bosses/min", "brackets": { "early": [0.1, 0.2], "mid": [0.2, 0.5], "late": [0.7, 1.5] },
+    "basis": "first kill of a tier: spawn quest plus fight; ~1 min late (one-tap, ~15 s spawn, user answers 2026-11-24), 2-5 min mid, 5-10 min early"
+  },
+  "catacombsXp": {
+    "unit": "Catacombs XP/min", "brackets": { "early": [300, 4000], "mid": [8000, 25000], "late": [80000, 125000] },
+    "basis": "XP per run / run time. Late (C45+): M7 ~500k XP with usual boosts in ~4-4.5 min at C50 (user answers 2026-11-24) = ~110-125k/min, with slower runs below that. Mid (C30-44): M5-M6 (~70-100k base x1.5) at 6-8 min. Early (<C30): F5 (2,400) to F7 (30k x1.4) at 8-12 min (wikiFloors)"
+  },
+  "classXp": {
+    "unit": "class XP/min", "brackets": { "early": [300, 4000], "mid": [8000, 25000], "late": [80000, 125000] },
+    "basis": "the class you play earns about the run's Catacombs XP; other classes get much less, so this assumes you play that class"
+  },
+  "floors": {
+    "unit": "runs/min",
+    "basis": "minutes per run, then runs/min = 1/minutes. Late (C45+): M7 ~4-4.5 min (user answers 2026-11-24), other floors faster. Mid is about the Speed time limit; early is over it (wikiDungeonScore)",
+    "minutesPerRun": {
+      "normal": {
+        "0": { "early": [8, 15], "mid": [3, 6], "late": [2, 4] },
+        "1": { "early": [8, 15], "mid": [3, 6], "late": [2, 4] },
+        "2": { "early": [8, 15], "mid": [3, 6], "late": [2, 4] },
+        "3": { "early": [8, 15], "mid": [3, 6], "late": [2, 4] },
+        "4": { "early": [10, 18], "mid": [4, 7], "late": [3, 5] },
+        "5": { "early": [10, 18], "mid": [3, 6], "late": [2, 4] },
+        "6": { "early": [12, 20], "mid": [4, 7], "late": [3, 5] },
+        "7": { "early": [15, 25], "mid": [6, 10], "late": [4, 6] }
+      },
+      "master": {
+        "1": { "early": [8, 14], "mid": [4, 7], "late": [2, 4] },
+        "2": { "early": [8, 14], "mid": [4, 7], "late": [2, 4] },
+        "3": { "early": [8, 14], "mid": [4, 7], "late": [2, 4] },
+        "4": { "early": [8, 14], "mid": [5, 8], "late": [3, 5] },
+        "5": { "early": [8, 14], "mid": [4, 7], "late": [2, 4] },
+        "6": { "early": [10, 16], "mid": [5, 8], "late": [3, 5] },
+        "7": { "early": [14, 25], "mid": [6, 10], "late": [4, 5] }
+      }
+    }
+  },
+  "minionTierMinutes": [[1, 3], [1, 3], [1, 4], [1, 4], [1, 5], [2, 9], [4, 17], [7, 34], [14, 68], [27, 137], [55, 273], [110, 546]],
+  "minionNote": "estimate: material needs roughly double per tier (~80 base items for I up to ~160k for XII), gathered at 300-1,500 items/min, plus 1-2 min to craft"
+}

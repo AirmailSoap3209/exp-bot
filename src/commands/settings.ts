@@ -1,7 +1,8 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
 import { loadProfile } from '../profile/load.js';
 import { BRACKETS, parseRateValue, profileKey, userData } from '../storage/userData.js';
-import { catalogue } from '../tasks/instance.js';
+import { defaultExcluded } from '../tasks/catalogue.js';
+import { catalogue, rateBook } from '../tasks/instance.js';
 import { decideTick } from '../tasks/progress.js';
 import { activities, findTask, searchActivities, searchTasks, type Choice } from '../tasks/search.js';
 import { requireLinked } from './target.js';
@@ -28,7 +29,7 @@ export async function exclude(i: ChatInputCommandInteraction, excluded: boolean)
   const category = i.options.getString('category', true);
   const name = catalogue.meta.categories.find((c) => c.id === category)?.name;
   if (!name) return `Unknown category "${category}".`;
-  const list = await userData.setExcluded(i.user.id, category, excluded);
+  const list = await userData.setExcluded(i.user.id, category, excluded, defaultExcluded(catalogue));
   const names = list.map((c) => catalogue.meta.categories.find((m) => m.id === c)?.name ?? c);
   return `${excluded ? 'Excluded' : 'Included'} **${name}**. Excluded now: ${names.length ? names.join(', ') : 'nothing'}.`;
 }
@@ -65,6 +66,8 @@ export async function rate(i: ChatInputCommandInteraction): Promise<string> {
   if (!link) return 'Rate overrides only apply to your linked profile. Run `/xp link <username>` first.';
   const activity = i.options.getString('activity', true);
   if (!activities(catalogue).some((a) => a.id === activity)) return `No activity "${activity}". Pick one from the autocomplete list.`;
+  // Fixed-time tasks (fairy souls, minion crafts) don't use rates, so an override would do nothing.
+  if (!rateBook.rates.has(activity)) return `\`${activity}\` uses fixed time estimates, not a rate, so there's nothing to override.`;
   const parsed = parseRateValue(i.options.getString('value', true));
   if (!parsed.ok) return parsed.error;
   const key = profileKey(link.uuid, link.profileId);
@@ -91,7 +94,7 @@ export async function autocomplete(i: AutocompleteInteraction): Promise<Choice[]
       .filter((t) => t !== undefined);
     return searchTasks(ticked, focused.value);
   }
-  if (sub === 'rate' && focused.name === 'activity') return searchActivities(catalogue, focused.value);
+  if (sub === 'rate' && focused.name === 'activity') return searchActivities(catalogue, focused.value, (id) => rateBook.rates.has(id));
   if (sub === 'rate' && focused.name === 'value') {
     const options = [...BRACKETS, 'default'].filter((b) => b.startsWith(focused.value.toLowerCase()));
     const n = Number(focused.value);

@@ -17,14 +17,40 @@ export type RateOverride = { bracket: string; setAt: string } | { rate: number; 
 
 export const BRACKETS = ['early', 'mid', 'late'] as const;
 
+export interface UserSettings {
+  excludedCategories: string[];
+  /** Categories excluded by default (meta.json) that the user brought back with /xp include. */
+  includedCategories?: string[];
+}
+
 /** Ticks and rate overrides belong to one profile of one player. */
 export const profileKey = (uuid: string, profileId: string) => `${uuid}:${profileId.replace(/-/g, '')}`;
 
+export interface OpenSession {
+  activity: string;
+  metric: string;
+  category: string;
+  uuid: string;
+  profileId: string;
+  playerName: string;
+  profileName: string;
+  startedAt: number;
+  snapshot: Record<string, number>;
+}
+
+/** Blended measured rate for one activity (see src/sessions). */
+export interface StoredSessionRate {
+  rate: number;
+  sessions: number;
+  history: { rate: number; minutes: number; endedAt: string }[];
+}
+
 interface Stores {
   links: JsonStore<Record<string, Link>>;
-  settings: JsonStore<Record<string, { excludedCategories: string[] }>>;
+  settings: JsonStore<Record<string, UserSettings>>;
   ticks: JsonStore<Record<string, string[]>>;
   rates: JsonStore<Record<string, Record<string, RateOverride>>>;
+  sessions: JsonStore<{ open: Record<string, OpenSession>; rates: Record<string, Record<string, StoredSessionRate>> }>;
 }
 
 /** Everything the bot remembers, keyed by Discord user ID or profile key. */
@@ -37,7 +63,46 @@ export class UserData {
       settings: new JsonStore(join(dir, 'settings.json'), () => ({})),
       ticks: new JsonStore(join(dir, 'ticks.json'), () => ({})),
       rates: new JsonStore(join(dir, 'rate-overrides.json'), () => ({})),
+      sessions: new JsonStore(join(dir, 'sessions.json'), () => ({ open: {}, rates: {} })),
     };
+  }
+
+  // ---- sessions ----
+  async getOpenSession(discordId: string): Promise<OpenSession | undefined> {
+    return (await this.s.sessions.read()).open[discordId];
+  }
+
+  /** Returns false if one is already open. */
+  startSession(discordId: string, session: OpenSession): Promise<boolean> {
+    return this.s.sessions.update((d) => {
+      if (d.open[discordId]) return false;
+      d.open[discordId] = session;
+      return true;
+    });
+  }
+
+  /** Closes the open session; returns it, or undefined if there was none. */
+  closeSession(discordId: string): Promise<OpenSession | undefined> {
+    return this.s.sessions.update((d) => {
+      const s = d.open[discordId];
+      delete d.open[discordId];
+      return s;
+    });
+  }
+
+  async getSessionRates(key: string): Promise<Record<string, StoredSessionRate>> {
+    return { ...((await this.s.sessions.read()).rates[key] ?? {}) };
+  }
+
+  /** Measured rates as plain numbers, for the estimator. */
+  async getSessionRateNumbers(key: string): Promise<Record<string, number>> {
+    return Object.fromEntries(Object.entries(await this.getSessionRates(key)).map(([a, r]) => [a, r.rate]));
+  }
+
+  setSessionRate(key: string, activity: string, rate: StoredSessionRate): Promise<void> {
+    return this.s.sessions.update((d) => {
+      (d.rates[key] ??= {})[activity] = rate;
+    });
   }
 
   // ---- links ----
@@ -50,18 +115,27 @@ export class UserData {
   }
 
   // ---- category filter ----
-  async getExcluded(discordId: string): Promise<Set<string>> {
-    return new Set((await this.s.settings.read())[discordId]?.excludedCategories ?? []);
+  /** Effective exclusions: the defaults the user hasn't included, plus the user's own exclusions. */
+  async getExcluded(discordId: string, defaults: readonly string[] = []): Promise<Set<string>> {
+    const s = (await this.s.settings.read())[discordId];
+    const included = new Set(s?.includedCategories ?? []);
+    return new Set([...defaults.filter((c) => !included.has(c)), ...(s?.excludedCategories ?? [])]);
   }
 
-  /** Adds or removes one category; returns the new exclusion list. */
-  setExcluded(discordId: string, category: string, excluded: boolean): Promise<string[]> {
+  /** Excludes or includes one category; returns the new effective exclusion list. */
+  setExcluded(discordId: string, category: string, excluded: boolean, defaults: readonly string[] = []): Promise<string[]> {
     return this.s.settings.update((d) => {
-      const set = new Set(d[discordId]?.excludedCategories ?? []);
-      if (excluded) set.add(category);
-      else set.delete(category);
-      d[discordId] = { excludedCategories: [...set].sort() };
-      return d[discordId].excludedCategories;
+      const ex = new Set(d[discordId]?.excludedCategories ?? []);
+      const inc = new Set(d[discordId]?.includedCategories ?? []);
+      if (excluded) {
+        ex.add(category);
+        inc.delete(category);
+      } else {
+        ex.delete(category);
+        if (defaults.includes(category)) inc.add(category);
+      }
+      d[discordId] = { excludedCategories: [...ex].sort(), ...(inc.size ? { includedCategories: [...inc].sort() } : {}) };
+      return [...new Set([...defaults.filter((c) => !inc.has(c)), ...ex])].sort();
     });
   }
 

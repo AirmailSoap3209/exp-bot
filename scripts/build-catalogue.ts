@@ -9,6 +9,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { Task } from '../src/tasks/types.js';
 import { buildCatalogue } from '../src/tasks/catalogue.js';
 import type { Meta } from '../src/tasks/types.js';
+import { BRACKET_NAMES, validateRate, type Bracket, type Range, type RateEntry } from '../src/estimate/types.js';
 
 const read = <T>(p: string): T => JSON.parse(readFileSync(p, 'utf8')) as T;
 
@@ -20,6 +21,7 @@ const neuMinions = read<{ source: string; fetchedAt: string; maxTiers: Record<st
 const overrides = read<{ addMobs: { island: string; name: string; mobs: string[] }[] }>('data/sources/bestiary-overrides.json');
 const wiki = read<any>('data/sources/wiki-xp.json');
 const slayerTable = read<{ source: string; cumulativeXp: Record<string, number[]> }>('data/leveling/slayer.json');
+const rateDefaults = read<any>('data/sources/rate-defaults.json');
 const cataTable = read<{ source: string; perLevelXp: number[] }>('data/leveling/catacombs.json');
 
 const WIKI = 'fandom wiki SkyBlock_Levels/Tasks, 2026-11-24';
@@ -76,6 +78,8 @@ function buildSkills(): Task[] {
 }
 
 // ---------- Collections ----------
+const collectionCategory = new Map<string, string>();
+
 /** Item IDs like "LOG:2" and "LOG_2" are different items, so ":" must survive slugging. */
 const itemSlug = (item: string) => item.split(':').map(slug).join('-');
 const collectionTaskId = (item: string, tier: number) => `collections.${itemSlug(item)}.tier${tier}`;
@@ -84,7 +88,8 @@ function buildCollections(): Task[] {
   const source = `Hypixel resources/skyblock/collections, fetched ${collRes.fetchedAt}`;
   return Object.entries(collRes.collections)
     .filter(([cat]) => cat !== 'RIFT') // Rift collections belong to the Rift category (later)
-    .flatMap(([, c]) => Object.entries(c.items).flatMap(([item, i]) => {
+    .flatMap(([cat, c]) => Object.entries(c.items).flatMap(([item, i]) => {
+      collectionCategory.set(itemSlug(item), rateDefaults.collections.itemClass?.[item] ?? cat);
       const sorted = [...i.tiers].sort((a, b) => a.tier - b.tier);
       return tiers(sorted.length, (n, prev) => {
         const t = sorted[n - 1]!;
@@ -134,7 +139,8 @@ function buildMinions(knownIds: Set<string>): Task[] {
       description: `Craft a ${name} Minion ${ROMAN[tier - 1]} for the first time`, xp: tierXp[tier - 1]!,
       requires: { metric: `minions.crafted.${id}_${tier}`, amount: 1 },
       prerequisites: prev ? [prev] : unlock ? [unlock] : [], activity: `minion.${slug(id)}`,
-      source, group: `minions.${slug(id)}`, tier,
+      source: `${source}; minutes ${rateDefaults.minionNote}`, group: `minions.${slug(id)}`, tier,
+      minutes: rateDefaults.minionTierMinutes[tier - 1],
     }));
   });
   console.log(`  minions with no collection unlock (unlocked another way): ${noRecipe.join(', ')}`);
@@ -154,7 +160,7 @@ function buildFairySouls(): Task[] {
 }
 
 // ---------- Bestiary ----------
-function buildBestiary(): { tasks: Task[]; families: { id: string; name: string; island: string; mobs: string[]; tiers: number[] }[] } {
+function buildBestiary(): { tasks: Task[]; families: { id: string; name: string; island: string; bracket: number; mobs: string[]; tiers: number[] }[] } {
   const families = neuBest.families.map((f) => ({ ...f, mobs: [...f.mobs] }));
   for (const o of overrides.addMobs) {
     const fam = families.find((f) => f.island === o.island && f.name === o.name);
@@ -173,7 +179,7 @@ function buildBestiary(): { tasks: Task[]; families: { id: string; name: string;
     if (!bracket) throw new Error(`bestiary family ${id} uses unknown bracket ${f.bracket}`);
     const maxTier = bracket.findIndex((x) => x >= f.cap) + 1 || bracket.length;
     const thresholds = bracket.slice(0, maxTier);
-    out.push({ id, name: f.name, island: f.islandName, mobs: f.mobs, tiers: thresholds });
+    out.push({ id, name: f.name, island: f.islandName, bracket: f.bracket, mobs: f.mobs, tiers: thresholds });
     tasks.push(...tiers(maxTier, (tier, prev) => task({
       id: `bestiary.${id}.tier${tier}`, category: 'bestiary', name: `${f.name} Bestiary ${ROMAN[tier - 1] ?? tier}`,
       description: `Kill ${thresholds[tier - 1]!.toLocaleString('en-US')} ${f.name} in total`, xp: wiki.bestiary.xpPerFamilyTier,
@@ -265,6 +271,70 @@ function buildCatacombs(): Task[] {
   return [...level, ...classes, ...floors];
 }
 
+// ---------- Rates ----------
+const scale = (b: Record<Bracket, Range>, f: number): Record<Bracket, Range> =>
+  Object.fromEntries(BRACKET_NAMES.map((k) => [k, b[k].map((x) => Number((x * f).toPrecision(3))) as Range])) as Record<Bracket, Range>;
+
+/** One rate per activity used by a task without fixed minutes. */
+function buildRates(tasks: Task[], families: { id: string; bracket: number }[]): Record<string, RateEntry[]> {
+  const d = rateDefaults;
+  const src = 'data/sources/rate-defaults.json';
+  /** Bracket maps in rate-defaults may carry a "basis" note; keep only the three brackets. */
+  const only = (b: any): Record<Bracket, Range> => Object.fromEntries(BRACKET_NAMES.map((k) => [k, b[k]])) as Record<Bracket, Range>;
+  const why = (basis?: string) => (basis ? `${src}; ${basis}` : src);
+  const familyBracket = new Map(families.map((f) => [f.id, f.bracket]));
+  // Kills needed for tier 10 in each NEU bracket, relative to the base bracket.
+  const tier10 = (b: number) => neuBest.brackets[String(b)]![9]!;
+  const out: Record<string, Map<string, RateEntry>> = {};
+  const put = (file: string, e: RateEntry) => ((out[file] ??= new Map()).set(e.activity, { ...e, source: e.source ?? src }));
+
+  for (const t of tasks) {
+    const a = t.activity;
+    if (!a || t.minutes) continue;
+    const parts = a.split('.');
+    if (a === 'combat.bestiary') put('bestiary', { activity: a, unit: d.bestiaryMilestone.unit, bracketBy: d.bestiaryMilestone.bracketBy, brackets: only(d.bestiaryMilestone.brackets), source: why(d.bestiaryMilestone.basis) });
+    else if (parts[0] === 'combat') {
+      const fam = a.slice('combat.'.length);
+      const b = familyBracket.get(fam);
+      if (b === undefined) throw new Error(`rates: no bestiary family for ${a}`);
+      put('bestiary', {
+        activity: a, unit: d.bestiary.unit, bracketBy: d.bestiary.bracketBy,
+        brackets: scale(only(d.bestiary.base), tier10(b) / tier10(d.bestiary.baseBracket)),
+        source: `${why(d.bestiary.basis)}; scaled for NEU kill bracket ${b}`,
+      });
+    } else if (parts[0] === 'collect') {
+      const cat = collectionCategory.get(parts.slice(1).join('.'));
+      const c = cat && d.collections.byResourceCategory[cat];
+      if (!c) throw new Error(`rates: no collection rate class for ${a}`);
+      put('collections', { activity: a, unit: d.collections.unit, bracketBy: c.bracketBy, brackets: only(c.brackets), source: why(c.basis) });
+    } else if (parts[0] === 'skill') {
+      const b = d.skills.bySkill[parts[1]!];
+      if (!b) throw new Error(`rates: no skill rate for ${a}`);
+      put('skills', { activity: a, unit: d.skills.unit, bracketBy: `skill.${parts[1]}`, brackets: only(b), source: why(b.basis) });
+    } else if (parts[0] === 'slayer' && parts.length === 2) {
+      put('slayer', { activity: a, unit: d.slayerXp.unit, bracketBy: `slayer.${parts[1]}`, brackets: only(d.slayerXp.byBoss[parts[1]!] ?? d.slayerXp.default), source: why(d.slayerXp.basis) });
+    } else if (parts[0] === 'slayer' && parts.length === 3) {
+      put('slayer', { activity: a, unit: d.slayerBoss.unit, bracketBy: `slayer.${parts[1]}`, brackets: only(d.slayerBoss.brackets), source: why(d.slayerBoss.basis) });
+    } else if (a === 'dungeons.catacombs') {
+      put('catacombs', { activity: a, unit: d.catacombsXp.unit, bracketBy: 'dungeons', brackets: only(d.catacombsXp.brackets), source: why(d.catacombsXp.basis) });
+    } else if (parts[0] === 'dungeons' && parts[1] === 'class') {
+      put('catacombs', { activity: a, unit: d.classXp.unit, bracketBy: 'dungeons', brackets: only(d.classXp.brackets), source: why(d.classXp.basis) });
+    } else if (parts[0] === 'dungeons' && /^[fm]\d$/.test(parts[1] ?? '')) {
+      // Stored as minutes per run (easier to check against the Speed time limits); rate = 1 / minutes.
+      const floor = parts[1]!;
+      const mode = floor[0] === 'f' ? 'normal' : 'master';
+      const minutes = d.floors.minutesPerRun[mode][floor.slice(1)] as Record<Bracket, Range> | undefined;
+      if (!minutes) throw new Error(`rates: no run time for ${a}`);
+      const brackets = Object.fromEntries(BRACKET_NAMES.map((k) => [k, [1 / minutes[k][1], 1 / minutes[k][0]].map((x) => Number(x.toPrecision(3)))])) as Record<Bracket, Range>;
+      put('catacombs', { activity: a, unit: d.floors.unit, bracketBy: 'dungeons', brackets, source: `${src}; ${d.floors.basis}` });
+    } else throw new Error(`rates: no rule for activity ${a}`);
+  }
+  const files = Object.fromEntries(Object.entries(out).map(([f, m]) => [f, [...m.values()].sort((x, y) => x.activity.localeCompare(y.activity))]));
+  const problems = Object.entries(files).flatMap(([f, list]) => list.flatMap((r, i) => validateRate(r, `rates/${f}.json[${i}]`)));
+  if (problems.length) throw new Error(`invalid rates:\n  ${problems.join('\n  ')}`);
+  return files;
+}
+
 // ---------- Write ----------
 function main() {
   const bestiary = buildBestiary();
@@ -290,6 +360,12 @@ function main() {
     const wikiMax = meta.categories.find((c) => c.id === cat)?.wikiMaxXp;
     const total = tasks.reduce((a, t) => a + t.xp, 0);
     console.log(`  ${cat.padEnd(12)} ${String(tasks.length).padStart(5)} tasks  ${String(total).padStart(6)} XP${wikiMax ? `  (wiki max ${wikiMax})` : ''}`);
+  }
+  const rates = buildRates(Object.values(out).flat(), bestiary.families);
+  mkdirSync('data/rates', { recursive: true });
+  for (const [file, list] of Object.entries(rates)) {
+    writeFileSync(`data/rates/${file}.json`, `[\n${list.map((r) => '  ' + JSON.stringify(r)).join(',\n')}\n]\n`);
+    console.log(`  rates/${file}.json: ${list.length} activities`);
   }
   writeFileSync('data/bestiary/families.json', `[\n${bestiary.families.map((f) => '  ' + JSON.stringify(f)).join(',\n')}\n]\n`);
   console.log(`  wrote data/bestiary/families.json (${bestiary.families.length} families)`);

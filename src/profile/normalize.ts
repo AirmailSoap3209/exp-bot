@@ -119,7 +119,7 @@ function readCollections(m: Obj, profile: RawProfile): NormalizedProfile['collec
   }
   return {
     unlockedTiers,
-    amounts: ok({ byItem, activeMembers: members.length, hiddenMembers: hidden }),
+    amounts: ok({ byItem, activeMembers: members.length, hiddenMembers: hidden, ownByItem: numberMap(m.collection) }),
   };
 }
 

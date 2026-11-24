@@ -51,8 +51,8 @@ export function activities(catalogue: Catalogue): { id: string; label: string }[
   return [...seen].map(([id, label]) => ({ id, label }));
 }
 
-export function searchActivities(catalogue: Catalogue, query: string): Choice[] {
-  return rank(activities(catalogue), (a) => `${a.id} ${a.label}`, query, (a, b) => a.id.localeCompare(b.id))
+export function searchActivities(catalogue: Catalogue, query: string, include: (id: string) => boolean = () => true): Choice[] {
+  return rank(activities(catalogue).filter((a) => include(a.id)), (a) => `${a.id} ${a.label}`, query, (a, b) => a.id.localeCompare(b.id))
     .map((a) => ({ name: clip(`${a.id} · ${a.label}`), value: a.id }));
 }
 

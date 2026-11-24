@@ -6,7 +6,7 @@
 import { readFileSync } from 'node:fs';
 import type { ProfilesResponse } from '../src/hypixel/client.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../src/profile/normalize.js';
-import { loadCatalogue } from '../src/tasks/catalogue.js';
+import { defaultExcluded, loadCatalogue } from '../src/tasks/catalogue.js';
 import { evaluateProgress, STATUS_LABEL, STATUSES, summarize } from '../src/tasks/progress.js';
 
 const [player, profileName] = process.argv.slice(2);
@@ -20,7 +20,7 @@ const raw = pickProfile(response.profiles, profileName);
 if (!raw) throw new Error(`No profile ${profileName ?? '(selected)'} for ${name}`);
 const profile = normalizeProfile(raw, uuid, read<SkillsResource>('resource-skills.json'), Date.now());
 const catalogue = loadCatalogue();
-const s = summarize(evaluateProgress(catalogue, profile).progress);
+const s = summarize(evaluateProgress(catalogue, profile).progress, new Set(defaultExcluded(catalogue)));
 const fmt = (n: number) => n.toLocaleString('en-US');
 
 console.log(`${name} / ${profile.cuteName}: level ${profile.leveling.level} (${fmt(profile.leveling.experience)} XP)`);

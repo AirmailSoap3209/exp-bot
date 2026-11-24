@@ -62,6 +62,21 @@ describe('UserData', () => {
   });
 });
 
+describe('default exclusions', () => {
+  it('applies defaults until included, and remembers the include', async () => {
+    const u = new UserData(await tempDir());
+    const defaults = ['minions'];
+    expect([...(await u.getExcluded('d1', defaults))]).toEqual(['minions']);
+    expect(await u.setExcluded('d1', 'minions', false, defaults)).toEqual([]);
+    expect([...(await u.getExcluded('d1', defaults))]).toEqual([]);
+    expect(await u.setExcluded('d1', 'bestiary', true, defaults)).toEqual(['bestiary']);
+    expect(await u.setExcluded('d1', 'minions', true, defaults)).toEqual(['bestiary', 'minions']);
+    expect([...(await u.getExcluded('d1', defaults))].sort()).toEqual(['bestiary', 'minions']);
+    // Another user still gets the default.
+    expect([...(await u.getExcluded('d2', defaults))]).toEqual(['minions']);
+  });
+});
+
 describe('parseRateValue', () => {
   it.each([
     ['late', { bracket: 'late' }],

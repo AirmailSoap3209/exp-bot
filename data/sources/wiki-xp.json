@@ -4,34 +4,116 @@
     "xpPerExchange": 10,
     "soulsPerExchange": 5,
     "maxExchanges": 53,
-    "minutesPerExchange": [10, 30],
-    "minutesNote": "placeholder: finding 5 more souls, gets slower as easy souls run out"
+    "minutesPerExchange": [
+      2,
+      6
+    ],
+    "minutesNote": "~10 min per island to clear its souls, ~17 souls per island on average, so ~2-6 min per 5 souls (user answers 2026-11-24)"
   },
-  "minionTierXp": [1, 1, 1, 1, 1, 1, 2, 3, 4, 6, 12, 24],
+  "minionTierXp": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    4,
+    6,
+    12,
+    24
+  ],
   "minionCollectionNames": {
     "COCOA": "Cocoa Beans",
     "ENDER_STONE": "End Stone",
     "NETHER_WARTS": "Nether Wart"
   },
   "slayer": {
-    "levelXp": [15, 25, 35, 50, 70, 100, 125, 150, 150],
+    "levelXp": [
+      15,
+      25,
+      35,
+      50,
+      70,
+      100,
+      125,
+      150,
+      150
+    ],
     "levelXpNote": "Wiki lists one table for all bosses; its stated max (3,825) is 30 more than this table gives with Riftstalker capped at level 5, so Riftstalker level XP is unverified",
-    "bossTierXp": [25, 25, 50, 50, 75],
+    "bossTierXp": [
+      25,
+      25,
+      50,
+      50,
+      75
+    ],
     "bosses": {
-      "zombie": { "name": "Revenant Horror", "taskId": "ZOMBIE", "maxTier": 5, "location": "Crypts, Hub" },
-      "spider": { "name": "Tarantula Broodfather", "taskId": "SPIDER", "maxTier": 5, "location": "Spider's Den" },
-      "wolf": { "name": "Sven Packmaster", "taskId": "WOLF", "maxTier": 4, "location": "Howling Cave, The Park" },
-      "enderman": { "name": "Voidgloom Seraph", "taskId": "ENDERMAN", "maxTier": 4, "location": "The End" },
-      "blaze": { "name": "Inferno Demonlord", "taskId": "BLAZE", "maxTier": 4, "location": "Crimson Isle" },
-      "vampire": { "name": "Riftstalker Bloodfiend", "taskId": "VAMPIRE", "maxTier": 5, "location": "Stillgore Chateau, The Rift" }
+      "zombie": {
+        "name": "Revenant Horror",
+        "taskId": "ZOMBIE",
+        "maxTier": 5,
+        "location": "Crypts, Hub"
+      },
+      "spider": {
+        "name": "Tarantula Broodfather",
+        "taskId": "SPIDER",
+        "maxTier": 5,
+        "location": "Spider's Den"
+      },
+      "wolf": {
+        "name": "Sven Packmaster",
+        "taskId": "WOLF",
+        "maxTier": 4,
+        "location": "Howling Cave, The Park"
+      },
+      "enderman": {
+        "name": "Voidgloom Seraph",
+        "taskId": "ENDERMAN",
+        "maxTier": 4,
+        "location": "The End"
+      },
+      "blaze": {
+        "name": "Inferno Demonlord",
+        "taskId": "BLAZE",
+        "maxTier": 4,
+        "location": "Crimson Isle"
+      },
+      "vampire": {
+        "name": "Riftstalker Bloodfiend",
+        "taskId": "VAMPIRE",
+        "maxTier": 5,
+        "location": "Stillgore Chateau, The Rift"
+      }
     }
   },
   "catacombs": {
-    "levelXp": { "1-39": 20, "40-50": 40 },
+    "levelXp": {
+      "1-39": 20,
+      "40-50": 40
+    },
     "classLevelXp": 4,
     "classMaxLevel": 50,
-    "floorXp": { "0": 20, "1": 20, "2": 20, "3": 20, "4": 20, "5": 30, "6": 30, "7": 30 },
-    "masterFloorXp": { "1": 50, "2": 50, "3": 50, "4": 50, "5": 50, "6": 50, "7": 50 }
+    "floorXp": {
+      "0": 20,
+      "1": 20,
+      "2": 20,
+      "3": 20,
+      "4": 20,
+      "5": 30,
+      "6": 30,
+      "7": 30
+    },
+    "masterFloorXp": {
+      "1": 50,
+      "2": 50,
+      "3": 50,
+      "4": 50,
+      "5": 50,
+      "6": 50,
+      "7": 50
+    }
   },
   "bestiary": {
     "xpPerFamilyTier": 1,

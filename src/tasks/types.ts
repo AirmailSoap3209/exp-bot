@@ -39,6 +39,8 @@ export interface CategoryMeta {
   guide: string;
   /** Max XP the wiki lists for this category, to sanity-check the catalogue. */
   wikiMaxXp?: number;
+  /** Left out of overview and rankings unless the user runs /xp include. */
+  defaultExcluded?: boolean;
   note?: string;
 }
 

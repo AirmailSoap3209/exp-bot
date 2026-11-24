@@ -1,0 +1,241 @@
+{
+  "uuid": "05f2040cd7d7451ca1aa9e8afae723f4",
+  "name": "dik9",
+  "response": {
+    "success": true,
+    "profiles": [
+      {
+        "profile_id": "3778b97a-6fdd-4991-9c36-d28e59e3ff28",
+        "community_upgrades": {
+          "upgrade_states": []
+        },
+        "created_at": 1788516721119,
+        "members": {
+          "05f2040cd7d7451ca1aa9e8afae723f4": {
+            "events": {
+              "easter": {
+                "rabbit_hitmen": {},
+                "chocobits": {},
+                "rabbits": {
+                  "collected_locations": {},
+                  "collected_eggs": {}
+                },
+                "time_tower": {},
+                "shop": {},
+                "employees": {},
+                "chocolate": 0,
+                "total_chocolate": 0,
+                "chocolate_since_prestige": 0
+              }
+            },
+            "skill_tree": {
+              "nodes": {
+                "mining": {},
+                "foraging": {},
+                "foraging_2": {},
+                "foraging_3": {},
+                "foraging_4": {},
+                "foraging_5": {},
+                "mining_2": {},
+                "mining_3": {},
+                "mining_4": {},
+                "mining_5": {}
+              },
+              "experience": {},
+              "selected_skill_tree_slot": {},
+              "tokens_spent": {},
+              "refund_ability_free": true,
+              "selected_ability": {}
+            },
+            "accessory_bag_storage": {
+              "tuning": {},
+              "highest_magical_power": 0
+            },
+            "leveling": {
+              "completions": {},
+              "experience": 123,
+              "completed_tasks": [
+                "PERSONAL_BANK_THREE",
+                "PERSONAL_BANK_ONE",
+                "PERSONAL_BANK_TWO",
+                "ABIPHONE_slayer"
+              ]
+            },
+            "profile": {
+              "first_join": 1788516722464,
+              "personal_bank_upgrade": 3,
+              "cookie_buff_active": false
+            },
+            "pets_data": {
+              "autopet": {},
+              "pets": [
+                {
+                  "uuid": null,
+                  "uniqueId": "c4d09e61-b755-4b1d-affb-cead9f02ae22",
+                  "type": "BINGO",
+                  "exp": 0,
+                  "active": true,
+                  "tier": "COMMON",
+                  "heldItem": null,
+                  "candyUsed": 0,
+                  "petSoulbound": false,
+                  "skin": null
+                }
+              ]
+            },
+            "player_id": "05f2040c-d7d7-451c-a1aa-9e8afae723f4",
+            "nether_island_player_data": {
+              "kuudra_completed_tiers": {},
+              "abiphone": {
+                "contact_data": {
+                  "slayer": {}
+                },
+                "games": {},
+                "operator_chip": {},
+                "active_contacts": [
+                  "slayer"
+                ]
+              }
+            },
+            "experimentation": {
+              "claimed_retroactive_rng": true
+            },
+            "player_data": {
+              "experience": {},
+              "perks": {},
+              "garden_chips": {},
+              "visited_modes": [
+                "hub",
+                "dynamic"
+              ],
+              "active_effects": [],
+              "visited_zones": [
+                "village"
+              ]
+            },
+            "quests": {},
+            "inventory": {
+              "bag_contents": {
+                "sacks_bag": {
+                  "type": 0,
+                  "data": "H4sIAAAAAAAA/+NiYOBkYMzkYmBgkGDABQAnBV3GJQAAAA=="
+                }
+              }
+            },
+            "objectives": {
+              "collect_log": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_guide": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "public_island": {
+                "status": "COMPLETE",
+                "progress": 0,
+                "completed_at": 1788516824673
+              },
+              "tutorial": [
+                "recalc_pet_xp_1",
+                "first_join",
+                "bag_xp_recheck1",
+                "stat_unlock_notification_magic_find"
+              ],
+              "explore_hub": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "hub_talk_to_wizard": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "paint_canvas": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "safety_talk_to_susan": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_artist_1": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_auction_master": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_banker": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_bartender_intro": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_blacksmith": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_carpenter": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_enid": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_fairy": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_farmer": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_librarian": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_lumber_jack": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_pet_collector": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              },
+              "talk_to_pet_sitter": {
+                "status": "ACTIVE",
+                "progress": 0,
+                "completed_at": 0
+              }
+            }
+          }
+        },
+        "game_mode": "bingo",
+        "cute_name": "Peach",
+        "selected": true
+      }
+    ]
+  }
+}

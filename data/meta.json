@@ -1,0 +1,48 @@
+{
+  "checked": "2026-11-24",
+  "note": "guideCategories.maxXp comes from the in-game SkyBlock Leveling menu and stays null until read there. wikiEstimate is summed from the fandom wiki tasks page and is rough (some tabs undercount or double count).",
+  "guideCategories": [
+    { "id": "core", "name": "Core Tasks", "maxXp": null, "wikiEstimate": 22184 },
+    { "id": "event", "name": "Event Tasks", "maxXp": null, "wikiEstimate": 1285 },
+    { "id": "dungeon", "name": "Dungeon Tasks", "maxXp": null, "wikiEstimate": 2760 },
+    { "id": "essence_shop", "name": "Essence Shop Tasks", "maxXp": null, "wikiEstimate": null },
+    { "id": "slaying", "name": "Slaying Tasks", "maxXp": null, "wikiEstimate": 11028 },
+    { "id": "skill_related", "name": "Skill Related Tasks", "maxXp": null, "wikiEstimate": null },
+    { "id": "misc", "name": "Miscellaneous Tasks", "maxXp": null, "wikiEstimate": 5072 },
+    { "id": "story", "name": "Story Tasks", "maxXp": null, "wikiEstimate": 712 },
+    { "id": "consumables", "name": "Consumables", "maxXp": null, "wikiEstimate": 15 }
+  ],
+  "categories": [
+    { "id": "skills", "name": "Skills", "status": "v1", "guide": "core", "wikiMaxXp": 8120, "note": "Wiki total predates Hunting and the Foraging cap raise; catalogue uses Hypixel's skills resource" },
+    { "id": "collections", "name": "Collections", "status": "v1", "guide": "core", "wikiMaxXp": 3024, "note": "Rift collections are counted under Rift" },
+    { "id": "minions", "name": "Minions", "status": "v1", "guide": "core", "wikiMaxXp": 2963 },
+    { "id": "fairy_souls", "name": "Fairy Souls", "status": "v1", "guide": "core", "wikiMaxXp": 530 },
+    { "id": "bestiary", "name": "Bestiary", "status": "v1", "guide": "slaying", "wikiMaxXp": 4370, "note": "Families from NEU, which undercounts tiers by ~5% against in-game milestones" },
+    { "id": "slayer", "name": "Slayer", "status": "v1", "guide": "slaying", "wikiMaxXp": 4950, "note": "Slayer levels (3,825) plus first boss kills per tier (1,125)" },
+    { "id": "catacombs", "name": "Catacombs", "status": "v1", "guide": "dungeon", "wikiMaxXp": 2760 },
+
+    { "id": "museum", "name": "Museum", "status": "never", "guide": "core", "note": "Monetary: XP for owning donated items" },
+    { "id": "accessories", "name": "Accessories / Magical Power", "status": "never", "guide": "core", "note": "Monetary" },
+    { "id": "pets", "name": "Pet Score", "status": "never", "guide": "core", "note": "Monetary" },
+    { "id": "bank_upgrades", "name": "Bank Upgrades", "status": "never", "guide": "core", "note": "Monetary" },
+    { "id": "fast_travel", "name": "Fast Travel Scrolls", "status": "never", "guide": "core", "note": "Monetary" },
+    { "id": "abiphone", "name": "Abiphone Contacts", "status": "never", "guide": "misc", "note": "Monetary" },
+
+    { "id": "boss_collections", "name": "Slayer & Dungeon Boss Collections", "status": "later", "guide": "slaying" },
+    { "id": "dragons", "name": "Dragons", "status": "later", "guide": "slaying" },
+    { "id": "kuudra", "name": "Kuudra", "status": "later", "guide": "slaying" },
+    { "id": "arachne", "name": "Arachne", "status": "later", "guide": "slaying" },
+    { "id": "mythological", "name": "Mythological Creatures", "status": "later", "guide": "slaying" },
+    { "id": "mob_types", "name": "Collect Mob Types", "status": "later", "guide": "slaying" },
+    { "id": "hotm", "name": "Heart of the Mountain & mining tasks", "status": "later", "guide": "skill_related" },
+    { "id": "garden", "name": "Garden", "status": "later", "guide": "skill_related" },
+    { "id": "trophy_fishing", "name": "Trophy Fishing & fishing tasks", "status": "later", "guide": "skill_related" },
+    { "id": "foraging_tasks", "name": "Foraging tasks", "status": "later", "guide": "skill_related" },
+    { "id": "rift", "name": "Rift", "status": "later", "guide": "story" },
+    { "id": "quests", "name": "Quests & objectives", "status": "later", "guide": "story" },
+    { "id": "events", "name": "Events", "status": "later", "guide": "event" },
+    { "id": "essence_shop", "name": "Essence Shop perks", "status": "later", "guide": "essence_shop" },
+    { "id": "exploration", "name": "Exploration & other one-time tasks", "status": "later", "guide": "misc", "note": "Includes community shop and island upgrades, still to be reviewed for monetary rules" },
+    { "id": "consumables", "name": "Consumables", "status": "later", "guide": "consumables" }
+  ]
+}

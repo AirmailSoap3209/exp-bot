@@ -1,0 +1,32 @@
+{
+  "name": "skyblock-xp-optimizer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personal Discord bot that ranks the quickest non-monetary SkyBlock XP tasks",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "check-api": "tsx scripts/check-api.ts",
+    "show-profile": "tsx scripts/show-profile.ts",
+    "catalogue:sources": "tsx scripts/catalogue-sources.ts",
+    "catalogue:build": "tsx scripts/build-catalogue.ts",
+    "coverage": "tsx scripts/coverage.ts",
+    "overview": "tsx scripts/overview.ts",
+    "deploy-commands": "tsx scripts/deploy-commands.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

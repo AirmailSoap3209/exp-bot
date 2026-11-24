@@ -1,0 +1,6 @@
+{
+  "note": "Mob keys seen in real profiles but missing from NEU's bestiary. Each entry adds keys to an existing family (matched by island + name).",
+  "addMobs": [
+    { "island": "mining_2", "name": "Emerald Slime", "mobs": ["emerald_slime_15"], "seen": "ducksterr_ fixtures, 2026-11" }
+  ]
+}

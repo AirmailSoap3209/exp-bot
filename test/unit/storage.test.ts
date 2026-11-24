@@ -62,6 +62,20 @@ describe('UserData', () => {
   });
 });
 
+describe('RequestLog rotation', () => {
+  it('moves a full log to .1 and starts a new one', async () => {
+    const { RequestLog } = await import('../../src/hypixel/requestLog.js');
+    const dir = await tempDir();
+    const file = join(dir, 'req.log');
+    const entry = { time: 't', path: '/x', status: 200, durationMs: 1, attempt: 1 };
+    await writeFile(file, 'x'.repeat(200));
+    const log = new RequestLog(file, 100);
+    await log.write(entry); // first write checks the size: 200 >= 100, so rotate
+    expect((await readFile(`${file}.1`, 'utf8')).length).toBe(200);
+    expect(JSON.parse(await readFile(file, 'utf8'))).toMatchObject({ path: '/x' });
+  });
+});
+
 describe('default exclusions', () => {
   it('applies defaults until included, and remembers the include', async () => {
     const u = new UserData(await tempDir());

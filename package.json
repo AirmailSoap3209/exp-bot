@@ -16,9 +16,10 @@
     "coverage": "tsx scripts/coverage.ts",
     "overview": "tsx scripts/overview.ts",
     "optimize": "tsx scripts/optimize.ts",
-    "deploy-commands": "tsx scripts/deploy-commands.ts",
+    "deploy-commands": "node dist/deploy-commands.js",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy-commands:dev": "tsx src/deploy-commands.ts"
   },
   "dependencies": {
     "discord.js": "^14.16.3",
@@ -29,5 +30,8 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

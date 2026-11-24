@@ -38,6 +38,11 @@ export class JsonStore<T> {
     return p;
   }
 
+  /** Resolves once every queued update has been written. */
+  async flush(): Promise<void> {
+    await this.queue;
+  }
+
   private async load(): Promise<T> {
     try {
       this.data = JSON.parse(await readFile(this.file, 'utf8')) as T;

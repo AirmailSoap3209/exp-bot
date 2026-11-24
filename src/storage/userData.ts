@@ -67,6 +67,11 @@ export class UserData {
     };
   }
 
+  /** Waits for pending writes in every store (used on shutdown). */
+  async flush(): Promise<void> {
+    await Promise.all(Object.values(this.s).map((store) => store.flush()));
+  }
+
   // ---- sessions ----
   async getOpenSession(discordId: string): Promise<OpenSession | undefined> {
     return (await this.s.sessions.read()).open[discordId];

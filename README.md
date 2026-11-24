@@ -17,6 +17,39 @@ cp .env.example .env   # fill in HYPIXEL_API_KEY (and Discord values once comman
 | `npm run build` / `npm start` | Compile to `dist/` and run the bot |
 | `npm run dev` | Run the bot with reload |
 
+## Running on a Linux server (pm2)
+
+Written for Ubuntu/Debian, such as a Contabo VPS. Run one copy only. Don't run the bot on your PC at the same time, or both copies answer every command.
+
+```sh
+# Once: Node 22 and pm2
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm install -g pm2
+pm2 install pm2-logrotate            # caps pm2's own log files
+
+# Once: in the cloned repo
+cp .env.example .env && nano .env    # DISCORD_TOKEN, DISCORD_CLIENT_ID, HYPIXEL_API_KEY (+ DISCORD_GUILD_ID)
+chmod 600 .env
+npm ci
+npm run build
+npm run deploy-commands              # registers /xp with Discord
+pm2 start ecosystem.config.cjs
+pm2 save
+pm2 startup                          # then run the command it prints, so the bot starts on reboot
+
+# Each update
+git pull && npm ci && npm run build && npm run deploy-commands && pm2 restart xp-bot
+
+# Day to day
+pm2 status
+pm2 logs xp-bot
+```
+
+- **Back up `storage-data/`.** It holds links, ticks, rate overrides and measured session rates. `git pull` never touches it because it's gitignored.
+- `logs/hypixel-requests.log` rotates itself at 10 MB, keeping one older copy as `.1`.
+- On `pm2 stop`/`restart` the bot finishes pending storage writes before exiting.
+
 ## Build progress
 
 - [x] **1. API check (code):** skeleton, Hypixel client, 60s profile cache / 24h resource cache, header-driven rate limiter that queues, keyed request log at `logs/hypixel-requests.log`

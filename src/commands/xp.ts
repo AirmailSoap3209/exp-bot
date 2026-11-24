@@ -10,7 +10,11 @@ import { randomUUID } from 'node:crypto';
 import { rankTasks, type RankResult } from '../optimizer/rank.js';
 import { profileKey, userData } from '../storage/userData.js';
 import type { NormalizedProfile } from '../profile/types.js';
-import { optimizeEmbed, pageButtons } from './optimize.js';
+import { optimizeEmbed, pageButtons, PAGE_SIZE } from './optimize.js';
+import { taskEmbed } from './taskDetail.js';
+import { categoryView } from '../optimizer/category.js';
+import { estimateTask, type EstimateContext } from '../estimate/estimate.js';
+import { findTask, searchTasks } from '../tasks/search.js';
 import { HypixelApiError, PlayerNotFoundError } from '../hypixel/client.js';
 import { ProfileNotFoundError } from '../profile/load.js';
 import { catalogue, rateBook } from '../tasks/instance.js';
@@ -20,7 +24,7 @@ import type { Command } from './index.js';
 import { overviewEmbed } from './overview.js';
 import * as session from './session.js';
 import * as settings from './settings.js';
-import { NotLinkedError, resolveTarget } from './target.js';
+import { NotLinkedError, resolveTarget, type Target } from './target.js';
 
 export function coverageEmbed(c: Coverage): EmbedBuilder {
   const section = (status: 'v1' | 'later' | 'never') =>
@@ -64,29 +68,96 @@ async function overview(i: ChatInputCommandInteraction): Promise<void> {
 }
 
 /** Rankings kept for Next/Prev, so paging never re-fetches. Expire after 15 minutes. */
-const pages = new Map<string, { userId: string; playerName: string; profile: NormalizedProfile; result: RankResult; isLinked: boolean; expires: number }>();
+interface PageState {
+  userId: string;
+  playerName: string;
+  profile: NormalizedProfile;
+  result: RankResult;
+  isLinked: boolean;
+  title?: string;
+  header?: string;
+  expires: number;
+}
+const pages = new Map<string, PageState>();
 const PAGE_TTL_MS = 15 * 60_000;
+
+/** Estimator context: overrides and measured session rates only apply to the caller's linked profile. */
+async function estimateContext(t: Target): Promise<EstimateContext> {
+  if (!t.isLinked) return { book: rateBook };
+  const key = profileKey(t.loaded.profile.uuid, t.loaded.profile.profileId);
+  const [overrides, sessionRates] = await Promise.all([userData.getRateOverrides(key), userData.getSessionRateNumbers(key)]);
+  return { book: rateBook, overrides, sessionRates };
+}
+
+/** Sends page 1 of a ranking, with Prev/Next when there is more than one page. */
+async function showRanking(i: ChatInputCommandInteraction, t: Target, result: RankResult, view: { title?: string; header?: string } = {}): Promise<void> {
+  const now = Date.now();
+  for (const [k, v] of pages) if (v.expires < now) pages.delete(k);
+  const id = randomUUID().slice(0, 8);
+  const state: PageState = { userId: i.user.id, playerName: t.loaded.playerName, profile: t.loaded.profile, result, isLinked: t.isLinked, ...view, expires: now + PAGE_TTL_MS };
+  pages.set(id, state);
+  const content = t.clearedTicks.length ? `Cleared ${t.clearedTicks.length} tick(s) the API now shows incomplete.` : undefined;
+  await i.editReply({
+    content,
+    embeds: [optimizeEmbed(state.playerName, state.profile, result, 0, { isLinked: state.isLinked, title: state.title, header: state.header })],
+    components: result.ranked.length > PAGE_SIZE ? [pageButtons(id, 0, result.ranked.length)] : [],
+  });
+}
 
 async function optimize(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
     const t = await resolveTarget(i);
-    const key = profileKey(t.loaded.profile.uuid, t.loaded.profile.profileId);
-    // Overrides and measured session rates only apply to the caller's linked profile.
-    const [overrides, sessionRates] = t.isLinked
-      ? await Promise.all([userData.getRateOverrides(key), userData.getSessionRateNumbers(key)])
-      : [undefined, undefined];
-    const result = rankTasks(t.evaluation.progress, t.loaded.profile, { book: rateBook, overrides, sessionRates }, { excluded: t.excluded, limit: 10 });
-    const now = Date.now();
-    for (const [k, v] of pages) if (v.expires < now) pages.delete(k);
-    const id = randomUUID().slice(0, 8);
-    pages.set(id, { userId: i.user.id, playerName: t.loaded.playerName, profile: t.loaded.profile, result, isLinked: t.isLinked, expires: now + PAGE_TTL_MS });
-    const content = t.clearedTicks.length ? `Cleared ${t.clearedTicks.length} tick(s) the API now shows incomplete.` : undefined;
-    await i.editReply({
-      content,
-      embeds: [optimizeEmbed(t.loaded.playerName, t.loaded.profile, result, 0, { isLinked: t.isLinked })],
-      components: result.ranked.length > 5 ? [pageButtons(id, 0, result.ranked.length)] : [],
-    });
+    const result = rankTasks(t.evaluation.progress, t.loaded.profile, await estimateContext(t), { excluded: t.excluded, limit: 10 });
+    await showRanking(i, t, result);
+  } catch (err) {
+    await i.editReply({ content: userError(err) });
+  }
+}
+
+async function category(i: ChatInputCommandInteraction): Promise<void> {
+  await i.deferReply();
+  try {
+    const id = i.options.getString('category', true);
+    const meta = catalogue.meta.categories.find((c) => c.id === id);
+    if (!meta || !catalogue.byCategory.has(id)) {
+      await i.editReply({ content: `No tasks in category "${id}".` });
+      return;
+    }
+    const t = await resolveTarget(i);
+    const view = categoryView(catalogue, t.evaluation.progress, t.loaded.profile, await estimateContext(t), id);
+    const s = view.summary;
+    const fmt = (n: number) => n.toLocaleString('en-US');
+    const total = s ? s.earned + s.remaining + s.likelyComplete + s.unknown : 0;
+    const header = [
+      `**${meta.name}** · ${fmt(s?.earned ?? 0)}/${fmt(total)} XP earned · ${fmt(view.result.ranked.length)} open now, quickest first`,
+      t.excluded.has(id) ? '-# This category is excluded from your overview and rankings; it is shown here anyway.' : '',
+    ].filter(Boolean).join('\n');
+    await showRanking(i, t, view.result, { title: meta.name, header });
+  } catch (err) {
+    await i.editReply({ content: userError(err) });
+  }
+}
+
+async function task(i: ChatInputCommandInteraction): Promise<void> {
+  await i.deferReply();
+  try {
+    const input = i.options.getString('task', true);
+    const found = findTask(catalogue, input);
+    if (!found) {
+      await i.editReply({ content: `No task matches "${input}". Pick one from the autocomplete list.` });
+      return;
+    }
+    const link = await userData.getLink(i.user.id);
+    if (!link) {
+      await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook)] });
+      return;
+    }
+    const t = await resolveTarget(i);
+    const progress = new Map(t.evaluation.progress.map((p) => [p.task.id, p]));
+    const p = progress.get(found.id)!;
+    const estimate = estimateTask(p, t.loaded.profile, await estimateContext(t));
+    await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook, { playerName: t.loaded.playerName, profile: t.loaded.profile, progress, estimate })] });
   } catch (err) {
     await i.editReply({ content: userError(err) });
   }
@@ -96,7 +167,7 @@ async function optimizePage(i: ButtonInteraction): Promise<void> {
   const [, id, pageStr] = i.customId.split(':');
   const state = pages.get(id ?? '');
   if (!state || state.expires < Date.now()) {
-    await i.reply({ content: 'This ranking has expired. Run `/xp optimize` again.', flags: MessageFlags.Ephemeral });
+    await i.reply({ content: 'This list has expired. Run the command again.', flags: MessageFlags.Ephemeral });
     return;
   }
   if (state.userId !== i.user.id) {
@@ -105,7 +176,7 @@ async function optimizePage(i: ButtonInteraction): Promise<void> {
   }
   const page = Number(pageStr);
   await i.update({
-    embeds: [optimizeEmbed(state.playerName, state.profile, state.result, page, { isLinked: state.isLinked })],
+    embeds: [optimizeEmbed(state.playerName, state.profile, state.result, page, { isLinked: state.isLinked, title: state.title, header: state.header })],
     components: [pageButtons(id!, page, state.result.ranked.length)],
   });
 }
@@ -141,6 +212,16 @@ export const xp: Command = {
       s.setName('optimize').setDescription('The 10 quickest SkyBlock XP tasks left, without buying progression')
         .addStringOption((o) => o.setName('player').setDescription('Minecraft username (default: your linked account)'))
         .addStringOption((o) => o.setName('profile').setDescription('Profile name (default: linked or selected profile)')),
+    )
+    .addSubcommand((s) =>
+      s.setName('category').setDescription('Remaining tasks in one category, quickest first')
+        .addStringOption((o) => o.setName('category').setDescription('Category').setRequired(true).addChoices(...settings.excludableCategories()))
+        .addStringOption((o) => o.setName('player').setDescription('Minecraft username (default: your linked account)'))
+        .addStringOption((o) => o.setName('profile').setDescription('Profile name (default: linked or selected profile)')),
+    )
+    .addSubcommand((s) =>
+      s.setName('task').setDescription('Full detail for one task')
+        .addStringOption((o) => o.setName('task').setDescription('Task name').setRequired(true).setAutocomplete(true)),
     )
     .addSubcommand((s) => s.setName('exclude').setDescription('Leave a category out of overview and rankings').addStringOption(categoryOption('exclude')))
     .addSubcommand((s) => s.setName('include').setDescription('Bring an excluded category back').addStringOption(categoryOption('include')))
@@ -181,6 +262,8 @@ export const xp: Command = {
     switch (i.options.getSubcommand()) {
       case 'overview': return overview(i);
       case 'optimize': return optimize(i);
+      case 'category': return category(i);
+      case 'task': return task(i);
       case 'link': return privately(i, () => settings.link(i));
       case 'exclude': return privately(i, () => settings.exclude(i, true));
       case 'include': return privately(i, () => settings.exclude(i, false));
@@ -196,7 +279,9 @@ export const xp: Command = {
   },
 
   async autocomplete(i: AutocompleteInteraction) {
-    await i.respond(i.options.getSubcommandGroup(false) === 'session' ? session.autocomplete(i) : await settings.autocomplete(i));
+    if (i.options.getSubcommandGroup(false) === 'session') return i.respond(session.autocomplete(i));
+    if (i.options.getSubcommand() === 'task') return i.respond(searchTasks(catalogue.tasks, i.options.getFocused()));
+    await i.respond(await settings.autocomplete(i));
   },
 
   async button(i: ButtonInteraction) {

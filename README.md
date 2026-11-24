@@ -51,7 +51,9 @@ cp .env.example .env   # fill in HYPIXEL_API_KEY (and Discord values once comman
   - Under 15 min is refused (the session stays open); over 4 h expires without saving.
   - New rates blend 60/40 with earlier ones, newest first, with the last 20 kept in `storage-data/sessions.json`.
   - Measured rates beat overrides and defaults in `/xp optimize` on your linked profile.
-- [ ] 8. `/xp category`, `/xp task`
+- [x] 8. `/xp category <category> [player] [profile]` and `/xp task <task>`.
+  - Category view: each source's next tier, quickest first, 5 per page. It works for categories that are excluded or left out by default (minions), and prerequisites in other categories still apply.
+  - Task detail: status and reason, progress, the estimate with its rate source, bracket and range, prerequisites with their status, next tier, and data source. It uses your linked profile, or shows task data only without a link.
 
 ## API check findings (2026-11-24)
 

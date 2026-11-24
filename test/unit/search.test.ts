@@ -35,7 +35,7 @@ describe('activity search', () => {
   it('lists each activity once and finds it by label', () => {
     const all = activities(catalogue);
     expect(new Set(all.map((a) => a.id)).size).toBe(all.length);
-    expect(all.find((a) => a.id === 'skill.combat')?.label).toBe('Combat level');
-    expect(searchActivities(catalogue, 'combat level')[0]?.value).toBe('skill.combat');
+    expect(all.find((a) => a.id === 'skill.combat')?.label).toBe('Combat');
+    expect(searchActivities(catalogue, 'skill combat')[0]?.value).toBe('skill.combat');
   });
 });

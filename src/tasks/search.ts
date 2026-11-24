@@ -1,3 +1,4 @@
+import { sourceName } from '../optimizer/category.js';
 import type { Catalogue } from './catalogue.js';
 import type { Task } from './types.js';
 
@@ -46,7 +47,7 @@ export function searchTasks(tasks: Task[], query: string): Choice[] {
 export function activities(catalogue: Catalogue): { id: string; label: string }[] {
   const seen = new Map<string, string>();
   for (const t of catalogue.tasks) {
-    if (t.activity && !seen.has(t.activity)) seen.set(t.activity, (t.group ? t.name.replace(/\s+\S+$/, '') : t.name));
+    if (t.activity && !seen.has(t.activity)) seen.set(t.activity, t.group ? sourceName(t.name) : t.name);
   }
   return [...seen].map(([id, label]) => ({ id, label }));
 }

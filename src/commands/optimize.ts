@@ -46,7 +46,13 @@ export function formatEntry(n: number, r: RankedTask): string {
   ].join('\n');
 }
 
-export function optimizeEmbed(playerName: string, profile: NormalizedProfile, result: RankResult, page: number, opts: { now?: number; isLinked?: boolean } = {}): EmbedBuilder {
+export function optimizeEmbed(
+  playerName: string,
+  profile: NormalizedProfile,
+  result: RankResult,
+  page: number,
+  opts: { now?: number; isLinked?: boolean; title?: string; header?: string } = {},
+): EmbedBuilder {
   const pages = Math.max(1, Math.ceil(result.ranked.length / PAGE_SIZE));
   const start = page * PAGE_SIZE;
   const entries = result.ranked.slice(start, start + PAGE_SIZE).map((r, i) => formatEntry(start + i + 1, r));
@@ -54,11 +60,17 @@ export function optimizeEmbed(playerName: string, profile: NormalizedProfile, re
   const notes = [
     d.unavailable ? `${fmt(d.unavailable)} tasks have no data and aren't ranked (see /xp overview).` : '',
     d.noRate ? `${fmt(d.noRate)} tasks have no rate yet.` : '',
-    'Times use placeholder rates until tuned with `/xp rate` or sessions.',
+    opts.header && d.blocked ? `${fmt(d.blocked)} later tiers or tasks are waiting on a prerequisite.` : '',
+    'Default rates are estimates; measure your own with `/xp session` or set them with `/xp rate`.',
   ].filter(Boolean);
   return new EmbedBuilder()
-    .setTitle(`Quickest SkyBlock XP · ${playerName} · ${profile.cuteName}`)
-    .setDescription([entries.length ? entries.join('\n\n') : 'Nothing left to rank. Every eligible task is done, blocked or has no data.', '', ...notes.map((n) => `-# ${n}`)].join('\n'))
+    .setTitle(`${opts.title ?? 'Quickest SkyBlock XP'} · ${playerName} · ${profile.cuteName}`)
+    .setDescription([
+      ...(opts.header ? [opts.header, ''] : []),
+      entries.length ? entries.join('\n\n') : 'Nothing left to rank. Every eligible task is done, blocked or has no data.',
+      '',
+      ...notes.map((n) => `-# ${n}`),
+    ].join('\n'))
     .setFooter({
       text: [profile.cuteName, `data ${dataAge(profile.fetchedAt, opts.now)}`, 'monetary tasks excluded', opts.isLinked ? 'your overrides applied' : '', `page ${page + 1}/${pages}`]
         .filter(Boolean).join(' · '),

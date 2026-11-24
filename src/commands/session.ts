@@ -1,4 +1,5 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
+import { metricLabel } from '../optimizer/category.js';
 import { loadProfile } from '../profile/load.js';
 import {
   activityMetric, blend, changes, MAX_SESSION_MINUTES, measurableActivities, measure, MIN_SESSION_MINUTES, takeSnapshot,
@@ -89,7 +90,7 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
       ? `Blended with ${previous.sessions} earlier session(s): ${fmt(previous.rate)} → **${fmt(next.rate)} ${unit}/min**.`
       : `First session for this activity: **${fmt(next.rate)} ${unit}/min**.`,
     '`/xp optimize` now uses this rate for your linked profile.',
-    others.length ? `Also moved this session (not saved): ${others.map((c) => `\`${c.metric}\` +${fmt(c.delta)}`).join(', ')}` : '',
+    others.length ? `Also moved this session (not saved): ${others.map((c) => `${metricLabel(catalogue, c.metric)} +${fmt(c.delta)}`).join(', ')}` : '',
   ].filter(Boolean).join('\n');
 }
 

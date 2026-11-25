@@ -4,11 +4,13 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadRates } from '../../src/estimate/rates.js';
-import type { ProfilesResponse } from '../../src/hypixel/client.js';
+import type { GardenResponse, ProfilesResponse } from '../../src/hypixel/client.js';
+import { withLearnedLinks } from '../../src/combos/learned.js';
+import { loadCombos } from '../../src/combos/combos.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
 import type { NormalizedProfile } from '../../src/profile/types.js';
 import {
-  activityMetric, blend, BLEND_WEIGHT, changes, measurableActivities, measure, measureRatios, takeSnapshot,
+  activityMetric, blend, BLEND_WEIGHT, changes, LINK_MIN_SESSIONS, measurableActivities, measure, measureLinks, measureRatios, takeSnapshot,
 } from '../../src/sessions/sessions.js';
 import { UserData, type OpenSession } from '../../src/storage/userData.js';
 import { loadCatalogue } from '../../src/tasks/catalogue.js';
@@ -19,7 +21,8 @@ const read = <T>(p: string): T => JSON.parse(readFileSync(new URL(p, import.meta
 const skills = read<SkillsResource>('../fixtures/resource-skills.json');
 function profile(player: string, name: string): NormalizedProfile {
   const { uuid, response } = read<{ uuid: string; response: ProfilesResponse }>(`../fixtures/profiles-${player}.json`);
-  return normalizeProfile(pickProfile(response.profiles, name)!, uuid, skills, 0);
+  const garden = name === 'lime' ? read<{ response: GardenResponse }>('../fixtures/garden-Floor7Sweat-lime.json').response : undefined;
+  return normalizeProfile(pickProfile(response.profiles, name)!, uuid, skills, 0, garden);
 }
 const lime = profile('floor7sweat', 'lime');
 
@@ -151,5 +154,51 @@ describe('combo ratios from sessions', () => {
     await u.setComboRatio('k', 'combo.slayer.zombie', 'skills.combat.xp', blend(first, 8, 30, 't2'));
     expect(await u.getComboRatioNumbers('k')).toEqual({ 'combo.slayer.zombie': { 'skills.combat.xp': 0.6 * 8 + 0.4 * 12 } });
     expect(await u.getComboRatioNumbers('other')).toEqual({});
+  });
+});
+
+describe('linked metrics from sessions', () => {
+  const book = loadRates();
+  const catalogue = loadCatalogue();
+  const start = { 'collections.MITHRIL_ORE': 1000, 'skills.mining.xp': 50_000, 'hotm.xp': 10, 'skills.combat.xp': 7 };
+  const end = { ...start, 'collections.MITHRIL_ORE': 3000, 'skills.mining.xp': 140_000, 'hotm.xp': 410 };
+
+  it('links everything else that went up, per unit of the activity', () => {
+    expect(measureLinks('collections.MITHRIL_ORE', start, end, 2000)).toEqual([
+      { metric: 'skills.mining.xp', ratio: 45, delta: 90_000 },
+      { metric: 'hotm.xp', ratio: 0.2, delta: 400 },
+    ]);
+    expect(measureLinks('collections.MITHRIL_ORE', start, end, 0)).toEqual([]);
+  });
+
+  it('snapshots metrics no rated activity measures, like HOTM XP and Garden XP', () => {
+    const snap = takeSnapshot(catalogue, book, lime);
+    expect(snap['hotm.xp']).toBeCloseTo(147660.91, 1);
+    expect(snap['garden.xp']).toBe(40878);
+  });
+
+  it(`adds a link to the activity's combo after ${LINK_MIN_SESSIONS} sessions, or makes a combo for an activity with none`, () => {
+    const combos = loadCombos(catalogue, book);
+    const once = { 'collect.mithril_ore': { 'hotm.xp': { rate: 0.2, sessions: 1 } } };
+    expect(withLearnedLinks(combos, once, catalogue, book, (a) => a).find((c) => c.id === 'combo.mine.mithril_ore')!.yields.map((y) => y.metric)).toEqual(['skills.mining.xp']);
+    const twice = { 'collect.mithril_ore': { 'hotm.xp': { rate: 0.2, sessions: 2 }, 'skills.mining.xp': { rate: 40, sessions: 3 } } };
+    const mined = withLearnedLinks(combos, twice, catalogue, book, (a) => a).find((c) => c.id === 'combo.mine.mithril_ore')!;
+    // The data yield stays as it is (its own measured ratio lives in the combo ratios); HOTM XP is added.
+    expect(mined.yields.map((y) => [y.metric, y.learned ?? false])).toEqual([['skills.mining.xp', false], ['hotm.xp', true]]);
+    expect(mined.yields[1]!.per).toEqual([0.2 * 0.85, 0.2 * 1.15]);
+    const fresh = withLearnedLinks(combos, { 'collect.hard_stone': { 'skills.mining.xp': { rate: 1, sessions: 2 }, 'collections.HARD_STONE': { rate: 1, sessions: 5 } } }, catalogue, book, () => 'Hard Stone');
+    expect(fresh.find((c) => c.id === 'combo.learned.collect.hard_stone')).toMatchObject({
+      name: 'Hard Stone (from your sessions)', primary: 'collect.hard_stone', primaryMetrics: ['collections.HARD_STONE'], yields: [{ metric: 'skills.mining.xp', learned: true }],
+    }); // its own metric is never a yield
+    expect(combos.find((c) => c.id === 'combo.mine.mithril_ore')!.yields).toHaveLength(1); // the shared list is untouched
+  });
+
+  it('stores links per profile and activity, and reads old combo IDs as their new ones', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'xpbot-link-'));
+    const u = new UserData(dir);
+    await u.setActivityLink('k', 'collect.mithril_ore', 'hotm.xp', blend(undefined, 0.2, 30, 't'));
+    expect(await u.getActivityLinks('k')).toMatchObject({ 'collect.mithril_ore': { 'hotm.xp': { rate: 0.2, sessions: 1 } } });
+    await u.setComboRatio('k', 'combo.combat.zealot', 'skills.combat.xp', blend(undefined, 100, 30, 't'));
+    expect(await u.getComboRatioNumbers('k')).toEqual({ 'combo.mob.combat_3.zealot': { 'skills.combat.xp': 100 } });
   });
 });

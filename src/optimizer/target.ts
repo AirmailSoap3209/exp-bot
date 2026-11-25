@@ -125,6 +125,10 @@ export function planTarget(
 
   const order: string[] = [];
   let gained = 0;
+  // A combo's row only changes when one of its metrics does, so rows are reused between picks
+  // until then. Choices only: the final plan is replayed (simulate) with every combo re-scored.
+  const rowCache = new Map<string, { key: string; row: ComboRow | undefined }>();
+  const comboMetrics = new Map((opts.combos ?? []).map((c) => [c.id, [...c.primaryMetrics, ...c.yields.map((y) => y.metric)]]));
   while (gained < target && order.length < maxPicks) {
     const need = target - gained;
     const options: Option[] = [];
@@ -135,7 +139,10 @@ export function planTarget(
       options.push({ id: p.task.id, xp: p.task.xp, m, ratio: p.task.xp / m });
     }
     for (const c of opts.combos ?? []) {
-      const row = scoreCombo(c, state, profile, ctx, opts);
+      const key = state.revisionKey(comboMetrics.get(c.id)!);
+      let cached = rowCache.get(c.id);
+      if (!cached || cached.key !== key) rowCache.set(c.id, (cached = { key, row: scoreCombo(c, state, profile, ctx, opts) }));
+      const row = cached.row;
       if (!row) continue;
       const m = Math.max(row.midMinutes, 1e-6);
       options.push({ id: c.id, xp: row.xp, m, ratio: row.xp / m, row });

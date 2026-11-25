@@ -59,8 +59,17 @@ interface Stores {
     rates: Record<string, Record<string, StoredSessionRate>>;
     /** Measured combo yields: profile key -> combo ID -> metric -> blended ratio (in `rate`). Missing in older files. */
     ratios?: Record<string, Record<string, Record<string, StoredSessionRate>>>;
+    /** Metrics seen moving with an activity: profile key -> activity -> metric -> blended ratio. Missing in older files. */
+    links?: Record<string, Record<string, Record<string, StoredSessionRate>>>;
   }>;
 }
+
+/** Combos whose ID changed when they became generated (2026-11-25); measured ratios carry over. */
+const RENAMED_COMBOS: Record<string, string> = {
+  'combo.combat.blaze': 'combo.mob.crimson_isle.blaze', 'combo.combat.crypt_ghoul': 'combo.mob.hub.crypt_ghoul',
+  'combo.combat.enderman': 'combo.mob.combat_3.enderman', 'combo.combat.ghast': 'combo.mob.crimson_isle.ghast',
+  'combo.combat.magma_cube': 'combo.mob.crimson_isle.magma_cube', 'combo.combat.zealot': 'combo.mob.combat_3.zealot',
+};
 
 /** Everything the bot remembers, keyed by Discord user ID or profile key. */
 export class UserData {
@@ -113,9 +122,26 @@ export class UserData {
     return Object.fromEntries(Object.entries(await this.getSessionRates(key)).map(([a, r]) => [a, r.rate]));
   }
 
-  /** Measured combo ratios for a profile: combo ID -> metric -> blended ratio. */
+  /** Measured combo ratios for a profile: combo ID -> metric -> blended ratio. Old combo IDs read as their new ones. */
   async getComboRatios(key: string): Promise<Record<string, Record<string, StoredSessionRate>>> {
-    return structuredClone((await this.s.sessions.read()).ratios?.[key] ?? {});
+    const stored = structuredClone((await this.s.sessions.read()).ratios?.[key] ?? {});
+    for (const [old, now] of Object.entries(RENAMED_COMBOS)) {
+      if (stored[old] && !stored[now]) stored[now] = stored[old]!;
+      delete stored[old];
+    }
+    return stored;
+  }
+
+  /** Metrics seen moving with each activity in sessions: activity -> metric -> blended ratio. */
+  async getActivityLinks(key: string): Promise<Record<string, Record<string, StoredSessionRate>>> {
+    return structuredClone((await this.s.sessions.read()).links?.[key] ?? {});
+  }
+
+  setActivityLink(key: string, activity: string, metric: string, ratio: StoredSessionRate): Promise<void> {
+    return this.s.sessions.update((d) => {
+      ((d.links ??= {})[key] ??= {})[activity] ??= {};
+      d.links[key]![activity]![metric] = ratio;
+    });
   }
 
   /** Measured ratios as plain numbers, for combo scoring. */

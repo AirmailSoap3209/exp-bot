@@ -211,3 +211,16 @@ describe('comboView (/xp combos)', () => {
     expect(r).toEqual([...r].sort((a, b) => b - a));
   });
 });
+
+describe('PlanState.revisionKey', () => {
+  it('changes when a metric moves or a task on it completes, never on tryApply', () => {
+    const s = new PlanState([tp('items1', 'items', 100, 0), tp('xp1', 'xp', 10, 0)]);
+    const k0 = s.revisionKey(['items', 'xp']);
+    s.tryApply({ items: 500, xp: 50 });
+    expect(s.revisionKey(['items', 'xp'])).toBe(k0);
+    s.apply({ xp: 1 });
+    expect(s.revisionKey(['items'])).toBe('0');
+    expect(s.revisionKey(['items', 'xp'])).not.toBe(k0);
+    expect(s.clone().revisionKey(['items', 'xp'])).toBe(s.revisionKey(['items', 'xp']));
+  });
+});

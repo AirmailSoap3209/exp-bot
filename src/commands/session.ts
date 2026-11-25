@@ -3,7 +3,7 @@ import { metricLabel } from '../optimizer/category.js';
 import { loadProfile } from '../profile/load.js';
 import { yieldPer } from '../combos/combos.js';
 import {
-  activityMetric, blend, changes, MAX_SESSION_MINUTES, measurableActivities, measure, measureRatios, MIN_SESSION_MINUTES, takeSnapshot,
+  activityMetric, blend, LINK_MIN_SESSIONS, MAX_SESSION_MINUTES, measurableActivities, measure, measureLinks, measureRatios, MIN_SESSION_MINUTES, takeSnapshot,
 } from '../sessions/sessions.js';
 import { profileKey, userData, type OpenSession } from '../storage/userData.js';
 import { catalogue, combos, rateBook } from '../tasks/instance.js';
@@ -55,6 +55,7 @@ export async function start(i: ChatInputCommandInteraction): Promise<string> {
     `Session started: **${labelOf(activity)}** on ${link.name} · ${link.profileName}.`,
     `Starting value: ${fmt(value)} ${unitOf(activity)}.`,
     learns.length ? `It also measures how much ${learns.join(', ')} you get per ${unitOf(activity).replace(/s$/, '')}, for ⚡ combo rows.` : '',
+    `Anything else that goes up while you play (skill XP, collections, bestiary, HOTM XP…) is linked to this activity, and becomes part of its ⚡ combo once it shows up in ${LINK_MIN_SESSIONS} sessions.`,
     `Play for at least ${MIN_SESSION_MINUTES} min, then run \`/xp session end\`. The API lags a few minutes, so wait a moment after you stop. Sessions expire after ${MAX_SESSION_MINUTES / 60} h.`,
   ].filter(Boolean).join('\n');
 }
@@ -101,8 +102,20 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
     ratioLines.push(`• ${c.name}: ${metricLabel(catalogue, r.metric)} **${fmt(blended.rate)}** per ${unit.replace(/s$/, '')}` +
       ` (this session ${fmt(r.ratio)}${prev ? `, ${blended.sessions} sessions` : ''}; data ${fmt(data[0])}${data[1] !== data[0] ? `–${fmt(data[1])}` : ''})`);
   }
+  // Everything else that went up is linked to this activity. A link joins the activity's combo
+  // (or makes one) once it has moved in LINK_MIN_SESSIONS sessions.
   const ratioMetrics = new Set(ratios.map((r) => r.metric));
-  const others = changes(open.snapshot, snapshot).filter((c) => c.metric !== open.metric && !ratioMetrics.has(c.metric)).slice(0, 5);
+  const linked = measureLinks(open.metric, open.snapshot, snapshot, m.delta).filter((l) => !ratioMetrics.has(l.metric));
+  const savedLinks = (await userData.getActivityLinks(key))[open.activity] ?? {};
+  const learned: string[] = [];
+  const pending: string[] = [];
+  for (const l of linked) {
+    const blended = blend(savedLinks[l.metric], l.ratio, m.minutes, new Date().toISOString());
+    await userData.setActivityLink(key, open.activity, l.metric, blended);
+    const line = `${metricLabel(catalogue, l.metric)} +${fmt(l.delta)} (**${fmt(blended.rate)}** per ${unit.replace(/s$/, '')})`;
+    (blended.sessions >= LINK_MIN_SESSIONS ? learned : pending).push(line);
+  }
+  const cap = (list: string[]) => (list.length > 8 ? [...list.slice(0, 8), `…and ${list.length - 8} more`] : list);
   return [
     `**${label}** session saved: +${fmt(m.delta)} ${unit} in ${Math.round(m.minutes)} min = **${fmt(m.rate)} ${unit}/min**.`,
     previous
@@ -110,7 +123,8 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
       : `First session for this activity: **${fmt(next.rate)} ${unit}/min**.`,
     '`/xp optimize` now uses this rate for your linked profile.',
     ratioLines.length ? `Combo ratios saved (used for ⚡ rows on your linked profile):\n${ratioLines.join('\n')}` : '',
-    others.length ? `Also moved this session (not saved): ${others.map((c) => `${metricLabel(catalogue, c.metric)} +${fmt(c.delta)}`).join(', ')}` : '',
+    learned.length ? `Linked to **${label}** (seen in ${LINK_MIN_SESSIONS}+ sessions, now part of its ⚡ combo):\n${cap(learned).map((x) => `• ${x}`).join('\n')}` : '',
+    pending.length ? `Also went up (saved; counts toward ⚡ combos once it moves again in another **${label}** session): ${cap(pending).join(', ')}` : '',
   ].filter(Boolean).join('\n');
 }
 
@@ -142,6 +156,12 @@ export async function status(i: ChatInputCommandInteraction): Promise<string> {
         `• ${c?.name ?? id}: ${metricLabel(catalogue, metric)} ${fmt(r.rate)} per ${c ? unitOf(c.primary).replace(/s$/, '') : 'unit'} (${r.sessions} session${r.sessions === 1 ? '' : 's'})`);
     });
     if (ratioLines.length) lines.push('', 'Measured combo ratios:', ...ratioLines.slice(0, 15));
+    const links = await userData.getActivityLinks(profileKey(link.uuid, link.profileId));
+    const linkLines = Object.entries(links).flatMap(([activity, byMetric]) => {
+      const used = Object.entries(byMetric).filter(([, r]) => r.sessions >= LINK_MIN_SESSIONS).sort((a, b) => b[1].sessions - a[1].sessions);
+      return used.length ? [`• ${labelOf(activity)}: ${used.slice(0, 4).map(([metric, r]) => `${metricLabel(catalogue, metric)} ${fmt(r.rate)} per ${unitOf(activity).replace(/s$/, '')}`).join(', ')}${used.length > 4 ? ` +${used.length - 4} more` : ''}`] : [];
+    });
+    if (linkLines.length) lines.push('', `Linked in your sessions (part of ⚡ combos):`, ...linkLines.slice(0, 15));
   }
   return lines.join('\n');
 }

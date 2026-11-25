@@ -36,6 +36,9 @@ export class PlanState {
   /** Metrics apply() has moved; tasks on other metrics keep their original progress. */
   private touched = new Set<string>();
   private completed = new Set<string>();
+  /** Bumped whenever a metric's value moves or a task on it completes (not during tryApply). */
+  private revisions = new Map<string, number>();
+  private trying = false;
 
   constructor(progress: readonly TaskProgress[]) {
     for (const p of progress) {
@@ -65,6 +68,7 @@ export class PlanState {
     c.values = new Map(this.values);
     c.touched = new Set(this.touched);
     c.completed = new Set(this.completed);
+    c.revisions = new Map(this.revisions);
     return c;
   }
 
@@ -163,10 +167,24 @@ export class PlanState {
     return undefined;
   }
 
+  /**
+   * A key that changes whenever any of these metrics moves or a task on one completes, so a
+   * result worked out from them (a combo row) can be reused until then.
+   */
+  revisionKey(metrics: readonly string[]): string {
+    return metrics.map((m) => this.revisions.get(m) ?? 0).join(',');
+  }
+
+  private bump(metric: string) {
+    if (!this.trying) this.revisions.set(metric, (this.revisions.get(metric) ?? 0) + 1);
+  }
+
   /** What apply() would do, without changing anything. */
   tryApply(deltas: Readonly<Record<string, number>>): ApplyResult {
     const saved = Object.keys(deltas).map((m) => ({ m, value: this.values.get(m), touched: this.touched.has(m) }));
+    this.trying = true;
     const result = this.apply(deltas);
+    this.trying = false;
     for (const t of result.newlyCompleted) this.completed.delete(t.id);
     for (const s of saved) {
       if (s.value === undefined) this.values.delete(s.m);
@@ -185,6 +203,7 @@ export class PlanState {
       const from = this.values.get(metric) ?? 0;
       this.values.set(metric, from + amount);
       this.touched.add(metric);
+      this.bump(metric);
       metricChanges.push({ metric, from, to: from + amount });
       check.push(...(this.byMetric.get(metric) ?? []));
     }
@@ -215,6 +234,7 @@ export class PlanState {
       const t = queue[i]!;
       if (this.completed.has(t.id) || !this.canComplete(t)) continue;
       this.completed.add(t.id);
+      this.bump(t.requires.metric);
       done.push(t);
       queue.push(...(this.dependents.get(t.id) ?? []));
     }

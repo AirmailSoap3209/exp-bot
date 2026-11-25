@@ -53,6 +53,14 @@ export function activities(catalogue: Catalogue): { id: string; label: string }[
   return [...seen].map(([id, label]) => ({ id, label }));
 }
 
+const labels = new WeakMap<Catalogue, Map<string, string>>();
+/** An activity's label (e.g. "Mithril collection"), or its ID when no task uses it. */
+export function activityLabel(catalogue: Catalogue, activity: string): string {
+  let m = labels.get(catalogue);
+  if (!m) labels.set(catalogue, (m = new Map(activities(catalogue).map((a) => [a.id, a.label]))));
+  return m.get(activity) ?? activity;
+}
+
 export function searchActivities(catalogue: Catalogue, query: string, include: (id: string) => boolean = () => true): Choice[] {
   return rank(activities(catalogue).filter((a) => include(a.id)), (a) => `${a.id} ${a.label}`, query, (a, b) => a.id.localeCompare(b.id))
     .map((a) => ({ name: clip(`${a.id} · ${a.label}`), value: a.id }));

@@ -35,13 +35,16 @@ export function metricValue(category: string, metric: string, p: NormalizedProfi
   return METRIC_VALUES[category]?.(metric, p);
 }
 
-/** Every measurable metric's value now, so the end of a session can show everything that moved. */
-export function takeSnapshot(catalogue: Catalogue, book: RateBook, p: NormalizedProfile): Record<string, number> {
+/**
+ * Every readable metric's value now, so the end of a session can see everything that moved,
+ * including metrics no rated activity measures (HOTM XP, Garden XP).
+ */
+export function takeSnapshot(catalogue: Catalogue, _book: RateBook, p: NormalizedProfile): Record<string, number> {
   const out: Record<string, number> = {};
   const done = new Set<string>();
   for (const t of catalogue.tasks) {
     const m = t.requires.metric;
-    if (done.has(m) || !t.activity || !book.rates.has(t.activity)) continue;
+    if (done.has(m)) continue;
     done.add(m);
     const v = metricValue(t.category, m, p);
     if (v !== undefined) out[m] = v;
@@ -108,6 +111,34 @@ export function measureRatios(
     }
   }
   return out;
+}
+
+/** A session links a metric to its activity for scoring only once it has moved in this many sessions. */
+export const LINK_MIN_SESSIONS = 2;
+
+/** One metric that went up alongside the session's activity, per unit of the activity's own metric. */
+export interface LinkMeasurement {
+  metric: string;
+  ratio: number;
+  delta: number;
+}
+
+/**
+ * Everything else that went up during a session, as a ratio to the activity's own metric (e.g.
+ * Mining XP per Mithril mined). One session can't tell cause from coincidence (a minion, a co-op
+ * mate, a second thing done on the side), so these become combo yields only after
+ * LINK_MIN_SESSIONS sessions of the same activity; see withLearnedLinks.
+ */
+export function measureLinks(
+  primaryMetric: string,
+  start: Record<string, number>,
+  end: Record<string, number>,
+  primaryDelta: number,
+): LinkMeasurement[] {
+  if (!(primaryDelta > 0)) return [];
+  return changes(start, end)
+    .filter((c) => c.metric !== primaryMetric)
+    .map((c) => ({ metric: c.metric, ratio: c.delta / primaryDelta, delta: c.delta }));
 }
 
 /** Metrics that moved, largest change first, for the end-of-session summary. */

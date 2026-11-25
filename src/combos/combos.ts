@@ -11,6 +11,8 @@ export interface ComboYield {
   per: Range | Record<Bracket, Range>;
   /** Where the number came from. */
   basis: string;
+  /** Added from the player's own sessions (withLearnedLinks), not from the data files. */
+  learned?: true;
 }
 
 /**

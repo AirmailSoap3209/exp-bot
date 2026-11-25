@@ -16,12 +16,14 @@ import { planTarget, xpToLevel } from '../optimizer/target.js';
 import { taskEmbed } from './taskDetail.js';
 import { categoryView } from '../optimizer/category.js';
 import { estimateTask, type EstimateContext } from '../estimate/estimate.js';
-import { findTask, searchTasks, sourceId } from '../tasks/search.js';
+import { activityLabel, findTask, searchTasks, sourceId } from '../tasks/search.js';
 import { HypixelApiError, PlayerNotFoundError } from '../hypixel/client.js';
 import { ProfileNotFoundError } from '../profile/load.js';
 import { catalogue, combos, rateBook } from '../tasks/instance.js';
 import { comboView, rankWithCombos } from '../optimizer/combined.js';
 import { combosFor } from '../combos/score.js';
+import type { Combo } from '../combos/combos.js';
+import { withLearnedLinks } from '../combos/learned.js';
 
 /** The caller's exclusions, as the optimizers take them. */
 const exclusionsOf = (t: Target) => ({ excluded: t.excluded, excludedSources: t.excludedSources, excludedActivities: t.excludedActivities });
@@ -108,6 +110,20 @@ async function estimateContext(t: Target): Promise<EstimateContext> {
   return { book: rateBook, overrides, sessionRates, comboRatios };
 }
 
+/**
+ * The combos to score for this target: the data combos, plus what the caller's own sessions showed
+ * moving alongside each activity (only for their linked profile, like measured rates).
+ */
+async function combosOf(t: Target): Promise<Combo[]> {
+  if (!t.isLinked) return combos;
+  const links = await userData.getActivityLinks(profileKey(t.loaded.profile.uuid, t.loaded.profile.profileId));
+  return withLearnedLinks(combos, links, catalogue, rateBook, (a) => activityLabel(catalogue, a));
+}
+
+/** Names a list, at most `max` of them. */
+const someNames = (list: { name: string }[], max = 8) =>
+  list.length <= max ? list.map((c) => c.name).join(', ') : `${list.slice(0, max).map((c) => c.name).join(', ')} and ${list.length - max} more`;
+
 /** Sends page 1 of a paged result, with Prev/Next when there is more than one page. */
 async function showPaged(i: ChatInputCommandInteraction, t: Target, render: (page: number) => EmbedBuilder, total: number, pageSize: number): Promise<void> {
   const now = Date.now();
@@ -141,7 +157,7 @@ async function target(i: ChatInputCommandInteraction): Promise<void> {
       await i.editReply({ content: `${playerName} is already level ${profile.leveling.level}, at or above level ${levelOpt}.` });
       return;
     }
-    const plan = planTarget(t.evaluation.progress, profile, await estimateContext(t), need, { ...exclusionsOf(t), combos });
+    const plan = planTarget(t.evaluation.progress, profile, await estimateContext(t), need, { ...exclusionsOf(t), combos: await combosOf(t) });
     const ask = levelOpt !== null ? { kind: 'level' as const, level: levelOpt } : { kind: 'xp' as const, xp: need };
     const render = (page: number) => targetEmbed(playerName, profile, plan, page, { ask, isLinked: t.isLinked });
     await showPaged(i, t, render, targetLineCount(plan), TARGET_PAGE_SIZE);
@@ -154,7 +170,7 @@ async function optimize(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
     const t = await resolveTarget(i);
-    const result = rankWithCombos(t.evaluation.progress, t.loaded.profile, await estimateContext(t), combos, { ...exclusionsOf(t), limit: 10 });
+    const result = rankWithCombos(t.evaluation.progress, t.loaded.profile, await estimateContext(t), await combosOf(t), { ...exclusionsOf(t), limit: 10 });
     await showRanking(i, t, result);
   } catch (err) {
     await i.editReply({ content: userError(err) });
@@ -165,10 +181,11 @@ async function combosCommand(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
     const t = await resolveTarget(i);
-    const view = comboView(t.evaluation.progress, t.loaded.profile, await estimateContext(t), combos, exclusionsOf(t));
-    const names = (list: { name: string }[]) => list.map((c) => c.name).join(', ');
+    const mine = await combosOf(t);
+    const view = comboView(t.evaluation.progress, t.loaded.profile, await estimateContext(t), mine, exclusionsOf(t));
+    const names = (list: { name: string }[]) => someNames(list);
     const header = [
-      `**${view.rows.length} of ${combos.length} combos** have something to do now, best XP per minute first. Each row stands alone: it lists everything that combo would finish.`,
+      `**${view.rows.length} of ${mine.length} combos** have something to do now, best XP per minute first. Each row stands alone: it lists everything that combo would finish.`,
       view.idle.length ? `-# Nothing to do right now (locked, maxed, or nothing beyond the main activity): ${names(view.idle)}` : '',
       view.excluded.length ? `-# Excluded by you (\`/xp include activity:\`): ${names(view.excluded)}` : '',
     ].filter(Boolean).join('\n');

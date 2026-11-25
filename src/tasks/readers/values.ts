@@ -48,5 +48,20 @@ const catacombs: MetricValue = (metric, p) => {
   return undefined;
 };
 
-/** Per category, like the readers. Categories with only fixed-time tasks need none. */
-export const METRIC_VALUES: Record<string, MetricValue> = { skills, collections, bestiary, slayer, catacombs };
+const hotm: MetricValue = (metric, p) => (metric === 'hotm.xp' && p.skillTree.available ? p.skillTree.value.hotmXp : undefined);
+const foragingTasks: MetricValue = (metric, p) => (metric === 'hotf.xp' && p.skillTree.available ? p.skillTree.value.hotfXp : undefined);
+
+const garden: MetricValue = (metric, p) => {
+  if (!p.garden.available) return undefined;
+  const g = p.garden.value;
+  if (metric === 'garden.xp') return g.xp;
+  if (metric === 'garden.visitors_accepted') return g.offersAccepted;
+  if (metric.startsWith('garden.crop_milestone.')) return g.cropMilestones[metric.slice('garden.crop_milestone.'.length)] ?? 0;
+  return undefined;
+};
+
+/**
+ * Per category, like the readers. Categories with only fixed-time tasks need none. A session
+ * snapshot reads every metric these cover, so it can see what else moved alongside the activity.
+ */
+export const METRIC_VALUES: Record<string, MetricValue> = { skills, collections, bestiary, slayer, catacombs, hotm, foraging_tasks: foragingTasks, garden };

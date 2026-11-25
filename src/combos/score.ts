@@ -106,7 +106,7 @@ export function scoreCombo(
   return {
     combo, horizon, units: best.s.units, minutes: best.minutes, midMinutes: (best.minutes[0] + best.minutes[1]) / 2, rate, deltas: best.d,
     tasks, xp: best.xp,
-    measured: combo.yields.filter((y) => (ctx.comboRatios?.[combo.id]?.[y.metric] ?? 0) > 0).map((y) => y.metric),
+    measured: combo.yields.filter((y) => y.learned || (ctx.comboRatios?.[combo.id]?.[y.metric] ?? 0) > 0).map((y) => y.metric),
   };
 }
 

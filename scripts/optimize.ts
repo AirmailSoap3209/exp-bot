@@ -7,7 +7,8 @@ import { readFileSync } from 'node:fs';
 import { formatEntry } from '../src/commands/optimize.js';
 import { loadRates } from '../src/estimate/rates.js';
 import type { ProfilesResponse } from '../src/hypixel/client.js';
-import { rankTasks } from '../src/optimizer/rank.js';
+import { rankWithCombos } from '../src/optimizer/combined.js';
+import { loadCombos } from '../src/combos/combos.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../src/profile/normalize.js';
 import { defaultExcluded, loadCatalogue } from '../src/tasks/catalogue.js';
 import { evaluateProgress } from '../src/tasks/progress.js';
@@ -27,7 +28,8 @@ if (!raw) throw new Error(`No profile ${profileName ?? '(selected)'} for ${name}
 const profile = normalizeProfile(raw, uuid, read<SkillsResource>('resource-skills.json'), Date.now());
 const catalogue = loadCatalogue();
 const { progress } = evaluateProgress(catalogue, profile);
-const result = rankTasks(progress, profile, { book: loadRates() }, { limit, excluded: new Set(defaultExcluded(catalogue)) });
+const book = loadRates();
+const result = rankWithCombos(progress, profile, { book }, loadCombos(catalogue, book), { limit, excluded: new Set(defaultExcluded(catalogue)) });
 
 console.log(`${name} / ${profile.cuteName}\n`);
 console.log(result.ranked.map((r, i) => formatEntry(i + 1, r).replace(/\*\*/g, '')).join('\n\n'));

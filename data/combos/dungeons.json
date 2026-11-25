@@ -1,0 +1,22 @@
+{
+  "source": "hypixelskyblock.minecraft.wiki floor pages (The_Catacombs_-_Entrance, The_Catacombs_-_Floor_I ... Floor_VII), infobox Base XP, fetched 2026-11-24",
+  "note": "Primary is runs of the floor. Each run gives at least the floor's base Catacombs XP (score, the daily first-runs bonus and XP boosts add more), so these are floors. Floor IV and Floor V pages both list 2,400. Class XP is not included: the wiki doesn't state how it is split between the selected and other classes. Master Mode is left out until its per-floor values are checked (the read pages gave M1 10k, M2 15k, M3 60k).",
+  "combos": [
+    { "id": "combo.dungeons.f0", "name": "Run the Catacombs Entrance", "location": "Dungeon Hub", "primary": "dungeons.f0",
+      "yields": [{ "metric": "catacombs.xp", "per": [50, 50], "basis": "Entrance: Base XP 50" }] },
+    { "id": "combo.dungeons.f1", "name": "Run Floor I", "location": "Dungeon Hub", "primary": "dungeons.f1",
+      "yields": [{ "metric": "catacombs.xp", "per": [80, 80], "basis": "Floor I: Base XP 80" }] },
+    { "id": "combo.dungeons.f2", "name": "Run Floor II", "location": "Dungeon Hub", "primary": "dungeons.f2",
+      "yields": [{ "metric": "catacombs.xp", "per": [160, 160], "basis": "Floor II: Base XP 160" }] },
+    { "id": "combo.dungeons.f3", "name": "Run Floor III", "location": "Dungeon Hub", "primary": "dungeons.f3",
+      "yields": [{ "metric": "catacombs.xp", "per": [400, 400], "basis": "Floor III: Base XP 400" }] },
+    { "id": "combo.dungeons.f4", "name": "Run Floor IV", "location": "Dungeon Hub", "primary": "dungeons.f4",
+      "yields": [{ "metric": "catacombs.xp", "per": [2400, 2400], "basis": "Floor IV: Base XP 2,400 (same as Floor V on the wiki)" }] },
+    { "id": "combo.dungeons.f5", "name": "Run Floor V", "location": "Dungeon Hub", "primary": "dungeons.f5",
+      "yields": [{ "metric": "catacombs.xp", "per": [2400, 2400], "basis": "Floor V: Base XP 2,400" }] },
+    { "id": "combo.dungeons.f6", "name": "Run Floor VI", "location": "Dungeon Hub", "primary": "dungeons.f6",
+      "yields": [{ "metric": "catacombs.xp", "per": [5000, 5000], "basis": "Floor VI: Base XP 5k" }] },
+    { "id": "combo.dungeons.f7", "name": "Run Floor VII", "location": "Dungeon Hub", "primary": "dungeons.f7",
+      "yields": [{ "metric": "catacombs.xp", "per": [30000, 30000], "basis": "Floor VII: Base XP 30k" }] }
+  ]
+}

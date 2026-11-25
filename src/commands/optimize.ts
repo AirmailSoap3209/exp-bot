@@ -31,8 +31,24 @@ function sourceLabel(e: Estimate): string {
   return `${e.bracket} bracket${info && !info.known ? ', assumed (no data)' : ''}`;
 }
 
+const xpRate = (x: number) => (x >= 10 ? fmt(x) : x.toFixed(x >= 1 ? 1 : 2));
+
+/** A combo row: what it is, what it completes, how long, where. */
+function formatCombo(n: number, r: RankedTask): string {
+  const row = r.combo!;
+  const shown = row.tasks.slice(0, 4).map((t) => `${t.name} (+${t.xp})`);
+  const more = row.tasks.length > 4 ? ` · +${row.tasks.length - 4} more` : '';
+  return [
+    `**${n}. ⚡ ${row.combo.name}** · +${fmt(row.xp)} XP across ${row.tasks.length} tasks`,
+    `${shown.join(' · ')}${more}`,
+    `${formatMinutes(row.minutes)} (${sourceLabel(r.estimate)}) · ${xpRate(r.estimate.xpPerMin)} XP/min`,
+    [row.combo.location, 'side tasks counted at the low end'].filter(Boolean).join(' · '),
+  ].join('\n');
+}
+
 /** One ranked entry in the spec's four-line format. */
 export function formatEntry(n: number, r: RankedTask): string {
+  if (r.combo) return formatCombo(n, r);
   const { task, current, required, remaining, status } = r.progress;
   const e = r.estimate;
   const unit = e.unit ? ` ${e.unit}` : '';
@@ -44,7 +60,7 @@ export function formatEntry(n: number, r: RankedTask): string {
   return [
     `**${n}. ${task.name}**`,
     `${progress} · +${task.xp} XP`,
-    `${formatMinutes(e.minutes)} (${sourceLabel(e)}) · ${e.xpPerMin >= 10 ? fmt(e.xpPerMin) : e.xpPerMin.toFixed(e.xpPerMin >= 1 ? 1 : 2)} XP/min`,
+    `${formatMinutes(e.minutes)} (${sourceLabel(e)}) · ${xpRate(e.xpPerMin)} XP/min`,
     where,
   ].join('\n');
 }

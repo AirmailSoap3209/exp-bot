@@ -132,17 +132,31 @@ pm2 logs xp-bot
   - **Minimum time per task** (`minMinutes` on rates, from `rate-defaults.json` `minimumMinutes`): one slayer boss for slayer XP, one dungeon run for Catacombs/class XP and dungeon-mob bestiary, one Kuudra run for Kuudra bestiary. The Kuudra run time is an estimate, because the wiki only gives per-wave timers.
   - **Enchanting** uses its own bracket cut-offs (10/30). Below 10 there are no Experiments, so the rate is enchanting at a table (~100–600 XP/min, estimate). The daily Experiment limit isn't modelled.
 
-- [ ] 11. Combined activities ("combos"): one action that progresses several sources at once.
+- [x] 11. Combined activities ("combos"): one action that progresses several sources at once.
   - [x] Data and loader: `data/combos/*.json`, loaded and validated at startup by `src/combos/combos.ts`. `npm run combos` lists them.
     - Each combo has a **primary** activity, whose existing rate is reused (session, override or bracket default), and **yields**. A yield is a ratio to the primary's unit, as a range, per bracket when it depends on gear. The primary's own metrics come from the tasks that use it.
     - Validation rejects the whole set on any problem: duplicate IDs, a primary with no rate or no tasks, a yield metric no task uses, a yield repeating the primary's metric, bad ranges, or a missing basis.
-    - 15 combos, from hypixelskyblock.minecraft.wiki (2026-11-24):
+    - 23 combos, from hypixelskyblock.minecraft.wiki (2026-11-24):
       - 5 slayer bosses: Combat XP per slayer XP = Combat XP needed to spawn / slayer XP, at the bracket's tier.
       - 6 mob grinds: Combat XP and guaranteed drops per kill.
       - 4 crops: Farming XP per item = XP per crop / (1 + fortune/100). One base drop is assumed, because the wiki doesn't state base drops.
-    - All yields are floors (no Wisdom, Looting or boss-kill XP).
-    - Not yet: mining (base drops and fortune not sourced) and dungeon floors (only Floor VII's base XP is on the wiki, and the class XP split isn't stated).
-  - [ ] Combo rows in `/xp optimize` and `/xp target`, `/xp exclude activity:`, "Also progressed by" in `/xp task` (step 4).
+      - 8 floors (Entrance–VII): base Catacombs XP per run.
+    - All yields are floors (no Wisdom, Looting, score or boss-kill XP).
+    - Not yet:
+      - Mining: base drops and fortune not sourced.
+      - Class XP: the split isn't stated.
+      - Master Mode: values look inconsistent.
+      - The fandom wiki refuses automated fetches (HTTP 402), so it can't fill these gaps.
+  - [x] Scoring (`src/combos/score.ts`), on `PlanState` without changing it:
+    - A row runs until the primary's next open tier. If nothing else finishes by then, it runs on to the first point where a side task does (e.g. "kill Zealots until Combat 43"), collecting primary tiers on the way. A primary with no open tier falls back to a yield.
+    - Side yields count only at the low end of their ratio, so the row's XP is a floor. Excluded, monetary and already-claimed tasks earn nothing. A row that finishes nothing beyond its primary isn't a combo.
+  - [x] `/xp optimize` (`rankWithCombos`):
+    - Rows sit alongside single tasks, sorted the same way (by time, then XP), shown with ⚡.
+    - The quickest entry claims its tasks, and later rows are re-scored without them, so a task appears once. Progress doesn't carry between rows. A row ties its primary task on time and wins on XP.
+    - For established profiles combos are rarely in the top 10: they take longer than one-kill tasks.
+  - [x] `/xp target`: combos compete with single tasks on XP per minute. Picking one applies all of it to the plan. Steps are replayed, so trimming keeps combos valid. Back-to-back rounds show as "⚡ Kill Zealots ×3".
+  - [x] `/xp exclude activity:` / `include activity:`: never recommend that activity or a combo built on it. Unlike category and source exclusions, its tasks still count when something else finishes them.
+  - [x] `/xp task` shows "Also progressed by" with the combos that feed the task.
 
 ## API check findings (2026-11-24)
 

@@ -27,14 +27,16 @@ export async function link(i: ChatInputCommandInteraction): Promise<string> {
 
 const categoryName = (id: string) => catalogue.meta.categories.find((m) => m.id === id)?.name ?? id;
 
-/** "Excluded now" lines for both kinds of exclusion. */
-function exclusionSummary(categories: string[], sourceIds: string[]): string {
+const list20 = (items: string[]) => items.slice(0, 20).join(', ') + (items.length > 20 ? ` and ${items.length - 20} more` : '');
+
+/** "Excluded now" lines for every kind of exclusion. */
+function exclusionSummary(categories: string[], sourceIds: string[], activityIds: string[]): string {
   const labels = new Map(sources(catalogue).map((s) => [s.id, `${s.label} (${categoryName(s.category)})`]));
-  const src = sourceIds.map((s) => labels.get(s) ?? s);
-  const shown = src.slice(0, 20).join(', ') + (src.length > 20 ? ` and ${src.length - 20} more` : '');
+  const acts = new Map(activities(catalogue).map((a) => [a.id, a.label]));
   return [
     `Excluded categories: ${categories.length ? categories.map(categoryName).join(', ') : 'none'}.`,
-    `Excluded sources: ${src.length ? shown : 'none'}.`,
+    `Excluded sources: ${sourceIds.length ? list20(sourceIds.map((s) => labels.get(s) ?? s)) : 'none'}.`,
+    `Excluded activities: ${activityIds.length ? list20(activityIds.map((a) => `\`${a}\`${acts.has(a) ? ` (${acts.get(a)})` : ''}`)) : 'none'}.`,
   ].join('\n');
 }
 
@@ -67,7 +69,23 @@ export async function exclude(i: ChatInputCommandInteraction, excluded: boolean)
     if (!excluded && categories.includes(source.category)) lines.push(`-# Its category is still excluded, so it stays hidden until you include ${categoryName(source.category)}.`);
   }
 
-  return [...lines, exclusionSummary(categories, sourceIds)].join('\n');
+  let activityIds = [...(await userData.getExcludedActivities(i.user.id))].sort();
+  const activityInput = i.options.getString('activity');
+  if (activityInput) {
+    const a = activityInput.trim();
+    const label = activities(catalogue).find((x) => x.id === a)?.label;
+    if (!label) return `No activity "${a}". Pick one from the autocomplete list.`;
+    const r = await userData.setActivityExcluded(i.user.id, a, excluded);
+    activityIds = r.list;
+    const name = `\`${a}\` (${label})`;
+    lines.push(
+      !r.changed ? `${name} was already ${excluded ? 'excluded' : 'included'}.` :
+      excluded ? `Excluded ${name}. It won't be recommended, and neither will combos built on it; its tasks still count when something else finishes them.` :
+      `Included ${name}.`,
+    );
+  }
+
+  return [...lines, exclusionSummary(categories, sourceIds, activityIds)].join('\n');
 }
 
 export async function tick(i: ChatInputCommandInteraction): Promise<string> {
@@ -125,6 +143,10 @@ export async function autocomplete(i: AutocompleteInteraction): Promise<Choice[]
     const ex = await userData.getExcludedSources(i.user.id);
     // Exclude offers sources not yet excluded; include offers only excluded ones.
     return searchSources(catalogue, focused.value, (s) => ex.has(s.id) === (sub === 'include'));
+  }
+  if ((sub === 'exclude' || sub === 'include') && focused.name === 'activity') {
+    const ex = await userData.getExcludedActivities(i.user.id);
+    return searchActivities(catalogue, focused.value, (id) => ex.has(id) === (sub === 'include'));
   }
   if (sub === 'tick' && focused.name === 'task') return searchTasks(catalogue.tasks, focused.value);
   if (sub === 'untick' && focused.name === 'task') {

@@ -23,6 +23,8 @@ export interface UserSettings {
   includedCategories?: string[];
   /** Single sources (task groups) the user left out with /xp exclude source:. */
   excludedSources?: string[];
+  /** Activities the user doesn't want recommended (/xp exclude activity:). */
+  excludedActivities?: string[];
 }
 
 /** Ticks and rate overrides belong to one profile of one player. */
@@ -154,14 +156,29 @@ export class UserData {
 
   /** Excludes or includes one source; returns whether anything changed and the new list. */
   setSourceExcluded(discordId: string, source: string, excluded: boolean): Promise<{ changed: boolean; list: string[] }> {
+    return this.setListed(discordId, 'excludedSources', source, excluded);
+  }
+
+  // ---- activity filter ----
+  async getExcludedActivities(discordId: string): Promise<Set<string>> {
+    return new Set((await this.s.settings.read())[discordId]?.excludedActivities ?? []);
+  }
+
+  /** Excludes or includes one activity; returns whether anything changed and the new list. */
+  setActivityExcluded(discordId: string, activity: string, excluded: boolean): Promise<{ changed: boolean; list: string[] }> {
+    return this.setListed(discordId, 'excludedActivities', activity, excluded);
+  }
+
+  /** Adds or removes one entry of a settings list, keeping the user's other settings. */
+  private setListed(discordId: string, field: 'excludedSources' | 'excludedActivities', value: string, add: boolean) {
     return this.s.settings.update((d) => {
       const cur = d[discordId] ?? { excludedCategories: [] };
-      const set = new Set(cur.excludedSources ?? []);
-      const changed = excluded ? !set.has(source) : set.has(source);
-      if (excluded) set.add(source);
-      else set.delete(source);
-      const { excludedSources: _, ...rest } = cur;
-      d[discordId] = { ...rest, ...(set.size ? { excludedSources: [...set].sort() } : {}) };
+      const set = new Set(cur[field] ?? []);
+      const changed = add ? !set.has(value) : set.has(value);
+      if (add) set.add(value);
+      else set.delete(value);
+      const { [field]: _, ...rest } = cur;
+      d[discordId] = { ...rest, ...(set.size ? { [field]: [...set].sort() } : {}) };
       return { changed, list: [...set].sort() };
     });
   }

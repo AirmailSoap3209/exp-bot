@@ -7,6 +7,11 @@ export interface Exclusions {
   excluded?: ReadonlySet<string>;
   /** Source IDs (task groups). */
   excludedSources?: ReadonlySet<string>;
+  /**
+   * Activity IDs the user doesn't want to do. A task or combo using one is never recommended,
+   * but its XP still counts when something else completes it (unlike category and source exclusions).
+   */
+  excludedActivities?: ReadonlySet<string>;
 }
 
 export type DropReason = 'monetary' | 'excluded' | 'done' | 'unavailable' | 'blocked';
@@ -27,7 +32,7 @@ export const isExcluded = (t: Task, ex: Exclusions) => !!(ex.excluded?.has(t.cat
 export function dropReason(p: TaskProgress, done: (id: string) => boolean, ex: Exclusions, selfDone = isDone(p)): DropReason | undefined {
   const t = p.task;
   if (t.monetary) return 'monetary';
-  if (isExcluded(t, ex)) return 'excluded';
+  if (isExcluded(t, ex) || (t.activity && ex.excludedActivities?.has(t.activity))) return 'excluded';
   if (selfDone) return 'done';
   if (p.status === 'unavailable') return 'unavailable';
   if (p.blocked || t.prerequisites.some((id) => !done(id))) return 'blocked';

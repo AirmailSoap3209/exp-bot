@@ -1,4 +1,5 @@
 import { estimateTask, type Estimate, type EstimateContext } from '../estimate/estimate.js';
+import type { ComboRow } from '../combos/score.js';
 import type { NormalizedProfile } from '../profile/types.js';
 import type { TaskProgress } from '../tasks/progress.js';
 import { dropReason, isDone, type Exclusions } from './eligible.js';
@@ -6,6 +7,8 @@ import { dropReason, isDone, type Exclusions } from './eligible.js';
 export interface RankedTask {
   progress: TaskProgress;
   estimate: Estimate;
+  /** Set when this entry is a combo row; progress and estimate are then its horizon task's. */
+  combo?: ComboRow;
 }
 
 export interface RankResult {

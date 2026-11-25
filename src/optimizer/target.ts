@@ -5,6 +5,9 @@ import type { TaskProgress } from '../tasks/progress.js';
 import type { Task } from '../tasks/types.js';
 import { isExcluded, type Exclusions } from './eligible.js';
 import { PlanState } from './plan.js';
+import type { Combo } from '../combos/combos.js';
+import { scoreCombo, type ComboRow } from '../combos/score.js';
+import { comboEntry } from './combined.js';
 
 export interface TargetPick {
   /** Progress as it stood when this step started, after the steps before it. */
@@ -16,6 +19,8 @@ export interface TargetPick {
   completed: Task[];
   /** Running totals up to and including this step. */
   total: { xp: number; minutes: Range };
+  /** Set when this step is a combo; progress is then its horizon task's. */
+  combo?: ComboRow;
 }
 
 export interface TargetPlan {
@@ -37,7 +42,12 @@ export interface TargetPlan {
 
 export interface TargetOptions extends Exclusions {
   maxPicks?: number;
+  /** Combos that compete with single tasks (data/combos). */
+  combos?: readonly Combo[];
 }
+
+/** Steps are task IDs, or combo IDs (which always start with "combo."). */
+const isComboStep = (id: string) => id.startsWith('combo.');
 
 const MAX_PICKS = 5000;
 const mid = (r: Range) => (r[0] + r[1]) / 2;
@@ -46,25 +56,37 @@ const mid = (r: Range) => (r[0] + r[1]) / 2;
 const rewardOf = (t: Task, ex: Exclusions) => (t.monetary || isExcluded(t, ex) ? 0 : t.xp);
 
 /**
- * Replays an ordered list of task IDs from the profile's real progress.
- * Returns undefined if any step can't be done at its turn (a prerequisite was removed).
+ * Replays an ordered list of steps from the profile's real progress. A combo step is re-scored
+ * on the state at its turn. Returns undefined if any step can't be done then (a prerequisite was
+ * removed, or a combo has nothing left to do).
  */
-function simulate(order: readonly string[], progress: readonly TaskProgress[], profile: NormalizedProfile, ctx: EstimateContext, ex: Exclusions) {
+function simulate(order: readonly string[], progress: readonly TaskProgress[], profile: NormalizedProfile, ctx: EstimateContext, ex: TargetOptions) {
   const state = new PlanState(progress);
+  const combos = new Map((ex.combos ?? []).map((c) => [c.id, c]));
   const picks: TargetPick[] = [];
   let xp = 0;
   const minutes: Range = [0, 0];
   for (const id of order) {
-    if (!state.isAvailable(id)) return undefined;
-    const p = state.progressFor(id)!;
-    const estimate = estimateTask(p, profile, ctx);
-    if (!estimate) return undefined;
-    const completed = state.applyTask(id).newlyCompleted.filter((t) => rewardOf(t, ex) > 0);
+    let p: TaskProgress, estimate: Estimate | undefined, done: Task[], combo: ComboRow | undefined;
+    if (isComboStep(id)) {
+      const c = combos.get(id);
+      combo = c && scoreCombo(c, state, profile, ctx, ex);
+      if (!combo) return undefined;
+      ({ progress: p, estimate } = comboEntry(combo));
+      done = state.apply(combo.deltas).newlyCompleted;
+    } else {
+      if (!state.isAvailable(id)) return undefined;
+      p = state.progressFor(id)!;
+      estimate = estimateTask(p, profile, ctx);
+      if (!estimate) return undefined;
+      done = state.applyTask(id).newlyCompleted;
+    }
+    const completed = done.filter((t) => rewardOf(t, ex) > 0);
     const gained = completed.reduce((n, t) => n + rewardOf(t, ex), 0);
     xp += gained;
     minutes[0] += estimate.minutes[0];
     minutes[1] += estimate.minutes[1];
-    picks.push({ progress: p, estimate, xp: gained, completed, total: { xp, minutes: [minutes[0], minutes[1]] } });
+    picks.push({ progress: p, estimate, xp: gained, completed, total: { xp, minutes: [minutes[0], minutes[1]] }, ...(combo ? { combo } : {}) });
   }
   return { picks, xp, minutes };
 }
@@ -96,26 +118,39 @@ export function planTarget(
     return cache.get(key);
   };
 
+  /** One option this turn: a single task, or a combo with its scored row. */
+  interface Option { id: string; xp: number; m: number; ratio: number; row?: ComboRow }
+  const better = (a: Option, b: Option) => a.ratio > b.ratio || (a.ratio === b.ratio && (a.xp > b.xp || (a.xp === b.xp && a.id < b.id)));
+  const quicker = (a: Option, b: Option) => a.m < b.m || (a.m === b.m && a.id < b.id);
+
   const order: string[] = [];
   let gained = 0;
   while (gained < target && order.length < maxPicks) {
     const need = target - gained;
-    let best: { p: TaskProgress; m: number; ratio: number } | undefined;
-    let cover: { p: TaskProgress; m: number } | undefined;
+    const options: Option[] = [];
     for (const p of state.candidates(opts)) {
       const e = estimate(p);
       if (!e) continue;
       const m = Math.max(e.midMinutes, 1e-6);
-      const ratio = p.task.xp / m;
-      if (!best || ratio > best.ratio || (ratio === best.ratio && (p.task.xp > best.p.task.xp || (p.task.xp === best.p.task.xp && p.task.id < best.p.task.id)))) {
-        best = { p, m, ratio };
-      }
-      if (p.task.xp >= need && (!cover || m < cover.m || (m === cover.m && p.task.id < cover.p.task.id))) cover = { p, m };
+      options.push({ id: p.task.id, xp: p.task.xp, m, ratio: p.task.xp / m });
+    }
+    for (const c of opts.combos ?? []) {
+      const row = scoreCombo(c, state, profile, ctx, opts);
+      if (!row) continue;
+      const m = Math.max(row.midMinutes, 1e-6);
+      options.push({ id: c.id, xp: row.xp, m, ratio: row.xp / m, row });
+    }
+    let best: Option | undefined;
+    let cover: Option | undefined;
+    for (const o of options) {
+      if (!best || better(o, best)) best = o;
+      if (o.xp >= need && (!cover || quicker(o, cover))) cover = o;
     }
     if (!best) break;
-    const pick = cover && cover.m < best.m ? cover.p : best.p;
-    order.push(pick.task.id);
-    gained += state.applyTask(pick.task.id).newlyCompleted.reduce((n, t) => n + rewardOf(t, opts), 0);
+    const pick = cover && cover.m < best.m ? cover : best;
+    order.push(pick.id);
+    const done = pick.row ? state.apply(pick.row.deltas).newlyCompleted : state.applyTask(pick.id).newlyCompleted;
+    gained += done.reduce((n, t) => n + rewardOf(t, opts), 0);
   }
 
   let plan = simulate(order, progress, profile, ctx, opts)!;

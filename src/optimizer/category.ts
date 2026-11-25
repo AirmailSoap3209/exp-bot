@@ -25,14 +25,18 @@ export function categoryView(
   ctx: EstimateContext,
   category: string,
   excludedSources: ReadonlySet<string> = new Set(),
+  excludedActivities: ReadonlySet<string> = new Set(),
 ): CategoryView {
   const others = new Set(catalogue.meta.categories.map((c) => c.id).filter((c) => c !== category));
   const result = rankTasks(progress, profile, ctx, { excluded: others, limit: Number.MAX_SAFE_INTEGER });
   // "excluded" counted the other categories; this view only cares about its own.
   result.dropped.excluded = 0;
-  // Sources the user excluded are hidden here (unlike a whole excluded category, which this view exists to show).
+  // Sources and activities the user excluded are hidden here (unlike a whole excluded category, which this view exists to show).
   const before = result.ranked.length;
-  result.ranked = result.ranked.filter((r) => !excludedSources.has(r.progress.task.group ?? r.progress.task.id));
+  result.ranked = result.ranked.filter((r) => {
+    const t = r.progress.task;
+    return !excludedSources.has(t.group ?? t.id) && !(t.activity && excludedActivities.has(t.activity));
+  });
   const hiddenSources = before - result.ranked.length;
   const own = progress.filter((p) => p.task.category === category);
   return { category, summary: summarize(own, new Set(), excludedSources).byCategory.get(category), result, hiddenSources };

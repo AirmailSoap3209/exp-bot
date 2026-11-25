@@ -124,6 +124,32 @@ export class PlanState {
     return [...lowest.values(), ...ungrouped].map((p) => this.progressFor(p.task.id)!);
   }
 
+  /**
+   * The next task on a metric that could be offered now (lowest open requirement first),
+   * as the estimator should see it; undefined when none is available or allowed.
+   */
+  nextOpen(metric: string, ex: Exclusions = {}): TaskProgress | undefined {
+    for (const t of this.byMetric.get(metric) ?? []) {
+      if (this.completed.has(t.id)) continue;
+      const p = this.byId.get(t.id)!;
+      if (!dropReason(p, (id) => this.completed.has(id), ex, false)) return this.progressFor(t.id);
+    }
+    return undefined;
+  }
+
+  /** What apply() would do, without changing anything. */
+  tryApply(deltas: Readonly<Record<string, number>>): ApplyResult {
+    const saved = Object.keys(deltas).map((m) => ({ m, value: this.values.get(m), touched: this.touched.has(m) }));
+    const result = this.apply(deltas);
+    for (const t of result.newlyCompleted) this.completed.delete(t.id);
+    for (const s of saved) {
+      if (s.value === undefined) this.values.delete(s.m);
+      else this.values.set(s.m, s.value);
+      if (!s.touched) this.touched.delete(s.m);
+    }
+    return result;
+  }
+
   /** Adds amounts to metrics and completes whatever that finishes, including unlocked dependents. */
   apply(deltas: Readonly<Record<string, number>>): ApplyResult {
     const metricChanges: MetricDelta[] = [];

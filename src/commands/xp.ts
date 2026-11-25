@@ -19,7 +19,12 @@ import { estimateTask, type EstimateContext } from '../estimate/estimate.js';
 import { findTask, searchTasks, sourceId } from '../tasks/search.js';
 import { HypixelApiError, PlayerNotFoundError } from '../hypixel/client.js';
 import { ProfileNotFoundError } from '../profile/load.js';
-import { catalogue, rateBook } from '../tasks/instance.js';
+import { catalogue, combos, rateBook } from '../tasks/instance.js';
+import { rankWithCombos } from '../optimizer/combined.js';
+import { combosFor } from '../combos/score.js';
+
+/** The caller's exclusions, as the optimizers take them. */
+const exclusionsOf = (t: Target) => ({ excluded: t.excluded, excludedSources: t.excludedSources, excludedActivities: t.excludedActivities });
 import { buildCoverage, formatRow, formatTotal, type Coverage } from '../tasks/coverage.js';
 import { summarize } from '../tasks/progress.js';
 import type { Command } from './index.js';
@@ -124,7 +129,7 @@ async function target(i: ChatInputCommandInteraction): Promise<void> {
       await i.editReply({ content: `${playerName} is already level ${profile.leveling.level}, at or above level ${levelOpt}.` });
       return;
     }
-    const plan = planTarget(t.evaluation.progress, profile, await estimateContext(t), need, { excluded: t.excluded, excludedSources: t.excludedSources });
+    const plan = planTarget(t.evaluation.progress, profile, await estimateContext(t), need, { ...exclusionsOf(t), combos });
     const ask = levelOpt !== null ? { kind: 'level' as const, level: levelOpt } : { kind: 'xp' as const, xp: need };
     const render = (page: number) => targetEmbed(playerName, profile, plan, page, { ask, isLinked: t.isLinked });
     await showPaged(i, t, render, targetLineCount(plan), TARGET_PAGE_SIZE);
@@ -137,7 +142,7 @@ async function optimize(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
     const t = await resolveTarget(i);
-    const result = rankTasks(t.evaluation.progress, t.loaded.profile, await estimateContext(t), { excluded: t.excluded, excludedSources: t.excludedSources, limit: 10 });
+    const result = rankWithCombos(t.evaluation.progress, t.loaded.profile, await estimateContext(t), combos, { ...exclusionsOf(t), limit: 10 });
     await showRanking(i, t, result);
   } catch (err) {
     await i.editReply({ content: userError(err) });
@@ -154,7 +159,7 @@ async function category(i: ChatInputCommandInteraction): Promise<void> {
       return;
     }
     const t = await resolveTarget(i);
-    const view = categoryView(catalogue, t.evaluation.progress, t.loaded.profile, await estimateContext(t), id, t.excludedSources);
+    const view = categoryView(catalogue, t.evaluation.progress, t.loaded.profile, await estimateContext(t), id, t.excludedSources, t.excludedActivities);
     const s = view.summary;
     const fmt = (n: number) => n.toLocaleString('en-US');
     const total = s ? s.earned + s.remaining + s.likelyComplete + s.unknown : 0;
@@ -180,15 +185,19 @@ async function task(i: ChatInputCommandInteraction): Promise<void> {
     }
     const link = await userData.getLink(i.user.id);
     if (!link) {
-      await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook)] });
+      await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook, undefined, combosFor(found, combos))] });
       return;
     }
     const t = await resolveTarget(i);
     const progress = new Map(t.evaluation.progress.map((p) => [p.task.id, p]));
     const p = progress.get(found.id)!;
     const estimate = estimateTask(p, t.loaded.profile, await estimateContext(t));
-    const excludedBy = t.excluded.has(found.category) ? 'category' : t.excludedSources.has(sourceId(found)) ? 'source' : undefined;
-    await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook, { playerName: t.loaded.playerName, profile: t.loaded.profile, progress, estimate, excludedBy })] });
+    const excludedBy =
+      t.excluded.has(found.category) ? 'category' :
+      t.excludedSources.has(sourceId(found)) ? 'source' :
+      found.activity && t.excludedActivities.has(found.activity) ? 'activity' : undefined;
+    const ctx = { playerName: t.loaded.playerName, profile: t.loaded.profile, progress, estimate, excludedBy } as const;
+    await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook, ctx, combosFor(found, combos))] });
   } catch (err) {
     await i.editReply({ content: userError(err) });
   }
@@ -223,6 +232,8 @@ const categoryOption = (verb: string) => (o: import('discord.js').SlashCommandSt
   o.setName('category').setDescription(`Category to ${verb}`).addChoices(...settings.excludableCategories());
 const sourceOption = (verb: string) => (o: import('discord.js').SlashCommandStringOption) =>
   o.setName('source').setDescription(`One source to ${verb}, with all its tiers (e.g. Wheat collection)`).setAutocomplete(true);
+const activityOption = (verb: string) => (o: import('discord.js').SlashCommandStringOption) =>
+  o.setName('activity').setDescription(`An activity to ${verb} from recommendations, combos included (e.g. collect.wheat)`).setAutocomplete(true);
 
 export const xp: Command = {
   data: new SlashCommandBuilder()
@@ -261,12 +272,12 @@ export const xp: Command = {
         .addStringOption((o) => o.setName('task').setDescription('Task name').setRequired(true).setAutocomplete(true)),
     )
     .addSubcommand((s) =>
-      s.setName('exclude').setDescription('Leave a category or one source out of overview and rankings (no options: list)')
-        .addStringOption(categoryOption('exclude')).addStringOption(sourceOption('exclude')),
+      s.setName('exclude').setDescription('Leave out a category, source or activity (no options: list)')
+        .addStringOption(categoryOption('exclude')).addStringOption(sourceOption('exclude')).addStringOption(activityOption('leave out')),
     )
     .addSubcommand((s) =>
-      s.setName('include').setDescription('Bring an excluded category or source back (no options: list)')
-        .addStringOption(categoryOption('include')).addStringOption(sourceOption('include')),
+      s.setName('include').setDescription('Bring an excluded category, source or activity back (no options: list)')
+        .addStringOption(categoryOption('include')).addStringOption(sourceOption('include')).addStringOption(activityOption('bring back')),
     )
     .addSubcommand((s) =>
       s.setName('tick').setDescription('Mark a task done on your linked profile when the API can\'t tell')

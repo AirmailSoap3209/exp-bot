@@ -14,19 +14,24 @@ interface Line {
   steps: TargetPick[];
 }
 
+/** Steps that merge into one line: tiers of one source, or rounds of one combo. */
+const lineKey = (s: TargetPick) => (s.combo ? `combo:${s.combo.combo.id}` : s.progress.task.group);
+
 function group(plan: TargetPlan): Line[] {
   const lines: Line[] = [];
   for (const s of plan.picks) {
     const last = lines.at(-1);
-    const g = s.progress.task.group;
-    if (last && g && last.steps[0]!.progress.task.group === g) last.steps.push(s);
+    const k = lineKey(s);
+    if (last && k && lineKey(last.steps[0]!) === k) last.steps.push(s);
     else lines.push({ steps: [s] });
   }
   return lines;
 }
 
-/** "Combat level 31", or "Combat level 31→33" for a run of tiers. */
+/** "Combat level 31", "Combat level 31→33" for a run of tiers, "⚡ Kill Zealots ×3" for combo rounds. */
 function lineName(steps: TargetPick[]): string {
+  const combo = steps[0]!.combo;
+  if (combo) return `⚡ ${combo.combo.name}${steps.length > 1 ? ` ×${steps.length}` : ''}`;
   const first = steps[0]!.progress.task.name;
   if (steps.length === 1) return first;
   const last = steps.at(-1)!.progress.task.name;
@@ -39,12 +44,15 @@ export function targetLines(plan: TargetPlan): string[] {
     const xp = line.steps.reduce((n, s) => n + s.xp, 0);
     const minutes: Range = line.steps.reduce<Range>((r, s) => [r[0] + s.estimate.minutes[0], r[1] + s.estimate.minutes[1]], [0, 0]);
     const total = line.steps.at(-1)!.total;
-    const picked = new Set(line.steps.map((s) => s.progress.task.id));
-    const bonus = line.steps.flatMap((s) => s.completed).filter((t) => !picked.has(t.id));
-    const where = line.steps[0]!.progress.task.location;
+    const isCombo = !!line.steps[0]!.combo;
+    // A combo's tasks are all worth listing; for a single task, only the extras it finishes on the way.
+    const picked = new Set(isCombo ? [] : line.steps.map((s) => s.progress.task.id));
+    const all = line.steps.flatMap((s) => s.completed).filter((t) => !picked.has(t.id));
+    const bonus = all.length > 6 ? [...all.slice(0, 6), { name: `${all.length - 6} more` }] : all;
+    const where = line.steps[0]!.combo?.combo.location ?? line.steps[0]!.progress.task.location;
     return [
       `**${i + 1}. ${lineName(line.steps)}** · +${fmt(xp)} XP · ${formatMinutes(minutes)}`,
-      `-# Σ ${fmt(total.xp)} XP · ${formatMinutes(total.minutes)}${where ? ` · ${where}` : ''}${bonus.length ? ` · also completes ${bonus.map((t) => t.name).join(', ')}` : ''}`,
+      `-# Σ ${fmt(total.xp)} XP · ${formatMinutes(total.minutes)}${where ? ` · ${where}` : ''}${bonus.length ? ` · ${isCombo ? 'completes' : 'also completes'} ${bonus.map((t) => t.name).join(', ')}` : ''}`,
     ].join('\n');
   });
 }

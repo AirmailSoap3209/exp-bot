@@ -171,3 +171,26 @@ describe('PlanState on real profiles', () => {
     if (next) expect(s.candidates().some((p) => p.task.id === next.id)).toBe(true);
   });
 });
+
+describe('PlanState helpers for combos', () => {
+  it('nextOpen gives the lowest open, allowed task on a metric', () => {
+    const s = new PlanState([
+      tp('t1', 'm', 10, 10), tp('t2', 'm', 20, 10, { prerequisites: ['t1'] }), tp('t3', 'm', 30, 10, { prerequisites: ['t2'] }),
+      tp('x', 'n', 5, 0, { group: 'gx' }),
+    ]);
+    expect(s.nextOpen('m')?.task.id).toBe('t2');
+    expect(s.nextOpen('n', { excludedSources: new Set(['gx']) })).toBeUndefined();
+    expect(s.nextOpen('nope')).toBeUndefined();
+  });
+
+  it('tryApply reports what apply would do and changes nothing', () => {
+    const s = new PlanState([tp('a', 'm', 10, 0), tp('b', 'n', 5, 0, { prerequisites: ['a'] })]);
+    const r = s.tryApply({ m: 10, n: 5 });
+    expect(ids(r.newlyCompleted)).toEqual(['a', 'b']);
+    expect(s.completedTaskIds.size).toBe(0);
+    expect(s.value('m')).toBe(0);
+    expect(s.value('n')).toBe(0);
+    expect(s.progressFor('a')!.current).toBe(0);
+    expect(ids(s.apply({ m: 10, n: 5 }).newlyCompleted)).toEqual(['a', 'b']);
+  });
+});

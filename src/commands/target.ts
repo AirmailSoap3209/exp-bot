@@ -21,6 +21,8 @@ export interface Target {
   excluded: Set<string>;
   /** Single sources (task groups) the caller excluded. */
   excludedSources: Set<string>;
+  /** Activities the caller doesn't want recommended. */
+  excludedActivities: Set<string>;
   /** Ticks removed because the API now shows those tasks incomplete. */
   clearedTicks: string[];
 }
@@ -33,10 +35,11 @@ export async function resolveTarget(interaction: ChatInputCommandInteraction, op
   const discordId = interaction.user.id;
   const player = interaction.options.getString('player') ?? undefined;
   const profileOpt = interaction.options.getString('profile') ?? undefined;
-  const [link, excluded, excludedSources] = await Promise.all([
+  const [link, excluded, excludedSources, excludedActivities] = await Promise.all([
     userData.getLink(discordId),
     userData.getExcluded(discordId, defaultExcluded(catalogue)),
     userData.getExcludedSources(discordId),
+    userData.getExcludedActivities(discordId),
   ]);
 
   let loaded: LoadedProfile;
@@ -53,7 +56,7 @@ export async function resolveTarget(interaction: ChatInputCommandInteraction, op
   const ticks = isLinked ? await userData.getTicks(key) : new Set<string>();
   const evaluation = evaluateProgress(catalogue, loaded.profile, ticks);
   const clearedTicks = evaluation.ticksToClear.length ? await userData.removeTicks(key, evaluation.ticksToClear) : [];
-  return { loaded, isLinked, link, evaluation, excluded, excludedSources, clearedTicks };
+  return { loaded, isLinked, link, evaluation, excluded, excludedSources, excludedActivities, clearedTicks };
 }
 
 /** Loads the caller's linked profile, for commands that only make sense on it (tick, rate). */

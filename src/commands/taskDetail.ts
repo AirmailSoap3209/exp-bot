@@ -1,4 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
+import type { Combo } from '../combos/combos.js';
 import type { Estimate } from '../estimate/estimate.js';
 import type { RateBook } from '../estimate/rates.js';
 import type { NormalizedProfile } from '../profile/types.js';
@@ -17,7 +18,7 @@ export interface TaskDetailContext {
   progress: Map<string, TaskProgress>;
   estimate?: Estimate;
   /** Set when the caller's exclusions leave this task out of rankings. */
-  excludedBy?: 'category' | 'source';
+  excludedBy?: 'category' | 'source' | 'activity';
   now?: number;
 }
 
@@ -40,7 +41,7 @@ function estimateText(e: Estimate | undefined, p: TaskProgress | undefined): str
 }
 
 /** Everything the bot knows about one task, with the caller's progress when available. */
-export function taskEmbed(task: Task, catalogue: Catalogue, book: RateBook, ctx?: TaskDetailContext): EmbedBuilder {
+export function taskEmbed(task: Task, catalogue: Catalogue, book: RateBook, ctx?: TaskDetailContext, alsoBy: readonly Combo[] = []): EmbedBuilder {
   const p = ctx?.progress.get(task.id);
   const unit = task.activity ? book.rates.get(task.activity)?.unit.replace(/\/min$/, '') ?? '' : '';
   const category = catalogue.meta.categories.find((c) => c.id === task.category)?.name ?? task.category;
@@ -66,8 +67,13 @@ export function taskEmbed(task: Task, catalogue: Catalogue, book: RateBook, ctx?
       name: 'Excluded',
       value: ctx.excludedBy === 'category'
         ? `You excluded the ${category} category, so this isn't ranked. \`/xp include category:\` brings it back.`
-        : `You excluded this source, so this isn't ranked. \`/xp include source:\` brings it back.`,
+        : ctx.excludedBy === 'source'
+          ? `You excluded this source, so this isn't ranked. \`/xp include source:\` brings it back.`
+          : `You excluded \`${task.activity}\`, so this isn't recommended on its own; its XP still counts when a combo finishes it. \`/xp include activity:\` brings it back.`,
     });
+  }
+  if (alsoBy.length) {
+    fields.push({ name: 'Also progressed by', value: clip(alsoBy.map((c) => `⚡ ${c.name}${c.location ? ` (${c.location})` : ''}`).join('\n')) });
   }
 
   if (task.prerequisites.length) {

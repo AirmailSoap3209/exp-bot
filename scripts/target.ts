@@ -9,6 +9,7 @@ import { formatMinutes } from '../src/commands/optimize.js';
 import { loadRates } from '../src/estimate/rates.js';
 import type { ProfilesResponse } from '../src/hypixel/client.js';
 import { planTarget, xpToLevel } from '../src/optimizer/target.js';
+import { loadCombos } from '../src/combos/combos.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../src/profile/normalize.js';
 import { defaultExcluded, loadCatalogue } from '../src/tasks/catalogue.js';
 import { evaluateProgress } from '../src/tasks/progress.js';
@@ -39,7 +40,8 @@ if (target <= 0) {
 }
 
 const t0 = performance.now();
-const plan = planTarget(progress, profile, { book: loadRates() }, target, { excluded: new Set(defaultExcluded(catalogue)) });
+const book = loadRates();
+const plan = planTarget(progress, profile, { book }, target, { excluded: new Set(defaultExcluded(catalogue)), combos: loadCombos(catalogue, book) });
 const ms = performance.now() - t0;
 
 console.log(`${name} / ${profile.cuteName} · target +${target} XP · level ${profile.leveling.level}`);

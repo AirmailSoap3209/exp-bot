@@ -121,3 +121,16 @@ describe('source exclusions', () => {
     expect((await u.getExcludedSources('d2')).size).toBe(0);
   });
 });
+
+describe('activity exclusions', () => {
+  it('stores activities per user without touching other exclusions', async () => {
+    const u = new UserData(await tempDir());
+    await u.setSourceExcluded('d1', 'collections.wheat', true);
+    expect(await u.setActivityExcluded('d1', 'collect.wheat', true)).toEqual({ changed: true, list: ['collect.wheat'] });
+    expect(await u.setActivityExcluded('d1', 'collect.wheat', true)).toEqual({ changed: false, list: ['collect.wheat'] });
+    expect([...(await u.getExcludedSources('d1'))]).toEqual(['collections.wheat']);
+    expect(await u.setActivityExcluded('d1', 'collect.wheat', false)).toEqual({ changed: true, list: [] });
+    expect((await u.getExcludedActivities('d1')).size).toBe(0);
+    expect([...(await u.getExcludedSources('d1'))]).toEqual(['collections.wheat']);
+  });
+});

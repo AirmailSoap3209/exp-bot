@@ -13,6 +13,7 @@ describe('combo data', () => {
   it('loads every combo, sorted by ID', () => {
     expect(combos.map((c) => c.id)).toEqual([
       'combo.combat.blaze', 'combo.combat.crypt_ghoul', 'combo.combat.enderman', 'combo.combat.ghast', 'combo.combat.magma_cube', 'combo.combat.zealot',
+      'combo.dungeons.f0', 'combo.dungeons.f1', 'combo.dungeons.f2', 'combo.dungeons.f3', 'combo.dungeons.f4', 'combo.dungeons.f5', 'combo.dungeons.f6', 'combo.dungeons.f7',
       'combo.farm.cactus', 'combo.farm.pumpkin', 'combo.farm.sugar_cane', 'combo.farm.wheat',
       'combo.slayer.blaze', 'combo.slayer.enderman', 'combo.slayer.spider', 'combo.slayer.wolf', 'combo.slayer.zombie',
     ]);

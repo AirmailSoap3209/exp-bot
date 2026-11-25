@@ -57,6 +57,61 @@ export function searchActivities(catalogue: Catalogue, query: string, include: (
     .map((a) => ({ name: clip(`${a.id} · ${a.label}`), value: a.id }));
 }
 
+/** One XP source: every tier of one group ("Wheat collection", "Revenant Horror Slayer"). */
+export interface Source {
+  id: string;
+  label: string;
+  category: string;
+  tiers: number;
+  xp: number;
+}
+
+const sourceCache = new WeakMap<Catalogue, Source[]>();
+
+/**
+ * Non-monetary sources in the catalogue. A label shared by two sources
+ * ("Bat Bestiary" on the island and in the Catacombs) gets its location added.
+ */
+export function sources(catalogue: Catalogue): Source[] {
+  const cached = sourceCache.get(catalogue);
+  if (cached) return cached;
+  const map = new Map<string, Source & { location?: string }>();
+  for (const t of catalogue.tasks) {
+    if (t.monetary) continue;
+    const id = t.group ?? t.id;
+    const s = map.get(id);
+    if (s) {
+      s.tiers++;
+      s.xp += t.xp;
+    } else map.set(id, { id, label: t.group ? sourceName(t.name) : t.name, category: t.category, tiers: 1, xp: t.xp, location: t.location });
+  }
+  const count = new Map<string, number>();
+  for (const s of map.values()) count.set(s.label, (count.get(s.label) ?? 0) + 1);
+  const list = [...map.values()].map(({ location, ...s }) => ({
+    ...s,
+    label: (count.get(s.label) ?? 0) > 1 && location ? `${s.label} · ${location}` : s.label,
+  }));
+  sourceCache.set(catalogue, list);
+  return list;
+}
+
+/** Source of a task, as used by source exclusions. */
+export const sourceId = (t: Task) => t.group ?? t.id;
+
+export function searchSources(catalogue: Catalogue, query: string, include: (s: Source) => boolean = () => true): Choice[] {
+  const names = new Map(catalogue.meta.categories.map((c) => [c.id, c.name]));
+  return rank(sources(catalogue).filter(include), (s) => `${s.label} ${s.id}`, query, (a, b) => a.id.localeCompare(b.id))
+    .map((s) => ({ name: clip(`${s.label} · ${names.get(s.category) ?? s.category} (${s.xp.toLocaleString('en-US')} XP)`), value: s.id }));
+}
+
+/** Resolves typed source input: an ID, an exact label, or a task in it. */
+export function findSource(catalogue: Catalogue, input: string): Source | undefined {
+  const s = input.trim().toLowerCase();
+  const all = sources(catalogue);
+  const task = findTask(catalogue, input);
+  return all.find((x) => x.id.toLowerCase() === s) ?? all.find((x) => x.label.toLowerCase() === s) ?? (task ? all.find((x) => x.id === sourceId(task)) : undefined);
+}
+
 /** Resolves what the user typed when they didn't pick an autocomplete choice: an ID, or an exact name. */
 export function findTask(catalogue: Catalogue, input: string): Task | undefined {
   const s = input.trim();

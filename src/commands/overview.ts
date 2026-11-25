@@ -2,6 +2,7 @@ import { EmbedBuilder } from 'discord.js';
 import type { NormalizedProfile } from '../profile/types.js';
 import type { Catalogue } from '../tasks/catalogue.js';
 import { STATUS_LABEL, STATUSES, type ProgressSummary } from '../tasks/progress.js';
+import { sources } from '../tasks/search.js';
 
 const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 
@@ -12,6 +13,7 @@ export function dataAge(fetchedAt: number, now = Date.now()): string {
 
 export interface OverviewOptions {
   excluded?: ReadonlySet<string>;
+  excludedSources?: ReadonlySet<string>;
   /** Whether ticks were applied (the caller's linked profile). */
   isLinked?: boolean;
   clearedTicks?: string[];
@@ -40,6 +42,12 @@ export function overviewEmbed(
   ];
   if (opts.excluded?.size) {
     xpLines.push(`Excluded by you: ${[...opts.excluded].map((c) => names.get(c) ?? c).join(', ')}`);
+  }
+  if (opts.excludedSources?.size) {
+    const labels = new Map(sources(catalogue).map((s) => [s.id, s.label]));
+    const list = [...opts.excludedSources].map((s) => labels.get(s) ?? s);
+    const shown = list.slice(0, 8).join(', ') + (list.length > 8 ? ` and ${list.length - 8} more` : '');
+    xpLines.push(`Excluded sources: ${shown}`);
   }
   if (opts.clearedTicks?.length) {
     const list = opts.clearedTicks.map((id) => catalogue.byId.get(id)?.name ?? id).join(', ');

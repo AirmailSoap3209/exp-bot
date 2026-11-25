@@ -103,3 +103,21 @@ describe('parseRateValue', () => {
   it('clears with default', () => expect(parseRateValue('default')).toEqual({ ok: true, override: undefined }));
   it.each(['0', '-3', 'fast', ''])('rejects %j', (raw) => expect(parseRateValue(raw).ok).toBe(false));
 });
+
+describe('source exclusions', () => {
+  it('stores sources per user, reports changes, and survives category changes', async () => {
+    const u = new UserData(await tempDir());
+    expect((await u.getExcludedSources('d1')).size).toBe(0);
+    expect(await u.setSourceExcluded('d1', 'collections.wheat', true)).toEqual({ changed: true, list: ['collections.wheat'] });
+    expect(await u.setSourceExcluded('d1', 'collections.wheat', true)).toEqual({ changed: false, list: ['collections.wheat'] });
+    await u.setSourceExcluded('d1', 'skills.alchemy', true);
+    // Category changes keep source exclusions, and source changes keep category ones.
+    await u.setExcluded('d1', 'bestiary', true, ['minions']);
+    await u.setExcluded('d1', 'minions', false, ['minions']);
+    expect([...(await u.getExcludedSources('d1'))]).toEqual(['collections.wheat', 'skills.alchemy']);
+    expect(await u.setSourceExcluded('d1', 'collections.wheat', false)).toEqual({ changed: true, list: ['skills.alchemy'] });
+    expect([...(await u.getExcluded('d1', ['minions']))]).toEqual(['bestiary']);
+    expect(await u.setSourceExcluded('d1', 'nope', false)).toEqual({ changed: false, list: ['skills.alchemy'] });
+    expect((await u.getExcludedSources('d2')).size).toBe(0);
+  });
+});

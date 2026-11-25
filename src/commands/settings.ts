@@ -4,7 +4,7 @@ import { BRACKETS, parseRateValue, profileKey, userData } from '../storage/userD
 import { defaultExcluded } from '../tasks/catalogue.js';
 import { catalogue, rateBook } from '../tasks/instance.js';
 import { decideTick } from '../tasks/progress.js';
-import { activities, findTask, searchActivities, searchTasks, type Choice } from '../tasks/search.js';
+import { activities, findSource, findTask, searchActivities, searchSources, searchTasks, sources, type Choice } from '../tasks/search.js';
 import { requireLinked } from './target.js';
 
 const fmt = (n: number) => n.toLocaleString('en-US');
@@ -25,13 +25,49 @@ export async function link(i: ChatInputCommandInteraction): Promise<string> {
   ].filter(Boolean).join('\n');
 }
 
+const categoryName = (id: string) => catalogue.meta.categories.find((m) => m.id === id)?.name ?? id;
+
+/** "Excluded now" lines for both kinds of exclusion. */
+function exclusionSummary(categories: string[], sourceIds: string[]): string {
+  const labels = new Map(sources(catalogue).map((s) => [s.id, `${s.label} (${categoryName(s.category)})`]));
+  const src = sourceIds.map((s) => labels.get(s) ?? s);
+  const shown = src.slice(0, 20).join(', ') + (src.length > 20 ? ` and ${src.length - 20} more` : '');
+  return [
+    `Excluded categories: ${categories.length ? categories.map(categoryName).join(', ') : 'none'}.`,
+    `Excluded sources: ${src.length ? shown : 'none'}.`,
+  ].join('\n');
+}
+
+/** /xp exclude and /xp include: a category, a source, both, or neither (lists the current exclusions). */
 export async function exclude(i: ChatInputCommandInteraction, excluded: boolean): Promise<string> {
-  const category = i.options.getString('category', true);
-  const name = catalogue.meta.categories.find((c) => c.id === category)?.name;
-  if (!name) return `Unknown category "${category}".`;
-  const list = await userData.setExcluded(i.user.id, category, excluded, defaultExcluded(catalogue));
-  const names = list.map((c) => catalogue.meta.categories.find((m) => m.id === c)?.name ?? c);
-  return `${excluded ? 'Excluded' : 'Included'} **${name}**. Excluded now: ${names.length ? names.join(', ') : 'nothing'}.`;
+  const category = i.options.getString('category');
+  const sourceInput = i.options.getString('source');
+  const defaults = defaultExcluded(catalogue);
+  const lines: string[] = [];
+
+  let categories = [...(await userData.getExcluded(i.user.id, defaults))].sort();
+  if (category) {
+    if (!catalogue.meta.categories.some((c) => c.id === category)) return `Unknown category "${category}".`;
+    categories = await userData.setExcluded(i.user.id, category, excluded, defaults);
+    lines.push(`${excluded ? 'Excluded' : 'Included'} the **${categoryName(category)}** category.`);
+  }
+
+  let sourceIds = [...(await userData.getExcludedSources(i.user.id))].sort();
+  if (sourceInput) {
+    const source = findSource(catalogue, sourceInput);
+    if (!source) return `No source matches "${sourceInput}". Pick one from the autocomplete list.`;
+    const r = await userData.setSourceExcluded(i.user.id, source.id, excluded);
+    sourceIds = r.list;
+    const name = `**${source.label}** (${categoryName(source.category)}, ${source.tiers} tier${source.tiers === 1 ? '' : 's'}, ${source.xp.toLocaleString('en-US')} XP)`;
+    lines.push(
+      !r.changed ? `${name} was already ${excluded ? 'excluded' : 'included'}.` :
+      excluded ? `Excluded ${name}. Tasks that need it first stay blocked.` :
+      `Included ${name}.`,
+    );
+    if (!excluded && categories.includes(source.category)) lines.push(`-# Its category is still excluded, so it stays hidden until you include ${categoryName(source.category)}.`);
+  }
+
+  return [...lines, exclusionSummary(categories, sourceIds)].join('\n');
 }
 
 export async function tick(i: ChatInputCommandInteraction): Promise<string> {
@@ -81,10 +117,15 @@ export async function rate(i: ChatInputCommandInteraction): Promise<string> {
   return `${what} ${count} override(s) on ${link.name} · ${link.profileName}. They take effect in \`/xp optimize\`.`;
 }
 
-/** Autocomplete for tick, untick and rate. */
+/** Autocomplete for exclude, include, tick, untick and rate. */
 export async function autocomplete(i: AutocompleteInteraction): Promise<Choice[]> {
   const sub = i.options.getSubcommand();
   const focused = i.options.getFocused(true);
+  if ((sub === 'exclude' || sub === 'include') && focused.name === 'source') {
+    const ex = await userData.getExcludedSources(i.user.id);
+    // Exclude offers sources not yet excluded; include offers only excluded ones.
+    return searchSources(catalogue, focused.value, (s) => ex.has(s.id) === (sub === 'include'));
+  }
   if (sub === 'tick' && focused.name === 'task') return searchTasks(catalogue.tasks, focused.value);
   if (sub === 'untick' && focused.name === 'task') {
     const link = await userData.getLink(i.user.id);

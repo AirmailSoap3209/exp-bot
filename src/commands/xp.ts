@@ -14,7 +14,7 @@ import { optimizeEmbed, pageButtons, PAGE_SIZE } from './optimize.js';
 import { taskEmbed } from './taskDetail.js';
 import { categoryView } from '../optimizer/category.js';
 import { estimateTask, type EstimateContext } from '../estimate/estimate.js';
-import { findTask, searchTasks } from '../tasks/search.js';
+import { findTask, searchTasks, sourceId } from '../tasks/search.js';
 import { HypixelApiError, PlayerNotFoundError } from '../hypixel/client.js';
 import { ProfileNotFoundError } from '../profile/load.js';
 import { catalogue, rateBook } from '../tasks/instance.js';
@@ -58,9 +58,11 @@ async function overview(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
     const t = await resolveTarget(i);
-    const summary = summarize(t.evaluation.progress, t.excluded);
+    const summary = summarize(t.evaluation.progress, t.excluded, t.excludedSources);
     await i.editReply({
-      embeds: [overviewEmbed(t.loaded.playerName, t.loaded.profile, summary, catalogue, { excluded: t.excluded, isLinked: t.isLinked, clearedTicks: t.clearedTicks })],
+      embeds: [overviewEmbed(t.loaded.playerName, t.loaded.profile, summary, catalogue, {
+        excluded: t.excluded, excludedSources: t.excludedSources, isLinked: t.isLinked, clearedTicks: t.clearedTicks,
+      })],
     });
   } catch (err) {
     await i.editReply({ content: userError(err) });
@@ -108,7 +110,7 @@ async function optimize(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
     const t = await resolveTarget(i);
-    const result = rankTasks(t.evaluation.progress, t.loaded.profile, await estimateContext(t), { excluded: t.excluded, limit: 10 });
+    const result = rankTasks(t.evaluation.progress, t.loaded.profile, await estimateContext(t), { excluded: t.excluded, excludedSources: t.excludedSources, limit: 10 });
     await showRanking(i, t, result);
   } catch (err) {
     await i.editReply({ content: userError(err) });
@@ -125,13 +127,14 @@ async function category(i: ChatInputCommandInteraction): Promise<void> {
       return;
     }
     const t = await resolveTarget(i);
-    const view = categoryView(catalogue, t.evaluation.progress, t.loaded.profile, await estimateContext(t), id);
+    const view = categoryView(catalogue, t.evaluation.progress, t.loaded.profile, await estimateContext(t), id, t.excludedSources);
     const s = view.summary;
     const fmt = (n: number) => n.toLocaleString('en-US');
     const total = s ? s.earned + s.remaining + s.likelyComplete + s.unknown : 0;
     const header = [
       `**${meta.name}** · ${fmt(s?.earned ?? 0)}/${fmt(total)} XP earned · ${fmt(view.result.ranked.length)} open now, quickest first`,
       t.excluded.has(id) ? '-# This category is excluded from your overview and rankings; it is shown here anyway.' : '',
+      view.hiddenSources ? `-# ${fmt(view.hiddenSources)} source(s) you excluded are hidden. \`/xp include source:\` brings one back.` : '',
     ].filter(Boolean).join('\n');
     await showRanking(i, t, view.result, { title: meta.name, header });
   } catch (err) {
@@ -157,7 +160,8 @@ async function task(i: ChatInputCommandInteraction): Promise<void> {
     const progress = new Map(t.evaluation.progress.map((p) => [p.task.id, p]));
     const p = progress.get(found.id)!;
     const estimate = estimateTask(p, t.loaded.profile, await estimateContext(t));
-    await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook, { playerName: t.loaded.playerName, profile: t.loaded.profile, progress, estimate })] });
+    const excludedBy = t.excluded.has(found.category) ? 'category' : t.excludedSources.has(sourceId(found)) ? 'source' : undefined;
+    await i.editReply({ embeds: [taskEmbed(found, catalogue, rateBook, { playerName: t.loaded.playerName, profile: t.loaded.profile, progress, estimate, excludedBy })] });
   } catch (err) {
     await i.editReply({ content: userError(err) });
   }
@@ -192,7 +196,9 @@ async function privately(i: ChatInputCommandInteraction, run: () => Promise<stri
 }
 
 const categoryOption = (verb: string) => (o: import('discord.js').SlashCommandStringOption) =>
-  o.setName('category').setDescription(`Category to ${verb}`).setRequired(true).addChoices(...settings.excludableCategories());
+  o.setName('category').setDescription(`Category to ${verb}`).addChoices(...settings.excludableCategories());
+const sourceOption = (verb: string) => (o: import('discord.js').SlashCommandStringOption) =>
+  o.setName('source').setDescription(`One source to ${verb}, with all its tiers (e.g. Wheat collection)`).setAutocomplete(true);
 
 export const xp: Command = {
   data: new SlashCommandBuilder()
@@ -223,8 +229,14 @@ export const xp: Command = {
       s.setName('task').setDescription('Full detail for one task')
         .addStringOption((o) => o.setName('task').setDescription('Task name').setRequired(true).setAutocomplete(true)),
     )
-    .addSubcommand((s) => s.setName('exclude').setDescription('Leave a category out of overview and rankings').addStringOption(categoryOption('exclude')))
-    .addSubcommand((s) => s.setName('include').setDescription('Bring an excluded category back').addStringOption(categoryOption('include')))
+    .addSubcommand((s) =>
+      s.setName('exclude').setDescription('Leave a category or one source out of overview and rankings (no options: list)')
+        .addStringOption(categoryOption('exclude')).addStringOption(sourceOption('exclude')),
+    )
+    .addSubcommand((s) =>
+      s.setName('include').setDescription('Bring an excluded category or source back (no options: list)')
+        .addStringOption(categoryOption('include')).addStringOption(sourceOption('include')),
+    )
     .addSubcommand((s) =>
       s.setName('tick').setDescription('Mark a task done on your linked profile when the API can\'t tell')
         .addStringOption((o) => o.setName('task').setDescription('Task name').setRequired(true).setAutocomplete(true)),

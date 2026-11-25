@@ -119,6 +119,15 @@ describe('rankTasks', () => {
     expect(pr.dropped.unavailable).toBeGreaterThan(0);
   });
 
+  it('drops excluded sources, every tier of them', () => {
+    const all = rankTasks(limeProgress, lime, { book }, { limit: 100_000 });
+    const top = all.ranked[0]!.progress.task;
+    const without = rankTasks(limeProgress, lime, { book }, { excludedSources: new Set([top.group!]), limit: 100_000 });
+    expect(without.ranked.some((r) => r.progress.task.group === top.group)).toBe(false);
+    expect(without.ranked.length).toBe(all.ranked.length - 1);
+    expect(without.dropped.excluded).toBeGreaterThan(0);
+  });
+
   it('breaks ties by XP', () => {
     const base = P.get('fairy_souls.exchange38')!;
     // Ranked alone, so drop prerequisites (a missing prerequisite counts as unfinished).

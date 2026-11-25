@@ -21,6 +21,8 @@ export interface UserSettings {
   excludedCategories: string[];
   /** Categories excluded by default (meta.json) that the user brought back with /xp include. */
   includedCategories?: string[];
+  /** Single sources (task groups) the user left out with /xp exclude source:. */
+  excludedSources?: string[];
 }
 
 /** Ticks and rate overrides belong to one profile of one player. */
@@ -139,8 +141,28 @@ export class UserData {
         ex.delete(category);
         if (defaults.includes(category)) inc.add(category);
       }
-      d[discordId] = { excludedCategories: [...ex].sort(), ...(inc.size ? { includedCategories: [...inc].sort() } : {}) };
+      const { includedCategories: _, ...rest } = d[discordId] ?? { excludedCategories: [] };
+      d[discordId] = { ...rest, excludedCategories: [...ex].sort(), ...(inc.size ? { includedCategories: [...inc].sort() } : {}) };
       return [...new Set([...defaults.filter((c) => !inc.has(c)), ...ex])].sort();
+    });
+  }
+
+  // ---- source filter ----
+  async getExcludedSources(discordId: string): Promise<Set<string>> {
+    return new Set((await this.s.settings.read())[discordId]?.excludedSources ?? []);
+  }
+
+  /** Excludes or includes one source; returns whether anything changed and the new list. */
+  setSourceExcluded(discordId: string, source: string, excluded: boolean): Promise<{ changed: boolean; list: string[] }> {
+    return this.s.settings.update((d) => {
+      const cur = d[discordId] ?? { excludedCategories: [] };
+      const set = new Set(cur.excludedSources ?? []);
+      const changed = excluded ? !set.has(source) : set.has(source);
+      if (excluded) set.add(source);
+      else set.delete(source);
+      const { excludedSources: _, ...rest } = cur;
+      d[discordId] = { ...rest, ...(set.size ? { excludedSources: [...set].sort() } : {}) };
+      return { changed, list: [...set].sort() };
     });
   }
 

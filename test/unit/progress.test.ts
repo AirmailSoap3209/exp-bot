@@ -132,6 +132,18 @@ describe('summarize', () => {
   });
 });
 
+describe('source exclusions in the overview', () => {
+  it('leaves excluded sources out of eligible XP and names them', () => {
+    const all = summarize(evalLime.progress);
+    const noFarming = summarize(evalLime.progress, new Set(), new Set(['skills.farming']));
+    const farmingXp = evalLime.progress.filter((p) => p.task.group === 'skills.farming').reduce((n, p) => n + p.task.xp, 0);
+    const total = (s: typeof all) => s.earned + s.remaining + s.likelyComplete + s.unknown;
+    expect(total(all) - total(noFarming)).toBe(farmingXp);
+    const json = overviewEmbed('Floor7Sweat', lime, noFarming, catalogue, { excludedSources: new Set(['skills.farming']) }).toJSON();
+    expect(json.description).toContain('Excluded sources: Farming');
+  });
+});
+
 describe('decideTick', () => {
   const task = (id: string) => catalogue.byId.get(id)!;
   it('refuses tasks the API already decides, allows the rest', () => {

@@ -44,6 +44,23 @@ describe('categoryView', () => {
   });
 });
 
+describe('categoryView with excluded sources', () => {
+  it('hides them and counts them', () => {
+    const all = categoryView(catalogue, progress, lime, { book }, 'skills');
+    const hide = all.result.ranked[0]!.progress.task.group!;
+    const v = categoryView(catalogue, progress, lime, { book }, 'skills', new Set([hide]));
+    expect(v.hiddenSources).toBe(1);
+    expect(v.result.ranked.some((r) => r.progress.task.group === hide)).toBe(false);
+    expect(all.hiddenSources).toBe(0);
+  });
+
+  it('notes excluded tasks in the task detail', () => {
+    const task = catalogue.byId.get('slayer.zombie.level8')!;
+    const json = taskEmbed(task, catalogue, book, { playerName: 'x', profile: lime, progress: P, excludedBy: 'source', now: 0 }).toJSON();
+    expect(json.fields?.find((f) => f.name === 'Excluded')?.value).toContain('/xp include source:');
+  });
+});
+
 describe('readable names', () => {
   it.each([
     ['Combat level 43', 'Combat'],

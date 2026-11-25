@@ -186,13 +186,17 @@ function add(b: CategorySummary, p: TaskProgress): void {
 
 /**
  * Totals for /xp overview. Monetary tasks never count toward eligible XP,
- * and neither do categories the user excluded with /xp exclude.
+ * and neither do categories or sources the user excluded with /xp exclude.
  */
-export function summarize(progress: TaskProgress[], excludedCategories: ReadonlySet<string> = new Set()): ProgressSummary {
+export function summarize(
+  progress: TaskProgress[],
+  excludedCategories: ReadonlySet<string> = new Set(),
+  excludedSources: ReadonlySet<string> = new Set(),
+): ProgressSummary {
   const total = emptyBuckets();
   const byCategory = new Map<string, CategorySummary>();
   for (const p of progress) {
-    if (p.task.monetary || excludedCategories.has(p.task.category)) continue;
+    if (p.task.monetary || excludedCategories.has(p.task.category) || excludedSources.has(p.task.group ?? p.task.id)) continue;
     add(total, p);
     let cat = byCategory.get(p.task.category);
     if (!cat) byCategory.set(p.task.category, (cat = emptyBuckets()));

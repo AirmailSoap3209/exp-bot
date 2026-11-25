@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { loadCatalogue } from '../../src/tasks/catalogue.js';
-import { activities, findTask, searchActivities, searchTasks } from '../../src/tasks/search.js';
+import { activities, findSource, findTask, searchActivities, searchSources, searchTasks, sources } from '../../src/tasks/search.js';
 
 const catalogue = loadCatalogue();
 
@@ -37,5 +37,26 @@ describe('activity search', () => {
     expect(new Set(all.map((a) => a.id)).size).toBe(all.length);
     expect(all.find((a) => a.id === 'skill.combat')?.label).toBe('Combat');
     expect(searchActivities(catalogue, 'skill combat')[0]?.value).toBe('skill.combat');
+  });
+});
+
+describe('source search', () => {
+  it('has one non-monetary source per group, with unique labels', () => {
+    const all = sources(catalogue);
+    expect(all.length).toBe(new Set(all.map((s) => s.id)).size);
+    expect(new Set(all.map((s) => s.label)).size).toBe(all.length);
+    expect(all.find((s) => s.id === 'bestiary.catacombs.bat')?.label).toBe('Bat Bestiary · Catacombs');
+    const wheat = all.find((s) => s.label === 'Wheat collection')!;
+    expect(wheat.tiers).toBe(catalogue.tasks.filter((t) => t.group === wheat.id).length);
+  });
+
+  it('autocompletes and resolves typed input by ID, label or a task in it', () => {
+    expect(searchSources(catalogue, 'revenant slayer')[0]?.value).toBe('slayer.zombie.level');
+    expect(searchSources(catalogue, 'revenant', (s) => s.id !== 'slayer.zombie.level').map((c) => c.value)).not.toContain('slayer.zombie.level');
+    for (const c of searchSources(catalogue, '')) expect(c.name.length).toBeLessThanOrEqual(100);
+    expect(findSource(catalogue, 'skills.farming')?.label).toBe('Farming');
+    expect(findSource(catalogue, 'wheat collection')?.category).toBe('collections');
+    expect(findSource(catalogue, 'slayer.zombie.tier5')?.id).toBe('slayer.zombie.tier');
+    expect(findSource(catalogue, 'nope')).toBeUndefined();
   });
 });

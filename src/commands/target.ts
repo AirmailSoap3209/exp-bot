@@ -19,6 +19,8 @@ export interface Target {
   link?: Link;
   evaluation: Evaluation;
   excluded: Set<string>;
+  /** Single sources (task groups) the caller excluded. */
+  excludedSources: Set<string>;
   /** Ticks removed because the API now shows those tasks incomplete. */
   clearedTicks: string[];
 }
@@ -31,7 +33,11 @@ export async function resolveTarget(interaction: ChatInputCommandInteraction, op
   const discordId = interaction.user.id;
   const player = interaction.options.getString('player') ?? undefined;
   const profileOpt = interaction.options.getString('profile') ?? undefined;
-  const [link, excluded] = await Promise.all([userData.getLink(discordId), userData.getExcluded(discordId, defaultExcluded(catalogue))]);
+  const [link, excluded, excludedSources] = await Promise.all([
+    userData.getLink(discordId),
+    userData.getExcluded(discordId, defaultExcluded(catalogue)),
+    userData.getExcludedSources(discordId),
+  ]);
 
   let loaded: LoadedProfile;
   if (player) {
@@ -47,7 +53,7 @@ export async function resolveTarget(interaction: ChatInputCommandInteraction, op
   const ticks = isLinked ? await userData.getTicks(key) : new Set<string>();
   const evaluation = evaluateProgress(catalogue, loaded.profile, ticks);
   const clearedTicks = evaluation.ticksToClear.length ? await userData.removeTicks(key, evaluation.ticksToClear) : [];
-  return { loaded, isLinked, link, evaluation, excluded, clearedTicks };
+  return { loaded, isLinked, link, evaluation, excluded, excludedSources, clearedTicks };
 }
 
 /** Loads the caller's linked profile, for commands that only make sense on it (tick, rate). */

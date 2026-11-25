@@ -9,6 +9,8 @@ export interface CategoryView {
   summary: CategorySummary | undefined;
   /** Next tier of every source that can be worked on now, quickest first. */
   result: RankResult;
+  /** Open sources left out because the user excluded them. */
+  hiddenSources: number;
 }
 
 /**
@@ -22,12 +24,18 @@ export function categoryView(
   profile: NormalizedProfile,
   ctx: EstimateContext,
   category: string,
+  excludedSources: ReadonlySet<string> = new Set(),
 ): CategoryView {
   const others = new Set(catalogue.meta.categories.map((c) => c.id).filter((c) => c !== category));
   const result = rankTasks(progress, profile, ctx, { excluded: others, limit: Number.MAX_SAFE_INTEGER });
   // "excluded" counted the other categories; this view only cares about its own.
   result.dropped.excluded = 0;
-  return { category, summary: summarize(progress.filter((p) => p.task.category === category)).byCategory.get(category), result };
+  // Sources the user excluded are hidden here (unlike a whole excluded category, which this view exists to show).
+  const before = result.ranked.length;
+  result.ranked = result.ranked.filter((r) => !excludedSources.has(r.progress.task.group ?? r.progress.task.id));
+  const hiddenSources = before - result.ranked.length;
+  const own = progress.filter((p) => p.task.category === category);
+  return { category, summary: summarize(own, new Set(), excludedSources).byCategory.get(category), result, hiddenSources };
 }
 
 /** Readable name for a metric, from the first task that uses it ("Combat level 43" -> "Combat"). */

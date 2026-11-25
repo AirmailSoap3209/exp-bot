@@ -73,7 +73,9 @@ pm2 logs xp-bot
   - Fixed minutes for fairy souls and minion crafts.
   - Bestiary rates scale with NEU's kill bracket, so a mob that needs 10× fewer kills per tier gets a 10× lower kills/min rate.
 - [x] 6. Settings: `/xp link`, `/xp exclude`/`include`, `/xp tick`/`untick`, `/xp rate`. Saved as JSON in `storage-data/` (gitignored).
-  - Links and category exclusions are keyed by Discord user. Exclusions apply to every lookup.
+  - Links and exclusions are keyed by Discord user. Exclusions apply to every lookup.
+  - `/xp exclude`/`include` take `category:`, `source:` (autocomplete), both, or neither (lists current exclusions). A source is one task group with all its tiers, such as "Wheat collection", "Revenant Horror Slayer" or "Bat Bestiary · Catacombs".
+  - Excluded sources leave `/xp optimize` and the overview totals, and `/xp category` hides them with a count. `/xp task` still shows them, with a note. Tasks whose prerequisite is in an excluded source stay blocked.
   - Ticks and rate overrides are keyed by player UUID + profile ID, and only apply when looking at your linked profile.
   - `/xp tick` refuses tasks the API already proves done or not done. Ticks the API later contradicts are cleared on the next `/xp overview`.
   - `/xp rate` overrides are stored and validated against catalogue activities, but nothing reads them until step 5's `/xp optimize`.

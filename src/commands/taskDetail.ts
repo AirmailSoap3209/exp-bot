@@ -16,6 +16,8 @@ export interface TaskDetailContext {
   profile: NormalizedProfile;
   progress: Map<string, TaskProgress>;
   estimate?: Estimate;
+  /** Set when the caller's exclusions leave this task out of rankings. */
+  excludedBy?: 'category' | 'source';
   now?: number;
 }
 
@@ -59,6 +61,14 @@ export function taskEmbed(task: Task, catalogue: Catalogue, book: RateBook, ctx?
     fields.push({ name: 'Status', value: clip([`**${STATUS_LABEL[p.status]}**`, progress, ...extra].join('\n')) });
   }
   fields.push({ name: 'Estimate', value: clip(estimateText(ctx?.estimate, p)) });
+  if (ctx?.excludedBy) {
+    fields.push({
+      name: 'Excluded',
+      value: ctx.excludedBy === 'category'
+        ? `You excluded the ${category} category, so this isn't ranked. \`/xp include category:\` brings it back.`
+        : `You excluded this source, so this isn't ranked. \`/xp include source:\` brings it back.`,
+    });
+  }
 
   if (task.prerequisites.length) {
     fields.push({

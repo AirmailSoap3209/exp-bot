@@ -14,7 +14,10 @@ export interface RankResult {
 }
 
 export interface RankOptions {
+  /** Category IDs to leave out. */
   excluded?: ReadonlySet<string>;
+  /** Source IDs (task groups) to leave out; counted under dropped.excluded too. */
+  excludedSources?: ReadonlySet<string>;
   limit?: number;
 }
 
@@ -37,7 +40,7 @@ export function rankTasks(progress: TaskProgress[], profile: NormalizedProfile, 
   for (const p of progress) {
     const t = p.task;
     if (t.monetary) dropped.monetary++;
-    else if (opts.excluded?.has(t.category)) dropped.excluded++;
+    else if (opts.excluded?.has(t.category) || opts.excludedSources?.has(t.group ?? t.id)) dropped.excluded++;
     else if (isDone(p)) dropped.done++;
     else if (p.status === 'unavailable') dropped.unavailable++;
     else if (p.blocked || t.prerequisites.some((id) => { const pre = byId.get(id); return !pre || !isDone(pre); })) dropped.blocked++;

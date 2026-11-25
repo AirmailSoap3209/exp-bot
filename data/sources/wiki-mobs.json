@@ -1,0 +1,1132 @@
+{
+ "source": "hypixelskyblock.minecraft.wiki mob pages, Mob Drops Table (raw wikitext), fetched 2026-11-25 by scripts/fetch-wiki-mobs.ts",
+ "note": "Per kill: Combat XP (and other skill XP) across the page's level variants, and drops at 100% chance in every variant, mapped to collection item IDs. Wisdom and Looting add more, so these are floors.",
+ "families": {
+  "dynamic.creeper": {
+   "page": "Creeper",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "SULPHUR": [
+     1,
+     1
+    ]
+   }
+  },
+  "dynamic.enderman": {
+   "page": "Enderman",
+   "combatXp": [
+    67,
+    67
+   ],
+   "drops": {
+    "ENDER_PEARL": [
+     1,
+     1
+    ]
+   }
+  },
+  "dynamic.skeleton": {
+   "page": "Skeleton",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "BONE": [
+     1,
+     1
+    ]
+   }
+  },
+  "dynamic.spider": {
+   "page": "Spider",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "SPIDER_EYE": [
+     1,
+     1
+    ],
+    "STRING": [
+     1,
+     1
+    ]
+   }
+  },
+  "dynamic.witch": {
+   "page": "Witch",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "SULPHUR": [
+     1,
+     1
+    ],
+    "GLOWSTONE_DUST": [
+     1,
+     1
+    ],
+    "REDSTONE": [
+     1,
+     1
+    ]
+   }
+  },
+  "dynamic.zombie": {
+   "page": "Zombie",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "ROTTEN_FLESH": [
+     1,
+     1
+    ]
+   }
+  },
+  "hub.crypt_ghoul": {
+   "page": "Crypt Ghoul",
+   "combatXp": [
+    49,
+    49
+   ],
+   "drops": {
+    "ROTTEN_FLESH": [
+     1,
+     1
+    ]
+   }
+  },
+  "hub.golden_ghoul": {
+   "page": "Golden Ghoul",
+   "combatXp": [
+    97,
+    97
+   ],
+   "drops": {
+    "ROTTEN_FLESH": [
+     8,
+     8
+    ],
+    "GOLD_INGOT": [
+     8,
+     8
+    ]
+   }
+  },
+  "hub.graveyard_zombie": {
+   "page": "Graveyard Zombie",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "ROTTEN_FLESH": [
+     1,
+     1
+    ]
+   }
+  },
+  "hub.old_wolf": {
+   "page": "Old Wolf",
+   "combatXp": [
+    100,
+    100
+   ],
+   "drops": {
+    "BONE": [
+     8,
+     8
+    ]
+   }
+  },
+  "hub.shiny_pig": {
+   "page": "Shiny Pig",
+   "combatXp": [
+    235,
+    235
+   ],
+   "drops": {}
+  },
+  "hub.wolf": {
+   "page": "Wolf",
+   "combatXp": [
+    16,
+    16
+   ],
+   "drops": {
+    "BONE": [
+     1,
+     1
+    ]
+   }
+  },
+  "hub.zombie_villager": {
+   "page": "Zombie Villager",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "ROTTEN_FLESH": [
+     1,
+     1
+    ]
+   }
+  },
+  "farming_1.chicken": {
+   "page": "Chicken",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "FEATHER": [
+     1,
+     1
+    ],
+    "RAW_CHICKEN": [
+     1,
+     1
+    ]
+   }
+  },
+  "farming_1.cow": {
+   "page": "Cow",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "LEATHER": [
+     1,
+     1
+    ]
+   }
+  },
+  "farming_1.mushroom_cow": {
+   "page": "Mushroom Cow",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "LEATHER": [
+     2,
+     2
+    ]
+   }
+  },
+  "farming_1.pig": {
+   "page": "Pig",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "PORK": [
+     1,
+     1
+    ]
+   }
+  },
+  "farming_1.rabbit": {
+   "page": "Rabbit",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "RABBIT": [
+     1,
+     1
+    ]
+   }
+  },
+  "farming_1.sheep": {
+   "page": "Sheep",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "MUTTON": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_1.arachne_s_brood": {
+   "page": "Arachne's Brood",
+   "combatXp": [
+    51,
+    51
+   ],
+   "drops": {
+    "STRING": [
+     8,
+     8
+    ],
+    "SPIDER_EYE": [
+     8,
+     8
+    ]
+   }
+  },
+  "combat_1.arachne_s_keeper": {
+   "page": "Arachne's Keeper",
+   "combatXp": [
+    46,
+    46
+   ],
+   "drops": {
+    "STRING": [
+     8,
+     8
+    ],
+    "SPIDER_EYE": [
+     8,
+     8
+    ]
+   }
+  },
+  "combat_1.dasher_spider": {
+   "page": "Dasher Spider",
+   "combatXp": [
+    7,
+    7
+   ],
+   "drops": {
+    "STRING": [
+     1,
+     1
+    ],
+    "SPIDER_EYE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_1.flint_skeleton": {
+   "page": "Flint Skeleton",
+   "combatXp": [
+    5,
+    5
+   ],
+   "drops": {
+    "BONE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_1.rain_slime": {
+   "page": "Rain Slime",
+   "combatXp": [
+    9,
+    9
+   ],
+   "drops": {
+    "SLIME_BALL": [
+     8,
+     8
+    ]
+   }
+  },
+  "combat_1.spider_jockey": {
+   "page": "Spider Jockey",
+   "combatXp": [
+    9,
+    9
+   ],
+   "drops": {
+    "SPIDER_EYE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_1.splitter_spider": {
+   "page": "Splitter Spider",
+   "combatXp": [
+    6,
+    6
+   ],
+   "drops": {
+    "STRING": [
+     1,
+     1
+    ],
+    "SPIDER_EYE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_1.voracious_spider": {
+   "page": "Voracious Spider",
+   "combatXp": [
+    13,
+    13
+   ],
+   "drops": {
+    "STRING": [
+     1,
+     1
+    ],
+    "SPIDER_EYE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_1.weaver_spider": {
+   "page": "Weaver Spider",
+   "combatXp": [
+    6,
+    6
+   ],
+   "drops": {
+    "STRING": [
+     1,
+     1
+    ],
+    "SPIDER_EYE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_3.enderman": {
+   "page": "Enderman",
+   "combatXp": [
+    67,
+    67
+   ],
+   "drops": {
+    "ENDER_PEARL": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_3.endermite": {
+   "page": "Endermite",
+   "combatXp": [
+    51,
+    51
+   ],
+   "drops": {
+    "ENDER_STONE": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_3.obsidian_defender": {
+   "page": "Obsidian Defender",
+   "combatXp": [
+    66,
+    66
+   ],
+   "drops": {
+    "OBSIDIAN": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_3.voidling_extremist": {
+   "page": "Voidling Extremist",
+   "combatXp": [
+    457,
+    457
+   ],
+   "drops": {}
+  },
+  "combat_3.voidling_fanatic": {
+   "page": "Voidling Fanatic",
+   "combatXp": [
+    274,
+    274
+   ],
+   "drops": {
+    "ENDER_PEARL": [
+     16,
+     16
+    ]
+   }
+  },
+  "combat_3.seer": {
+   "page": "Seer",
+   "combatXp": [
+    82,
+    82
+   ],
+   "drops": {
+    "ENDER_PEARL": [
+     1,
+     1
+    ]
+   }
+  },
+  "combat_3.zealot": {
+   "page": "Zealot",
+   "combatXp": [
+    109,
+    109
+   ],
+   "drops": {
+    "ENDER_PEARL": [
+     4,
+     4
+    ]
+   }
+  },
+  "crimson_isle.blaze": {
+   "page": "Blaze",
+   "combatXp": [
+    210,
+    210
+   ],
+   "drops": {
+    "BLAZE_ROD": [
+     1,
+     1
+    ]
+   }
+  },
+  "crimson_isle.flaming_spider": {
+   "page": "Flaming Spider",
+   "combatXp": [
+    125,
+    125
+   ],
+   "drops": {
+    "STRING": [
+     8,
+     8
+    ],
+    "SPIDER_EYE": [
+     8,
+     8
+    ]
+   }
+  },
+  "crimson_isle.flare": {
+   "page": "Flare",
+   "combatXp": [
+    360,
+    360
+   ],
+   "drops": {
+    "BLAZE_ROD": [
+     8,
+     8
+    ]
+   }
+  },
+  "crimson_isle.ghast": {
+   "page": "Ghast",
+   "combatXp": [
+    210,
+    210
+   ],
+   "drops": {
+    "GHAST_TEAR": [
+     1,
+     1
+    ]
+   }
+  },
+  "crimson_isle.kada_knight": {
+   "page": "Kada Knight",
+   "combatXp": [
+    267,
+    267
+   ],
+   "drops": {
+    "PORK": [
+     1,
+     1
+    ],
+    "FEATHER": [
+     1,
+     1
+    ],
+    "RAW_CHICKEN": [
+     1,
+     1
+    ]
+   }
+  },
+  "crimson_isle.magma_cube": {
+   "page": "Magma Cube",
+   "combatXp": [
+    226,
+    226
+   ],
+   "drops": {
+    "MAGMA_CREAM": [
+     1,
+     1
+    ]
+   }
+  },
+  "crimson_isle.magma_cube_rider": {
+   "page": "Magma Cube Rider",
+   "combatXp": [
+    240,
+    240
+   ],
+   "drops": {
+    "PORK": [
+     8,
+     8
+    ],
+    "MAGMA_CREAM": [
+     8,
+     8
+    ]
+   }
+  },
+  "crimson_isle.matcho": {
+   "page": "Matcho",
+   "combatXp": [
+    304,
+    304
+   ],
+   "drops": {
+    "SULPHUR_ORE": [
+     1,
+     1
+    ]
+   }
+  },
+  "crimson_isle.millennia_aged_blaze": {
+   "page": "Millennia-Aged Blaze",
+   "combatXp": [
+    435,
+    435
+   ],
+   "drops": {
+    "BLAZE_ROD": [
+     16,
+     16
+    ]
+   }
+  },
+  "crimson_isle.mushroom_bull": {
+   "page": "Mushroom Bull",
+   "combatXp": [
+    250,
+    250
+   ],
+   "drops": {
+    "LEATHER": [
+     8,
+     8
+    ]
+   }
+  },
+  "crimson_isle.smoldering_blaze": {
+   "page": "Smoldering Blaze",
+   "combatXp": [
+    301,
+    301
+   ],
+   "drops": {
+    "BLAZE_ROD": [
+     8,
+     8
+    ]
+   }
+  },
+  "crimson_isle.vanquisher": {
+   "page": "Vanquisher",
+   "combatXp": [
+    352,
+    352
+   ],
+   "drops": {}
+  },
+  "crimson_isle.wither_skeleton": {
+   "page": "Wither Skeleton",
+   "combatXp": [
+    216,
+    216
+   ],
+   "drops": {
+    "COAL": [
+     8,
+     9
+    ],
+    "BONE": [
+     8,
+     8
+    ]
+   }
+  },
+  "crimson_isle.wither_spectre": {
+   "page": "Wither Spectre",
+   "combatXp": [
+    216,
+    216
+   ],
+   "drops": {
+    "SULPHUR": [
+     1,
+     1
+    ]
+   }
+  },
+  "mining_2.emerald_slime": {
+   "page": "Emerald Slime",
+   "combatXp": [
+    6,
+    16
+   ],
+   "drops": {
+    "SLIME_BALL": [
+     1,
+     2
+    ]
+   }
+  },
+  "mining_2.lapis_zombie": {
+   "page": "Lapis Zombie",
+   "combatXp": [
+    9,
+    9
+   ],
+   "drops": {
+    "INK_SACK:4": [
+     4,
+     4
+    ],
+    "ROTTEN_FLESH": [
+     1,
+     1
+    ]
+   }
+  },
+  "mining_2.miner_skeleton": {
+   "page": "Miner Skeleton",
+   "combatXp": [
+    16,
+    16
+   ],
+   "drops": {
+    "DIAMOND": [
+     1,
+     1
+    ],
+    "BONE": [
+     1,
+     1
+    ]
+   }
+  },
+  "mining_2.miner_zombie": {
+   "page": "Miner Zombie",
+   "combatXp": [
+    19,
+    19
+   ],
+   "drops": {
+    "DIAMOND": [
+     1,
+     1
+    ],
+    "ROTTEN_FLESH": [
+     1,
+     1
+    ]
+   }
+  },
+  "mining_2.redstone_pigman": {
+   "page": "Redstone Pigman",
+   "combatXp": [
+    12,
+    12
+   ],
+   "drops": {
+    "REDSTONE": [
+     4,
+     4
+    ]
+   }
+  },
+  "mining_2.sneaky_creeper": {
+   "page": "Sneaky Creeper",
+   "combatXp": [
+    7,
+    7
+   ],
+   "drops": {
+    "SULPHUR": [
+     1,
+     1
+    ]
+   }
+  },
+  "mining_3.diamond_goblin": {
+   "page": "Diamond Goblin",
+   "combatXp": [
+    163,
+    163
+   ],
+   "drops": {
+    "MITHRIL_ORE": [
+     32,
+     32
+    ]
+   }
+  },
+  "mining_3.ghost": {
+   "page": "Ghost",
+   "combatXp": [
+    100,
+    100
+   ],
+   "drops": {}
+  },
+  "mining_3.glacite_bowman": {
+   "page": "Glacite Bowman",
+   "combatXp": [
+    261,
+    261
+   ],
+   "drops": {}
+  },
+  "mining_3.glacite_caver": {
+   "page": "Glacite Caver",
+   "combatXp": [
+    262,
+    262
+   ],
+   "drops": {}
+  },
+  "mining_3.glacite_mage": {
+   "page": "Glacite Mage",
+   "combatXp": [
+    265,
+    265
+   ],
+   "drops": {}
+  },
+  "mining_3.glacite_mutt": {
+   "page": "Glacite Mutt",
+   "combatXp": [
+    259,
+    259
+   ],
+   "drops": {}
+  },
+  "mining_3.glacite_walker": {
+   "page": "Glacite Walker",
+   "combatXp": [
+    36,
+    36
+   ],
+   "drops": {}
+  },
+  "mining_3.goblin": {
+   "page": "Goblin",
+   "combatXp": [
+    34,
+    34
+   ],
+   "drops": {}
+  },
+  "mining_3.golden_goblin": {
+   "page": "Golden Goblin",
+   "combatXp": [
+    148,
+    148
+   ],
+   "drops": {
+    "MITHRIL_ORE": [
+     8,
+     8
+    ]
+   }
+  },
+  "mining_3.littlefoot": {
+   "page": "Littlefoot",
+   "combatXp": [
+    3810,
+    3810
+   ],
+   "drops": {}
+  },
+  "mining_3.powder_ghast": {
+   "page": "Powder Ghast",
+   "combatXp": [
+    82,
+    82
+   ],
+   "drops": {}
+  },
+  "mining_3.star_sentry": {
+   "page": "Star Sentry",
+   "combatXp": [
+    202,
+    202
+   ],
+   "drops": {
+    "MITHRIL_ORE": [
+     8,
+     8
+    ]
+   }
+  },
+  "mining_3.treasure_hoarder": {
+   "page": "Treasure Hoarder",
+   "combatXp": [
+    91,
+    91
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.automaton": {
+   "page": "Automaton",
+   "combatXp": [
+    100,
+    100
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.butterfly": {
+   "page": "Butterfly",
+   "combatXp": [
+    9,
+    9
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.grunt": {
+   "page": "Grunt",
+   "combatXp": [
+    81,
+    81
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.sludge": {
+   "page": "Sludge",
+   "combatXp": [
+    70,
+    117
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.thyst": {
+   "page": "Thyst",
+   "combatXp": [
+    58,
+    58
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.stoneworm": {
+   "page": "Stoneworm",
+   "combatXp": [
+    178,
+    178
+   ],
+   "drops": {}
+  },
+  "crystal_hollows.yog": {
+   "page": "Yog",
+   "combatXp": [
+    139,
+    139
+   ],
+   "drops": {}
+  },
+  "foraging_1.howling_spirit": {
+   "page": "Howling Spirit",
+   "combatXp": [
+    76,
+    76
+   ],
+   "drops": {
+    "LOG_2": [
+     16,
+     16
+    ],
+    "LOG:3": [
+     16,
+     16
+    ],
+    "LOG_2:1": [
+     16,
+     16
+    ]
+   }
+  },
+  "foraging_1.pack_spirit": {
+   "page": "Pack Spirit",
+   "combatXp": [
+    64,
+    64
+   ],
+   "drops": {
+    "LOG_2": [
+     8,
+     8
+    ],
+    "LOG:3": [
+     8,
+     8
+    ],
+    "LOG_2:1": [
+     8,
+     8
+    ]
+   }
+  },
+  "foraging_2.shellwise": {
+   "page": "Shellwise",
+   "combatXp": [
+    5,
+    5
+   ],
+   "otherXp": {
+    "hunting": [
+     500,
+     500
+    ]
+   },
+   "drops": {
+    "SEA_LUMIES": [
+     16,
+     16
+    ]
+   }
+  },
+  "foraging_2.stridersurfer": {
+   "page": "Stridersurfer",
+   "combatXp": [
+    87,
+    87
+   ],
+   "otherXp": {
+    "fishing": [
+     775,
+     775
+    ]
+   },
+   "drops": {}
+  },
+  "foraging_2.tidetot": {
+   "page": "Tidetot",
+   "combatXp": [
+    57,
+    57
+   ],
+   "drops": {
+    "SEA_LUMIES": [
+     8,
+     8
+    ]
+   }
+  },
+  "foraging_3.grizzly_bear": {
+   "page": "Grizzly Bear",
+   "combatXp": [
+    151,
+    151
+   ],
+   "otherXp": {
+    "hunting": [
+     1000,
+     1000
+    ]
+   },
+   "drops": {}
+  },
+  "foraging_3.parched": {
+   "page": "Parched",
+   "combatXp": [
+    87,
+    87
+   ],
+   "drops": {}
+  }
+ },
+ "noData": [
+  "dynamic.bat (Bat)",
+  "dynamic.slime (Slime)",
+  "combat_1.silverfish (Silverfish)",
+  "crimson_isle.tentacle (Tentacle)",
+  "mining_3.goblin_raiders (Goblin Raiders)",
+  "foraging_2.azure (Azure)",
+  "foraging_2.bambuleaf (Bambuleaf)",
+  "foraging_2.birries (Birries)",
+  "foraging_2.bogged (Bogged)",
+  "foraging_2.chill (Chill)",
+  "foraging_2.cod (Cod)",
+  "foraging_2.coralot (Coralot)",
+  "foraging_2.dreadwing (Dreadwing)",
+  "foraging_2.ent (Ent)",
+  "foraging_2.hewver (Hewver)",
+  "foraging_2.hideonleaf (Hideonleaf)",
+  "foraging_2.honeyhog (Honeyhog)",
+  "foraging_2.honeymite (Honeymite)",
+  "foraging_2.invisibug (Invisibug)",
+  "foraging_2.joydive (Joydive)",
+  "foraging_2.lumisquid (Lumisquid)",
+  "foraging_2.mochibear (Mochibear)",
+  "foraging_2.mossybit (Mossybit)",
+  "foraging_2.murkbat (Murkbat)",
+  "foraging_2.nessie (Nessie)",
+  "foraging_2.phanflare (Phanflare)",
+  "foraging_2.phanpyre (Phanpyre)",
+  "foraging_2.salmon (Salmon)",
+  "foraging_2.spike (Spike)",
+  "foraging_2.stag_beetle (Stag Beetle)",
+  "foraging_2.tadgang (Tadgang)",
+  "foraging_2.the_loch_emperor (The Loch Emperor)",
+  "foraging_2.verdant (Verdant)",
+  "foraging_2.wetwing (Wetwing)",
+  "foraging_2.woodlouse (Woodlouse)",
+  "foraging_3.ant (Ant)",
+  "foraging_3.beeheemoth (Beeheemoth)",
+  "foraging_3.blue_jay (Blue Jay)",
+  "foraging_3.brineling (Brineling)",
+  "foraging_3.bunbun (Bunbun)",
+  "foraging_3.drybark (Drybark)",
+  "foraging_3.dustybit (Dustybit)",
+  "foraging_3.ember (Ember)",
+  "foraging_3.firefox (Firefox)",
+  "foraging_3.giant_isopod (Giant Isopod)",
+  "foraging_3.groundhog (Groundhog)",
+  "foraging_3.haggard (Haggard)",
+  "foraging_3.hideonsun (Hideonsun)",
+  "foraging_3.hivethief (Hivethief)",
+  "foraging_3.honeybuzz (Honeybuzz)",
+  "foraging_3.mountain_goat (Mountain Goat)",
+  "foraging_3.pangolin (Pangolin)",
+  "foraging_3.pollendart (Pollendart)",
+  "foraging_3.puck (Puck)",
+  "foraging_3.queen_ant (Queen Ant)",
+  "foraging_3.sepialot (Sepialot)",
+  "foraging_3.silkbreeze (Silkbreeze)",
+  "foraging_3.solar (Solar)",
+  "foraging_3.sprawl (Sprawl)",
+  "foraging_3.tiki (Tiki)",
+  "foraging_3.timil (Timil)",
+  "foraging_3.torrid (Torrid)",
+  "foraging_3.water_snake (Water Snake)"
+ ]
+}

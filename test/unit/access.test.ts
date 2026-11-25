@@ -100,7 +100,7 @@ describe('generated access data (hypixelskyblock.minecraft.wiki, 2026-11-24)', (
   it('gates collections, bestiary families and slayer bosses on where they are done', () => {
     expect(t('collections.glacite.tier1').access?.anyOf.map((a) => a.id)).toEqual(['glacite_tunnels']);
     for (const item of ['glacite', 'tungsten', 'umber']) expect(t(`collections.${item}.tier1`).access?.anyOf[0]).toMatchObject({ hotm: 7 });
-    expect(t('collections.gemstone_collection.tier1').access?.anyOf.map((a) => a.id)).toEqual(['crystal_hollows', 'crimson_isle']);
+    expect(t('collections.gemstone_collection.tier1').access?.anyOf).toMatchObject([{ id: 'crystal_hollows', hotm: 4 }]);
     expect(t('collections.chili_pepper.tier1').access?.other).toEqual(['an Inferno Minion running LEGENDARY Hypergolic fuel']);
     expect(t('collections.wheat.tier1').access).toBeUndefined();
     expect(t('bestiary.fishing_lava.ragnarok.tier1').access).toMatchObject({ anyOf: [{ id: 'crimson_isle' }], skills: { fishing: 47 } });

@@ -14,8 +14,7 @@ describe('combo data', () => {
   it('loads every combo, sorted by ID', () => {
     const ids = combos.map((c) => c.id);
     expect(ids).toEqual([...ids].sort((a, b) => a.localeCompare(b)));
-    expect(ids.filter((id) => /^combo\.(combat|dungeons|slayer)\./.test(id))).toEqual([
-      'combo.combat.blaze', 'combo.combat.crypt_ghoul', 'combo.combat.enderman', 'combo.combat.ghast', 'combo.combat.magma_cube', 'combo.combat.zealot',
+    expect(ids.filter((id) => /^combo\.(dungeons|slayer)\./.test(id))).toEqual([
       'combo.dungeons.f0', 'combo.dungeons.f1', 'combo.dungeons.f2', 'combo.dungeons.f3', 'combo.dungeons.f4', 'combo.dungeons.f5', 'combo.dungeons.f6', 'combo.dungeons.f7',
       'combo.slayer.blaze', 'combo.slayer.enderman', 'combo.slayer.spider', 'combo.slayer.wolf', 'combo.slayer.zombie',
     ]);
@@ -37,17 +36,29 @@ describe('combo data', () => {
     expect(yieldPer(byId.get('combo.mine.ink_sack-4')!.yields[0]!, 'early')).toEqual([0.389, 1.75]);
   });
 
+  it('generates a mob combo for every grindable family with wiki kill data, and slayer quests with their spawn mob', () => {
+    const mobs = JSON.parse(readFileSync(new URL('../../data/sources/wiki-mobs.json', import.meta.url), 'utf8')) as { families: Record<string, unknown> };
+    for (const id of Object.keys(mobs.families)) expect(byId.get(`combo.mob.${id}`), id).toBeDefined();
+    expect(byId.get('combo.mob.combat_3.zealot')).toMatchObject({ name: 'Kill Zealots', location: 'The End', yields: [{ metric: 'skills.combat.xp', per: [109, 109] }, { metric: 'collections.ENDER_PEARL', per: [4, 4] }] });
+    expect(byId.get('combo.mob.combat_3.enderman')!.name).toBe('Kill Endermen');
+    // Revenant: 5,000 Combat XP to spawn a T4 (500 slayer XP) from 49 XP Crypt Ghouls = 0.204 kills per slayer XP.
+    const rev = byId.get('combo.slayer.zombie')!;
+    expect(rev.yields.map((y) => y.metric)).toEqual(['skills.combat.xp', 'bestiary.family.hub.crypt_ghoul', 'collections.ROTTEN_FLESH']);
+    expect(yieldPer(rev.yields[1]!, 'mid')).toEqual([0.204, 0.204]);
+    expect(byId.get('combo.slayer.spider')!.yields.map((y) => y.metric)).toEqual(['skills.combat.xp']);
+  });
+
   it('works out what the primary advances from the tasks that use it', () => {
     expect(byId.get('combo.farm.wheat')!.primaryMetrics).toEqual(['collections.WHEAT']);
     expect(byId.get('combo.slayer.zombie')!.primaryMetrics).toEqual(['slayer.zombie.xp']);
-    expect(byId.get('combo.combat.zealot')!.primaryMetrics).toEqual(['bestiary.family.combat_3.zealot']);
+    expect(byId.get('combo.mob.combat_3.zealot')!.primaryMetrics).toEqual(['bestiary.family.combat_3.zealot']);
   });
 
   it('picks the bracket range for gear-dependent yields, and the fixed range otherwise', () => {
     const farm = byId.get('combo.farm.wheat')!.yields[0]!;
     expect(yieldPer(farm, 'early')).toEqual([2, 4]);
     expect(yieldPer(farm, 'late')).toEqual([0.211, 0.364]);
-    const pearls = byId.get('combo.combat.zealot')!.yields.find((y) => y.metric === 'collections.ENDER_PEARL')!;
+    const pearls = byId.get('combo.mob.combat_3.zealot')!.yields.find((y) => y.metric === 'collections.ENDER_PEARL')!;
     expect(yieldPer(pearls, 'early')).toEqual([4, 4]);
     expect(yieldPer(pearls, 'late')).toEqual([4, 4]);
   });

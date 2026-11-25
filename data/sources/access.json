@@ -141,7 +141,7 @@
     "note": "Hypixel item IDs. 'areas' is any-of: one reachable area is enough. Obsidian, Ice and items found on starter islands are not gated.",
     "MITHRIL_ORE": { "areas": ["dwarven_mines"] },
     "HARD_STONE": { "areas": ["crystal_hollows"] },
-    "GEMSTONE_COLLECTION": { "areas": ["crystal_hollows", "crimson_isle"] },
+    "GEMSTONE_COLLECTION": { "areas": ["crystal_hollows"] },
     "GLACITE": { "areas": ["glacite_tunnels"] },
     "TUNGSTEN": { "areas": ["glacite_tunnels"] },
     "UMBER": { "areas": ["glacite_tunnels"] },

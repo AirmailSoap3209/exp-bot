@@ -17,6 +17,25 @@ cp .env.example .env   # fill in HYPIXEL_API_KEY (and Discord values once comman
 | `npm run build` / `npm start` | Compile to `dist/` and run the bot |
 | `npm run dev` | Run the bot with reload |
 
+## Running on your PC (Windows)
+
+Use this when the server is down or behind. **Stop the server copy first** (`pm2 stop xp-bot`), or both copies answer every command.
+
+```powershell
+npm ci                      # once, and after pulling dependency changes
+copy .env.example .env      # once; fill in DISCORD_TOKEN, DISCORD_CLIENT_ID, HYPIXEL_API_KEY, DISCORD_GUILD_ID
+npm run local               # registers /xp with Discord, then runs the bot and reloads on code changes
+```
+
+Ctrl+C stops it cleanly. Set `DISCORD_GUILD_ID` so command changes show up instantly instead of within the hour.
+
+Links, ticks, exclusions and session rates live in `storage-data/` on whichever machine runs the bot. To keep yours, copy the server's folder over before starting, and copy it back before restarting the server:
+
+```powershell
+scp -r user@your-server:~/exp-bot/storage-data .    # server -> PC
+scp -r storage-data user@your-server:~/exp-bot/     # PC -> server, with the server bot stopped
+```
+
 ## Running on a Linux server (pm2)
 
 Written for Ubuntu/Debian, such as a Contabo VPS. Run one copy only. Don't run the bot on your PC at the same time, or both copies answer every command.

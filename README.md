@@ -132,6 +132,18 @@ pm2 logs xp-bot
   - **Minimum time per task** (`minMinutes` on rates, from `rate-defaults.json` `minimumMinutes`): one slayer boss for slayer XP, one dungeon run for Catacombs/class XP and dungeon-mob bestiary, one Kuudra run for Kuudra bestiary. The Kuudra run time is an estimate, because the wiki only gives per-wave timers.
   - **Enchanting** uses its own bracket cut-offs (10/30). Below 10 there are no Experiments, so the rate is enchanting at a table (~100–600 XP/min, estimate). The daily Experiment limit isn't modelled.
 
+- [ ] 11. Combined activities ("combos"): one action that progresses several sources at once.
+  - [x] Data and loader: `data/combos/*.json`, loaded and validated at startup by `src/combos/combos.ts`. `npm run combos` lists them.
+    - Each combo has a **primary** activity, whose existing rate is reused (session, override or bracket default), and **yields**. A yield is a ratio to the primary's unit, as a range, per bracket when it depends on gear. The primary's own metrics come from the tasks that use it.
+    - Validation rejects the whole set on any problem: duplicate IDs, a primary with no rate or no tasks, a yield metric no task uses, a yield repeating the primary's metric, bad ranges, or a missing basis.
+    - 15 combos, from hypixelskyblock.minecraft.wiki (2026-11-24):
+      - 5 slayer bosses: Combat XP per slayer XP = Combat XP needed to spawn / slayer XP, at the bracket's tier.
+      - 6 mob grinds: Combat XP and guaranteed drops per kill.
+      - 4 crops: Farming XP per item = XP per crop / (1 + fortune/100). One base drop is assumed, because the wiki doesn't state base drops.
+    - All yields are floors (no Wisdom, Looting or boss-kill XP).
+    - Not yet: mining (base drops and fortune not sourced) and dungeon floors (only Floor VII's base XP is on the wiki, and the class XP split isn't stated).
+  - [ ] Combo rows in `/xp optimize` and `/xp target`, `/xp exclude activity:`, "Also progressed by" in `/xp task` (step 4).
+
 ## API check findings (2026-11-24)
 
 - **`leveling.completed_tasks` exists**, but only holds one-time tasks: slayer first kills (`DEFEAT_ZOMBIE_SLAYER_ONE`), floor completions (`COMPLETE_CATACOMBS0`–`7`, `COMPLETE_MASTER_CATACOMBS1`–`7`), objectives, songs, essence perks, Abiphone, bank. Skills, collections, bestiary, minions and fairy souls never appear, so those need their own readers. A task entry can carry the Hypixel task ID so "verified complete" comes straight from the list.

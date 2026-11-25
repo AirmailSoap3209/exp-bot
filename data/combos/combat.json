@@ -1,0 +1,54 @@
+{
+  "source": "hypixelskyblock.minecraft.wiki mob pages (Zealot, Enderman, Crypt_Ghoul, Ghast, Blaze, Magma_Cube), XP and drop tables, fetched 2026-11-24",
+  "note": "Primary is bestiary kills. Combat XP is the base per kill (Combat Wisdom adds more) and drops are the guaranteed 100% drops (Looting adds more), so these are floors.",
+  "combos": [
+    {
+      "id": "combo.combat.zealot", "name": "Kill Zealots", "location": "Dragon's Nest, The End",
+      "primary": "combat.combat_3.zealot",
+      "yields": [
+        { "metric": "skills.combat.xp", "per": [109, 109], "basis": "Zealot Lv73: 109 Combat XP" },
+        { "metric": "collections.ENDER_PEARL", "per": [4, 4], "basis": "Zealot: 4 Ender Pearl, 100%" }
+      ]
+    },
+    {
+      "id": "combo.combat.enderman", "name": "Kill Endermen", "location": "The End",
+      "primary": "combat.combat_3.enderman",
+      "yields": [
+        { "metric": "skills.combat.xp", "per": [67, 88], "basis": "Enderman Lv45-59: 67-88 Combat XP" },
+        { "metric": "collections.ENDER_PEARL", "per": [1, 1], "basis": "Enderman: 1 Ender Pearl, 100%" }
+      ]
+    },
+    {
+      "id": "combo.combat.crypt_ghoul", "name": "Kill Crypt Ghouls", "location": "Crypts, Hub",
+      "primary": "combat.hub.crypt_ghoul",
+      "yields": [
+        { "metric": "skills.combat.xp", "per": [49, 49], "basis": "Crypt Ghoul Lv33: 49 Combat XP" },
+        { "metric": "collections.ROTTEN_FLESH", "per": [1, 1], "basis": "Crypt Ghoul: 1 Rotten Flesh, 100%" }
+      ]
+    },
+    {
+      "id": "combo.combat.ghast", "name": "Kill Ghasts", "location": "Crimson Isle (night)",
+      "primary": "combat.crimson_isle.ghast",
+      "yields": [
+        { "metric": "skills.combat.xp", "per": [210, 210], "basis": "Ghast Lv140: 210 Combat XP" },
+        { "metric": "collections.GHAST_TEAR", "per": [1, 1], "basis": "Ghast: 1 Ghast Tear, 100%" }
+      ]
+    },
+    {
+      "id": "combo.combat.blaze", "name": "Kill Blazes", "location": "Stronghold, Crimson Isle",
+      "primary": "combat.crimson_isle.blaze",
+      "yields": [
+        { "metric": "skills.combat.xp", "per": [210, 210], "basis": "Blaze Lv140: 210 Combat XP" },
+        { "metric": "collections.BLAZE_ROD", "per": [1, 1], "basis": "Blaze: 1 Blaze Rod, 100%" }
+      ]
+    },
+    {
+      "id": "combo.combat.magma_cube", "name": "Kill Magma Cubes", "location": "Crimson Fields, Crimson Isle",
+      "primary": "combat.crimson_isle.magma_cube",
+      "yields": [
+        { "metric": "skills.combat.xp", "per": [226, 226], "basis": "Magma Cube Lv151: 226 Combat XP" },
+        { "metric": "collections.MAGMA_CREAM", "per": [1, 1], "basis": "Magma Cube: 1 Magma Cream, 100%" }
+      ]
+    }
+  ]
+}

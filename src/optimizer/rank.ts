@@ -1,6 +1,7 @@
 import { estimateTask, type Estimate, type EstimateContext } from '../estimate/estimate.js';
 import type { NormalizedProfile } from '../profile/types.js';
 import type { TaskProgress } from '../tasks/progress.js';
+import { dropReason, isDone, type Exclusions } from './eligible.js';
 
 export interface RankedTask {
   progress: TaskProgress;
@@ -13,16 +14,10 @@ export interface RankResult {
   dropped: Record<'done' | 'monetary' | 'excluded' | 'unavailable' | 'blocked' | 'laterTier' | 'noRate', number>;
 }
 
-export interface RankOptions {
-  /** Category IDs to leave out. */
-  excluded?: ReadonlySet<string>;
-  /** Source IDs (task groups) to leave out; counted under dropped.excluded too. */
-  excludedSources?: ReadonlySet<string>;
+/** Excluded categories and sources are both counted under dropped.excluded. */
+export interface RankOptions extends Exclusions {
   limit?: number;
 }
-
-/** Counts as finished for prerequisite purposes, including estimates that say done. */
-const isDone = (p: TaskProgress) => p.status === 'verified_complete' || p.status === 'ticked' || (p.status === 'estimated' && p.likelyComplete);
 
 /**
  * Ranks the quickest eligible tasks:
@@ -37,13 +32,10 @@ export function rankTasks(progress: TaskProgress[], profile: NormalizedProfile, 
   const byId = new Map(progress.map((p) => [p.task.id, p]));
 
   const pool: TaskProgress[] = [];
+  const done = (id: string) => { const pre = byId.get(id); return !!pre && isDone(pre); };
   for (const p of progress) {
-    const t = p.task;
-    if (t.monetary) dropped.monetary++;
-    else if (opts.excluded?.has(t.category) || opts.excludedSources?.has(t.group ?? t.id)) dropped.excluded++;
-    else if (isDone(p)) dropped.done++;
-    else if (p.status === 'unavailable') dropped.unavailable++;
-    else if (p.blocked || t.prerequisites.some((id) => { const pre = byId.get(id); return !pre || !isDone(pre); })) dropped.blocked++;
+    const reason = dropReason(p, done, opts);
+    if (reason) dropped[reason]++;
     else pool.push(p);
   }
 

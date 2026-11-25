@@ -1,4 +1,5 @@
 import { sourceName } from '../optimizer/category.js';
+import { sourceOf } from '../optimizer/eligible.js';
 import type { Catalogue } from './catalogue.js';
 import type { Task } from './types.js';
 
@@ -96,7 +97,7 @@ export function sources(catalogue: Catalogue): Source[] {
 }
 
 /** Source of a task, as used by source exclusions. */
-export const sourceId = (t: Task) => t.group ?? t.id;
+export const sourceId = sourceOf;
 
 export function searchSources(catalogue: Catalogue, query: string, include: (s: Source) => boolean = () => true): Choice[] {
   const names = new Map(catalogue.meta.categories.map((c) => [c.id, c.name]));

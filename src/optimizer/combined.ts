@@ -17,6 +17,40 @@ export function comboEntry(row: ComboRow): RankedTask {
   return { progress: row.horizon, estimate, combo: row };
 }
 
+export interface ComboView {
+  /** Combos with something to do, best XP per minute first. */
+  rows: RankedTask[];
+  /** Combos that have nothing to do right now (locked, maxed, or finish nothing beyond their primary). */
+  idle: Combo[];
+  /** Combos left out because the user excluded their primary activity. */
+  excluded: Combo[];
+}
+
+/**
+ * /xp combos: every combo scored on the real profile. Each row stands alone (nothing is claimed
+ * between rows, unlike /xp optimize), so it shows everything that combo would finish.
+ */
+export function comboView(
+  progress: TaskProgress[],
+  profile: NormalizedProfile,
+  ctx: EstimateContext,
+  combos: readonly Combo[],
+  ex: RankOptions = {},
+): ComboView {
+  const state = new PlanState(progress);
+  const rows: RankedTask[] = [];
+  const idle: Combo[] = [];
+  const excluded: Combo[] = [];
+  for (const c of combos) {
+    if (ex.excludedActivities?.has(c.primary)) { excluded.push(c); continue; }
+    const row = scoreCombo(c, state, profile, ctx, ex);
+    if (row) rows.push(comboEntry(row));
+    else idle.push(c);
+  }
+  rows.sort((a, b) => b.estimate.xpPerMin - a.estimate.xpPerMin || a.estimate.midMinutes - b.estimate.midMinutes || a.combo!.combo.id.localeCompare(b.combo!.combo.id));
+  return { rows, idle, excluded };
+}
+
 /** Quicker first; on a tie, more XP. */
 const before = (a: { mid: number; xp: number }, b: { mid: number; xp: number }) => a.mid < b.mid || (a.mid === b.mid && a.xp > b.xp);
 

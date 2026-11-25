@@ -7,7 +7,7 @@ import { combosFor, scoreCombo } from '../../src/combos/score.js';
 import { loadRates, type RateBook } from '../../src/estimate/rates.js';
 import type { RateEntry } from '../../src/estimate/types.js';
 import type { ProfilesResponse } from '../../src/hypixel/client.js';
-import { comboEntry, rankWithCombos } from '../../src/optimizer/combined.js';
+import { comboEntry, comboView, rankWithCombos } from '../../src/optimizer/combined.js';
 import { PlanState } from '../../src/optimizer/plan.js';
 import { planTarget } from '../../src/optimizer/target.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
@@ -163,5 +163,34 @@ describe('measured combo ratios', () => {
     expect(row.units).toBeCloseTo(150 / 0.85);
     expect(scoreCombo(combo(), s, profile, ctx)!.measured).toEqual([]);
     expect(formatEntry(1, comboEntry(row))).toContain('your measured ratios, low end');
+  });
+});
+
+describe('comboView (/xp combos)', () => {
+  it('lists every combo with something to do, best XP per minute first, without claiming between rows', () => {
+    const list = [tp('items1', 'items', 100, 0, { xp: 4 }), tp('xp1', 'xp', 150, 0, { xp: 5 })];
+    const second: Combo = { ...combo([3, 3]), id: 'combo.grind2', name: 'Grind 2' };
+    const idle: Combo = { ...combo(), id: 'combo.idle', name: 'Idle', primary: 'side', primaryMetrics: ['side'], yields: [{ metric: 'nothing', per: [1, 1], basis: 'b' }] };
+    const v = comboView(list, profile, ctx, [combo(), second, idle]);
+    // Both rows finish xp1: nothing is claimed between rows here.
+    expect(v.rows.map((r) => r.combo!.combo.id).sort()).toEqual(['combo.grind', 'combo.grind2']);
+    expect(v.rows.every((r) => r.combo!.tasks.some((t) => t.id === 'xp1'))).toBe(true);
+    expect(v.idle.map((c) => c.id)).toEqual(['combo.idle']);
+    const mine = comboView(list, profile, ctx, [combo()], { excludedActivities: new Set(['grind']) });
+    expect(mine).toMatchObject({ rows: [], idle: [] });
+    expect(mine.excluded.map((c) => c.id)).toEqual(['combo.grind']);
+  });
+
+  it('sorts real combos by XP per minute', () => {
+    const catalogue = loadCatalogue();
+    const realBook = loadRates();
+    const read = <T>(p: string): T => JSON.parse(readFileSync(new URL(p, import.meta.url), 'utf8')) as T;
+    const { uuid, response } = read<{ uuid: string; response: ProfilesResponse }>('../fixtures/profiles-floor7sweat.json');
+    const lime = normalizeProfile(pickProfile(response.profiles, 'lime')!, uuid, read<SkillsResource>('../fixtures/resource-skills.json'), 0);
+    const all = loadCombos(catalogue, realBook);
+    const v = comboView(evaluateProgress(catalogue, lime).progress, lime, { book: realBook }, all, { excluded: new Set(defaultExcluded(catalogue)) });
+    expect(v.rows.length + v.idle.length).toBe(all.length);
+    const r = v.rows.map((x) => x.estimate.xpPerMin);
+    expect(r).toEqual([...r].sort((a, b) => b - a));
   });
 });

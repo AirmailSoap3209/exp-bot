@@ -20,7 +20,7 @@ import { findTask, searchTasks, sourceId } from '../tasks/search.js';
 import { HypixelApiError, PlayerNotFoundError } from '../hypixel/client.js';
 import { ProfileNotFoundError } from '../profile/load.js';
 import { catalogue, combos, rateBook } from '../tasks/instance.js';
-import { rankWithCombos } from '../optimizer/combined.js';
+import { comboView, rankWithCombos } from '../optimizer/combined.js';
 import { combosFor } from '../combos/score.js';
 
 /** The caller's exclusions, as the optimizers take them. */
@@ -151,6 +151,26 @@ async function optimize(i: ChatInputCommandInteraction): Promise<void> {
   }
 }
 
+async function combosCommand(i: ChatInputCommandInteraction): Promise<void> {
+  await i.deferReply();
+  try {
+    const t = await resolveTarget(i);
+    const view = comboView(t.evaluation.progress, t.loaded.profile, await estimateContext(t), combos, exclusionsOf(t));
+    const names = (list: { name: string }[]) => list.map((c) => c.name).join(', ');
+    const header = [
+      `**${view.rows.length} of ${combos.length} combos** have something to do now, best XP per minute first. Each row stands alone: it lists everything that combo would finish.`,
+      view.idle.length ? `-# Nothing to do right now (locked, maxed, or nothing beyond the main activity): ${names(view.idle)}` : '',
+      view.excluded.length ? `-# Excluded by you (\`/xp include activity:\`): ${names(view.excluded)}` : '',
+    ].filter(Boolean).join('\n');
+    const result = { ranked: view.rows, dropped: { done: 0, monetary: 0, excluded: 0, unavailable: 0, blocked: 0, laterTier: 0, noRate: 0 } };
+    const { playerName, profile } = t.loaded;
+    const render = (page: number) => optimizeEmbed(playerName, profile, result, page, { isLinked: t.isLinked, title: 'Combos', header });
+    await showPaged(i, t, render, view.rows.length, PAGE_SIZE);
+  } catch (err) {
+    await i.editReply({ content: userError(err) });
+  }
+}
+
 async function category(i: ChatInputCommandInteraction): Promise<void> {
   await i.deferReply();
   try {
@@ -257,6 +277,11 @@ export const xp: Command = {
         .addStringOption((o) => o.setName('profile').setDescription('Profile name (default: linked or selected profile)')),
     )
     .addSubcommand((s) =>
+      s.setName('combos').setDescription('Activities that progress several sources at once, best XP per minute first')
+        .addStringOption((o) => o.setName('player').setDescription('Minecraft username (default: your linked account)'))
+        .addStringOption((o) => o.setName('profile').setDescription('Profile name (default: linked or selected profile)')),
+    )
+    .addSubcommand((s) =>
       s.setName('target').setDescription('The quickest set of tasks to gain an amount of XP or reach a SkyBlock level')
         .addIntegerOption((o) => o.setName('xp').setDescription('SkyBlock XP to gain').setMinValue(1).setMaxValue(100_000))
         .addIntegerOption((o) => o.setName('level').setDescription('SkyBlock level to reach (100 XP per level)').setMinValue(1).setMaxValue(1_000))
@@ -318,6 +343,7 @@ export const xp: Command = {
     switch (i.options.getSubcommand()) {
       case 'overview': return overview(i);
       case 'optimize': return optimize(i);
+      case 'combos': return combosCommand(i);
       case 'target': return target(i);
       case 'category': return category(i);
       case 'task': return task(i);

@@ -74,11 +74,28 @@ describe('scoreCombo', () => {
     expect(scoreCombo(combo(), new PlanState(list), profile, ctx, { excludedActivities: new Set(['side']) })).toBeDefined();
   });
 
-  it('falls back to a yield when the primary has no open tier', () => {
-    const s = new PlanState([{ ...tp('items1', 'items', 100, 100), status: 'verified_complete' }, tp('xp1', 'xp', 40, 0)]);
-    const row = scoreCombo(combo(), s, profile, ctx)!;
-    expect(row.horizon.task.id).toBe('xp1');
-    expect(row.units).toBe(20);
+  it('with the primary maxed, one side metric is just a single task; two make a combo', () => {
+    const maxed = { ...tp('items1', 'items', 100, 100), status: 'verified_complete' as const };
+    expect(scoreCombo(combo(), new PlanState([maxed, tp('xp1', 'xp', 40, 0)]), profile, ctx)).toBeUndefined();
+    const two: Combo = { ...combo(), yields: [...combo().yields, { metric: 'side', per: [1, 1], basis: 'b' }] };
+    const row = scoreCombo(two, new PlanState([maxed, tp('xp1', 'xp', 40, 0), tp('side1', 'side', 30, 0)]), profile, ctx)!;
+    expect(row.units).toBe(30); // side1 needs 30 items; xp1 (20 items) finishes on the way
+    expect(ids(row.tasks).sort()).toEqual(['side1', 'xp1']);
+  });
+
+  it('stops where XP per minute is best, not at the first side tier', () => {
+    // A 1 XP side tier at 20 items, then a 20 XP one at 60: running on is 21 XP / 6 min vs 1 XP / 2 min.
+    const two: Combo = { ...combo(), yields: [...combo().yields, { metric: 'side', per: [1, 1], basis: 'b' }] };
+    const list = [{ ...tp('items1', 'items', 100, 100), status: 'verified_complete' as const },
+      tp('xp1', 'xp', 40, 0, { xp: 1 }), tp('side1', 'side', 30, 0, { xp: 1 }), tp('xp2', 'xp', 120, 0, { xp: 20, prerequisites: ['xp1'] })];
+    const row = scoreCombo(two, new PlanState(list), profile, ctx)!;
+    expect(row.horizon.task.id).toBe('xp2');
+    expect(row.xp).toBe(22);
+  });
+
+  it("isn't offered when the primary is behind an access gate", () => {
+    const gated = { ...tp('items1', 'items', 100, 0), blocked: 'Needs Dwarven Mines access: Mining 12' };
+    expect(scoreCombo(combo(), new PlanState([gated, tp('xp1', 'xp', 40, 0)]), profile, ctx)).toBeUndefined();
   });
 });
 

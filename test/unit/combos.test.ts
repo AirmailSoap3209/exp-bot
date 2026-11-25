@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { buildCombos, ComboError, loadCombos, yieldPer } from '../../src/combos/combos.js';
 import { loadRates } from '../../src/estimate/rates.js';
@@ -11,12 +12,29 @@ describe('combo data', () => {
   const byId = new Map(combos.map((c) => [c.id, c]));
 
   it('loads every combo, sorted by ID', () => {
-    expect(combos.map((c) => c.id)).toEqual([
+    const ids = combos.map((c) => c.id);
+    expect(ids).toEqual([...ids].sort((a, b) => a.localeCompare(b)));
+    expect(ids.filter((id) => /^combo\.(combat|dungeons|slayer)\./.test(id))).toEqual([
       'combo.combat.blaze', 'combo.combat.crypt_ghoul', 'combo.combat.enderman', 'combo.combat.ghast', 'combo.combat.magma_cube', 'combo.combat.zealot',
       'combo.dungeons.f0', 'combo.dungeons.f1', 'combo.dungeons.f2', 'combo.dungeons.f3', 'combo.dungeons.f4', 'combo.dungeons.f5', 'combo.dungeons.f6', 'combo.dungeons.f7',
-      'combo.farm.cactus', 'combo.farm.pumpkin', 'combo.farm.sugar_cane', 'combo.farm.wheat',
       'combo.slayer.blaze', 'combo.slayer.enderman', 'combo.slayer.spider', 'combo.slayer.wolf', 'combo.slayer.zombie',
     ]);
+  });
+
+  it('generates a gathering combo for every collection whose block gives skill XP on the wiki', () => {
+    const src = JSON.parse(readFileSync(new URL('../../data/sources/combo-sources.json', import.meta.url), 'utf8')) as { gathering: Record<string, Record<string, unknown>> };
+    for (const [skill, items] of Object.entries(src.gathering)) {
+      for (const item of Object.keys(items)) {
+        const c = combos.find((x) => x.primary === `collect.${item.toLowerCase().replace(/:/g, '-')}`);
+        expect(c, item).toBeDefined();
+        expect(c!.yields[0]!.metric).toBe(`skills.${skill}.xp`);
+        // Every crop is farmed in the Garden, so it also counts toward the crop's milestone.
+        if (skill === 'farming') expect(c!.yields.map((y) => y.metric)).toContain(`garden.crop_milestone.${item}`);
+      }
+    }
+    expect(Object.values(src.gathering).reduce((n, items) => n + Object.keys(items).length, 0)).toBe(43);
+    // Base drops divide the per-item XP: lapis drops 4-9 per block.
+    expect(yieldPer(byId.get('combo.mine.ink_sack-4')!.yields[0]!, 'early')).toEqual([0.389, 1.75]);
   });
 
   it('works out what the primary advances from the tasks that use it', () => {

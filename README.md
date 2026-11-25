@@ -126,7 +126,8 @@ pm2 logs xp-bot
     - Islands need skill or SkyBlock levels: Crimson Isle Combat 22, Dwarven Mines Mining 12, Galatea Foraging 12, the Garden SkyBlock level 5, the Rift SkyBlock level 12, and so on.
     - Sea creatures need their Fishing level. Island-locked collections need their area.
     - Kuudra needs Crimson Isle access, Elle's quest step and a key.
-    - Requirements the API doesn't show (Heart of the Mountain/Forest tiers, quests, Safari Tickets, keys) count as met only when the profile already shows progress in that area. A task with progress of its own is never blocked. Missing skill data counts as unmet.
+    - Heart of the Mountain tiers are checked against HOTM XP: Crystal Hollows needs HOTM 4, the Glacite Tunnels (Glacite, Tungsten, Umber) HOTM 7. This gate holds even when co-op collection progress shows in the area; only a done task is exempt.
+    - Requirements the API doesn't show (Heart of the Forest tiers, quests, Safari Tickets, keys) count as met only when the profile already shows progress in that area. A task with progress of its own isn't blocked by these. Missing skill data counts as unmet.
     - Unlike prerequisites, these don't open up during an `/xp target` plan.
     - Not gated: event areas (festivals, Jerry's Workshop), Obsidian and Ice. Golem, Terracotta, Wither Guard and Wither Miner have no floor on the wiki, so they only need the Entrance.
   - **Minimum time per task** (`minMinutes` on rates, from `rate-defaults.json` `minimumMinutes`): one slayer boss for slayer XP, one dungeon run for Catacombs/class XP and dungeon-mob bestiary, one Kuudra run for Kuudra bestiary. The Kuudra run time is an estimate, because the wiki only gives per-wave timers.
@@ -136,20 +137,21 @@ pm2 logs xp-bot
   - [x] Data and loader: `data/combos/*.json`, loaded and validated at startup by `src/combos/combos.ts`. `npm run combos` lists them.
     - Each combo has a **primary** activity, whose existing rate is reused (session, override or bracket default), and **yields**. A yield is a ratio to the primary's unit, as a range, per bracket when it depends on gear. The primary's own metrics come from the tasks that use it.
     - Validation rejects the whole set on any problem: duplicate IDs, a primary with no rate or no tasks, a yield metric no task uses, a yield repeating the primary's metric, bad ranges, or a missing basis.
-    - 23 combos, from hypixelskyblock.minecraft.wiki (2026-11-24):
+    - 62 combos, from hypixelskyblock.minecraft.wiki:
+      - 43 gathering combos, **generated** by `npm run catalogue:build` into `data/combos/gathering.json` from `data/sources/combo-sources.json` (edit that file): every crop, ore and log whose block gives skill XP on the wiki. Skill XP per item = XP per block / (base items per block × (1 + fortune/100)), with fortune per bracket matching the collection rates. Base drops aren't on the wiki; the few that aren't 1 (carrots, lapis, ...) say where they came from. Crops are farmed in the Garden, so they also count toward crop milestones (1 per item, a floor checked against the fixtures).
       - 5 slayer bosses: Combat XP per slayer XP = Combat XP needed to spawn / slayer XP, at the bracket's tier.
       - 6 mob grinds: Combat XP and guaranteed drops per kill.
-      - 4 crops: Farming XP per item = XP per crop / (1 + fortune/100). One base drop is assumed, because the wiki doesn't state base drops.
       - 8 floors (Entrance–VII): base Catacombs XP per run.
+      - No gathering combo for items with no block XP on the wiki (Hard Stone, Glacite, Tungsten, Umber, Sulphur, fishing).
     - All yields are floors (no Wisdom, Looting, score or boss-kill XP).
     - Not yet:
-      - Mining: base drops and fortune not sourced.
       - Class XP: the split isn't stated.
       - Master Mode: values look inconsistent.
       - The fandom wiki refuses automated fetches (HTTP 402), so it can't fill these gaps.
   - [x] Scoring (`src/combos/score.ts`), on `PlanState` without changing it:
-    - A row runs until the primary's next open tier. If nothing else finishes by then, it runs on to the first point where a side task does (e.g. "kill Zealots until Combat 43"), collecting primary tiers on the way. A primary with no open tier falls back to a yield.
-    - Side yields count only at the low end of their ratio, so the row's XP is a floor. Excluded, monetary and already-claimed tasks earn nothing. A row that finishes nothing beyond its primary isn't a combo.
+    - A row runs at least until the primary's next open tier, then on to whichever upcoming tier (of the primary or any yield, up to 12 each) gives it the best XP per minute. So "Farm wheat in the Garden" runs to the next Farming level and collects the milestones and collection tiers on the way, instead of stopping at a 1 XP milestone.
+    - Side yields count only at the low end of their ratio, so the row's XP is a floor. Excluded, monetary and already-claimed tasks earn nothing.
+    - A row must finish tasks on two metrics, one a yield; otherwise it's a single task (a maxed collection plus one milestone is just the milestone). A combo whose primary is behind an access gate isn't offered, even if its side yields are open.
   - [x] `/xp optimize` (`rankWithCombos`):
     - Rows sit alongside single tasks, sorted the same way (by time, then XP), shown with ⚡.
     - The quickest entry claims its tasks, and later rows are re-scored without them, so a task appears once. Progress doesn't carry between rows. A row ties its primary task on time and wins on XP.
@@ -184,13 +186,15 @@ pm2 logs xp-bot
     - Spooky brackets and four event perk shops.
     - Five essence shops (only the ones whose perks, rebuilt from IDs, match the wiki totals).
     - Harp songs and Dojo belts.
+    - Garden (separate `/v2/skyblock/garden` call, fetched with the profile; if it fails, only Garden tasks go unavailable): Garden levels, plots, unique visitors and offers accepted, Crop Upgrades (gated on Garden level), and Crop Milestones (timed at the crop's farming rate, as their own `garden.crop.*` activities).
+    - Rift Guide: 21 objectives checked from the rift section (Montezuma fragments, Porhtal's eyes, Enigma's Cloak, Jacquelle, Kloon, Barry).
   - **Not yet** (each category's note in `data/meta.json` says what's missing):
     - Boss Collections (no breakdown on the wiki).
     - Mob Types.
     - Powder, Commission and Corpse milestones.
-    - Garden-endpoint tasks (Garden level, plots, visitors…), which need a separate API call.
+    - Garden: Composter upgrades (the wiki's totals disagree, 244 vs 305), Greenhouse and Visitor upgrades, DNA Analysis, Farming Chips, and 4 of Carrolyn's 8 crops (IDs not seen yet).
     - Trophy Frogs and pet milestones.
-    - Rift Guide, objectives and chapters.
+    - Rift objectives and chapters. The Rift Guide's 63 wiki objectives are in, but 21 are checked from the API; the other 42 are tracked manually (tick them), and the wiki's 360 XP total suggests the page lists only part of the guide.
     - The other six essence shops.
     - Most misc rows.
   - Times are fixed estimates, labelled as such in each task's source. Area gates use `access.json`. Events aren't gated on being active.

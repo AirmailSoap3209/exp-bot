@@ -1,0 +1,68 @@
+{
+  "source": "hypixelskyblock.minecraft.wiki Farming (Crops table), Mining (Mining XP Table), Foraging (Blocks table), fetched 2026-11-25",
+  "note": "Skill XP is given per block broken, not per item (wiki Farming note; the Mining and Foraging tables are per block too), so XP per item = XP per block / (base items per block x (1 + fortune/100)). Fortune per bracket matches the collection rate brackets in rate-defaults.json. Base drops are 1 unless listed; the wiki pages don't state them, so listed ones are vanilla or community values and say so. Items with no XP on these tables (Hard Stone, Umber, Tungsten, Glacite, Sulphur, Mycelium, Red Sand, fishing and mob drops) get no gathering combo.",
+  "fortune": {
+    "farming": { "early": [0, 100], "mid": [200, 400], "late": [1000, 1800], "basis": "rate-defaults FARMING: <100 fortune early, ~300 mid, ~1,400 late" },
+    "mining": { "early": [0, 100], "mid": [100, 300], "late": [500, 1000], "basis": "rate-defaults MINING: low fortune early, x~3 drops mid, x~10 late (gemstones)" },
+    "foraging": { "early": [0, 50], "mid": [50, 200], "late": [200, 400], "basis": "estimate: Foraging Fortune from axes, armor and pets" }
+  },
+  "baseBasis": {
+    "farming": "base drops per crop as farming-fortune calculators use them (not on the wiki)",
+    "mining": "vanilla Minecraft drop count (not on the wiki)"
+  },
+  "gathering": {
+    "farming": {
+      "WHEAT": { "name": "wheat", "xp": 4 },
+      "CARROT_ITEM": { "name": "carrots", "xp": 4, "base": [3, 3] },
+      "POTATO_ITEM": { "name": "potatoes", "xp": 4, "base": [3, 3] },
+      "PUMPKIN": { "name": "pumpkins", "xp": 4.5 },
+      "MELON": { "name": "melons", "xp": 4, "base": [5, 5] },
+      "SUGAR_CANE": { "name": "sugar cane", "xp": 2, "base": [2, 2] },
+      "CACTUS": { "name": "cactus", "xp": 2, "base": [2, 2] },
+      "MUSHROOM_COLLECTION": { "name": "mushrooms", "xp": 6 },
+      "INK_SACK:3": { "name": "cocoa beans", "xp": 4, "base": [3, 3] },
+      "NETHER_STALK": { "name": "nether wart", "xp": 4, "base": [2, 3] },
+      "DOUBLE_PLANT": { "name": "sunflowers", "xp": 4 },
+      "MOONFLOWER": { "name": "moonflowers", "xp": 4 },
+      "WILD_ROSE": { "name": "wild roses", "xp": 4 }
+    },
+    "mining": {
+      "COBBLESTONE": { "name": "cobblestone", "xp": 1 },
+      "ICE": { "name": "ice", "xp": 0.2 },
+      "NETHERRACK": { "name": "netherrack", "xp": 0.5 },
+      "SAND": { "name": "sand", "xp": 3 },
+      "GRAVEL": { "name": "gravel", "xp": 4 },
+      "QUARTZ": { "name": "nether quartz", "xp": 5 },
+      "ENDER_STONE": { "name": "end stone", "xp": 3 },
+      "COAL": { "name": "coal", "xp": 5 },
+      "IRON_INGOT": { "name": "iron", "xp": 5 },
+      "GOLD_INGOT": { "name": "gold", "xp": 6 },
+      "INK_SACK:4": { "name": "lapis lazuli", "xp": 7, "base": [4, 9] },
+      "REDSTONE": { "name": "redstone", "xp": 7, "base": [4, 5] },
+      "EMERALD": { "name": "emeralds", "xp": 9 },
+      "DIAMOND": { "name": "diamonds", "xp": 10 },
+      "GLOWSTONE_DUST": { "name": "glowstone", "xp": 7, "base": [2, 4] },
+      "OBSIDIAN": { "name": "obsidian", "xp": 20 },
+      "MITHRIL_ORE": { "name": "mithril", "xp": 45 },
+      "GEMSTONE_COLLECTION": { "name": "gemstones", "xp": 70 }
+    },
+    "foraging": {
+      "LOG": { "name": "oak logs", "xp": 6 },
+      "LOG:1": { "name": "spruce logs", "xp": 6 },
+      "LOG:2": { "name": "birch logs", "xp": 6 },
+      "LOG:3": { "name": "jungle logs", "xp": 6 },
+      "LOG_2": { "name": "acacia logs", "xp": 6 },
+      "LOG_2:1": { "name": "dark oak logs", "xp": 6 },
+      "FIG_LOG": { "name": "fig logs", "xp": 15 },
+      "LUSHLILAC": { "name": "lushlilac", "xp": 15 },
+      "SEA_LUMIES": { "name": "sea lumies", "xp": 15 },
+      "RUBY_VEILSHROOM": { "name": "ruby veilshrooms", "xp": 16 },
+      "MANGROVE_LOG": { "name": "mangrove logs", "xp": 20 },
+      "HELIX_LOG": { "name": "helix logs", "xp": 25 }
+    }
+  },
+  "gardenMilestones": {
+    "per": [1, 1],
+    "basis": "crops farmed in the Garden count toward the crop's milestone; test/fixtures show milestone counts at or above the collection for every crop (ducksterr_, 2026-11-25), so 1 per item is a floor"
+  }
+}

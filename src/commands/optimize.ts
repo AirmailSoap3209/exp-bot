@@ -39,7 +39,7 @@ function formatCombo(n: number, r: RankedTask): string {
   const shown = row.tasks.slice(0, 4).map((t) => `${t.name} (+${t.xp})`);
   const more = row.tasks.length > 4 ? ` · +${row.tasks.length - 4} more` : '';
   return [
-    `**${n}. ⚡ ${row.combo.name}** · +${fmt(row.xp)} XP across ${row.tasks.length} tasks`,
+    `**${n}. ⚡ ${row.combo.name}** · +${fmt(row.xp)} XP across ${row.tasks.length} task${row.tasks.length === 1 ? "" : "s"}`,
     `${shown.join(' · ')}${more}`,
     `${formatMinutes(row.minutes)} (${sourceLabel(r.estimate)}) · ${xpRate(r.estimate.xpPerMin)} XP/min`,
     [row.combo.location, row.measured.length ? 'your measured ratios, low end' : 'side tasks counted at the low end'].filter(Boolean).join(' · '),

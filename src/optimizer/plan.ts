@@ -137,6 +137,32 @@ export class PlanState {
     return undefined;
   }
 
+  /**
+   * The not-yet-completed tasks on a metric that progress could still complete (lowest requirement
+   * first), ignoring prerequisites since earlier tiers may complete on the way; at most `limit`.
+   */
+  upcoming(metric: string, ex: Exclusions = {}, limit = 25): TaskProgress[] {
+    const out: TaskProgress[] = [];
+    for (const t of this.byMetric.get(metric) ?? []) {
+      if (out.length >= limit) break;
+      if (this.completed.has(t.id)) continue;
+      if (!dropReason(this.byId.get(t.id)!, () => true, ex, false)) out.push(this.progressFor(t.id)!);
+    }
+    return out;
+  }
+
+  /**
+   * Why the player can't work on a metric at all (no access to where it's done, a cap): the block on
+   * its first not-yet-completed task. Undefined when that task isn't blocked, or every task is done.
+   */
+  blockedOn(metric: string): string | undefined {
+    for (const t of this.byMetric.get(metric) ?? []) {
+      if (this.completed.has(t.id)) continue;
+      return this.byId.get(t.id)!.blocked;
+    }
+    return undefined;
+  }
+
   /** What apply() would do, without changing anything. */
   tryApply(deltas: Readonly<Record<string, number>>): ApplyResult {
     const saved = Object.keys(deltas).map((m) => ({ m, value: this.values.get(m), touched: this.touched.has(m) }));

@@ -208,7 +208,7 @@
       "name": "Garden",
       "status": "v1",
       "guide": "skill_related",
-      "note": "In the catalogue: Jacob gold medals (130) and Anita upgrades (250). The rest (Garden level, visitors, plots, crop milestones, composter, greenhouse, chips, Sowdust, DNA) needs the separate Garden API endpoint"
+      "note": "In the catalogue: Jacob gold medals (130), Anita upgrades (250), and from the Garden API endpoint Garden levels (140), plots (120), unique visitors (48), offers accepted (90), Crop Upgrades (117) and Crop Milestones (598); 4 of Carrolyn's crops (20). Not yet: Composter upgrades (the wiki's totals disagree), Greenhouse and Visitor upgrades, DNA Analysis, Farming Chips, and Carrolyn's other 4 crops"
     },
     {
       "id": "trophy_fishing",
@@ -229,7 +229,7 @@
       "name": "Rift",
       "status": "v1",
       "guide": "story",
-      "note": "In the catalogue: Timecharms (800). Not yet: Rift Guide objectives (360)"
+      "note": "In the catalogue: Timecharms (800) and the Rift Guide's 63 wiki objectives (189; 21 checked from the API, the rest ticked by hand). The wiki's Rift Guide total is 360, so its page lists only part of the guide. Not yet: Complete Objectives and Chapters"
     },
     {
       "id": "quests",

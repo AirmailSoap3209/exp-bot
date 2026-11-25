@@ -52,6 +52,12 @@ export function validateTask(raw: unknown, where: string): string[] {
   }
   if (t.activity === null && t.minutes === undefined) p.push(`${at}: a task with no activity needs fixed minutes`);
   if (t.access !== undefined) p.push(...validateAccess(t.access, at));
+  if (t.hypixelTaskIdUnconfirmed !== undefined && (t.hypixelTaskIdUnconfirmed !== true || !isStr(t.hypixelTaskId))) {
+    p.push(`${at}: hypixelTaskIdUnconfirmed must be true, and only on a task with a hypixelTaskId`);
+  }
+  if (typeof t.requires === 'object' && t.requires && String((t.requires as Record<string, unknown>).metric).startsWith('task.') && !isStr(t.hypixelTaskId)) {
+    p.push(`${at}: a task.<ID> metric needs a hypixelTaskId`);
+  }
   return p;
 }
 

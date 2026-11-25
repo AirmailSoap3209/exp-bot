@@ -202,7 +202,43 @@ export function normalizeProfile(
     catacombs: readCatacombs(m),
     fairySouls: readFairySouls(m),
     minions: readMinions(m),
+    skillTree: readSkillTree(m),
+    completions: readCompletions(m),
+    jacob: readJacob(m),
+    trophyFish: readTrophyFish(m),
+    rift: readRift(m),
   };
+}
+
+function readSkillTree(m: Obj): NormalizedProfile['skillTree'] {
+  const xp = at(m, 'skill_tree.experience');
+  if (!isObj(xp)) return missing('No Heart of the Mountain or Forest data on this profile');
+  return ok({ hotmXp: num(xp.mining), hotfXp: num(xp.foraging) });
+}
+
+function readCompletions(m: Obj): NormalizedProfile['completions'] {
+  const c = at(m, 'leveling.completions');
+  return isObj(c) ? ok(numberMap(c)) : missing('No leveling task counters on this profile');
+}
+
+function readJacob(m: Obj): NormalizedProfile['jacob'] {
+  const j = at(m, 'jacobs_contest');
+  if (!isObj(j)) return missing("No Jacob's Farming Contest data on this profile");
+  const gold = new Set<string>();
+  for (const b of ['gold', 'platinum', 'diamond']) for (const c of stringSet(at(j, `unique_brackets.${b}`)) ?? []) gold.add(c);
+  return ok({ goldCrops: gold, doubleDrops: num(at(j, 'perks.double_drops')), farmingLevelCap: num(at(j, 'perks.farming_level_cap')) });
+}
+
+function readTrophyFish(m: Obj): NormalizedProfile['trophyFish'] {
+  const t = m.trophy_fish;
+  return isObj(t) ? ok(numberMap(t)) : missing('No trophy fish data on this profile');
+}
+
+function readRift(m: Obj): NormalizedProfile['rift'] {
+  const r = m.rift;
+  if (!isObj(r)) return missing('No Rift data on this profile');
+  const secured = at(r, 'gallery.secured_trophies');
+  return ok({ timecharms: Array.isArray(secured) ? secured.length : 0 });
 }
 
 /** Picks a profile by cute name or ID, or the player's selected profile when none is given. */

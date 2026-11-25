@@ -87,12 +87,20 @@ export function evaluateTask(task: Task, profile: NormalizedProfile, ticked: boo
     return { progress: { ...base, status, current: null, remaining: null, reason: `Tracked ${task.tracking}; tick it when done` }, clearTick: false };
   }
 
-  const reader = readerFor(task.category);
-  const reading: Reading = reader ? reader(task, profile) : { kind: 'unavailable', reason: 'No progress reader for this category yet' };
+  // task.<ID> metrics have no reader: Hypixel's completed-task list is the only evidence.
+  const reader = task.requires.metric.startsWith('task.') ? undefined : readerFor(task.category);
+  const reading: Reading = reader
+    ? reader(task, profile)
+    : { kind: 'unavailable', reason: task.hypixelTaskId ? "Tracked through Hypixel's completed-task list" : 'No progress reader for this category yet' };
 
   if (reading.kind === 'unavailable') {
-    // The task list can still prove a task incomplete even when the reader has no numbers.
+    // The task list can still prove a task incomplete even when the reader has no numbers,
+    // unless the ID itself is a pattern guess: then it's only an estimate, and can be ticked.
     if (task.hypixelTaskId && tasksList.available && !ticked) {
+      if (task.hypixelTaskIdUnconfirmed) {
+        const reason = `Task ID ${task.hypixelTaskId} is unconfirmed, so this may already be done; tick it if it is`;
+        return { progress: { ...base, status: 'estimated', current: 0, remaining: required, reason }, clearTick: false };
+      }
       return { progress: { ...base, status: 'verified_incomplete', current: null, remaining: null, reason: reading.reason }, clearTick: false };
     }
     return { progress: { ...base, status: ticked ? 'ticked' : 'unavailable', current: null, remaining: null, reason: reading.reason }, clearTick: false };
@@ -100,7 +108,7 @@ export function evaluateTask(task: Task, profile: NormalizedProfile, ticked: boo
 
   const { complete, ...rest } = measured(task, reading);
   // Reaching step 3 with a task ID means the list exists and doesn't contain it.
-  const listSaysIncomplete = !!task.hypixelTaskId && tasksList.available;
+  const listSaysIncomplete = !!task.hypixelTaskId && !task.hypixelTaskIdUnconfirmed && tasksList.available;
 
   // 2. A number that proves completion: exact, or a lower bound already past the requirement.
   if (complete && reading.confidence !== 'approx') {

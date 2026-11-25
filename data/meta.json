@@ -164,26 +164,31 @@
     {
       "id": "dragons",
       "name": "Dragons",
-      "status": "later",
-      "guide": "slaying"
+      "status": "v1",
+      "guide": "slaying",
+      "wikiMaxXp": 200
     },
     {
       "id": "kuudra",
       "name": "Kuudra",
-      "status": "later",
-      "guide": "slaying"
+      "status": "v1",
+      "guide": "slaying",
+      "wikiMaxXp": 300
     },
     {
       "id": "arachne",
       "name": "Arachne",
-      "status": "later",
-      "guide": "slaying"
+      "status": "v1",
+      "guide": "slaying",
+      "wikiMaxXp": 60
     },
     {
       "id": "mythological",
       "name": "Mythological Creatures",
-      "status": "later",
-      "guide": "slaying"
+      "status": "v1",
+      "guide": "slaying",
+      "wikiMaxXp": 100,
+      "note": "Approximate: summed over NEU bestiary families; the Diana mayor event is not checked"
     },
     {
       "id": "mob_types",
@@ -194,57 +199,65 @@
     {
       "id": "hotm",
       "name": "Heart of the Mountain & mining tasks",
-      "status": "later",
-      "guide": "skill_related"
+      "status": "v1",
+      "guide": "skill_related",
+      "note": "In the catalogue: HotM tiers (1,175) and Crystal Nucleus runs (200). Not yet: powder (1,942 incl. a decreasing tail above 600k), Commission Milestones (255), Peak of the Mountain (1,000), Fossil Research (80), Rock Milestones (100, needs the Rock pet), Corpse Milestones (140)"
     },
     {
       "id": "garden",
       "name": "Garden",
-      "status": "later",
-      "guide": "skill_related"
+      "status": "v1",
+      "guide": "skill_related",
+      "note": "In the catalogue: Jacob gold medals (130) and Anita upgrades (250). The rest (Garden level, visitors, plots, crop milestones, composter, greenhouse, chips, Sowdust, DNA) needs the separate Garden API endpoint"
     },
     {
       "id": "trophy_fishing",
       "name": "Trophy Fishing & fishing tasks",
-      "status": "later",
-      "guide": "skill_related"
+      "status": "v1",
+      "guide": "skill_related",
+      "note": "In the catalogue: Trophy Fish (1,080). Not yet: Trophy Frogs (540, task IDs unknown), Dolphin Milestones (100, needs the Dolphin pet), Ship Parts and Crew (35)"
     },
     {
       "id": "foraging_tasks",
       "name": "Foraging tasks",
-      "status": "later",
-      "guide": "skill_related"
+      "status": "v1",
+      "guide": "skill_related",
+      "note": "In the catalogue: HotF tiers (725) and Safari Milestones (220). Not yet: Forest/Desert Whispers (1,240), Center of the Forest (255), Tree Gift Milestones (84)"
     },
     {
       "id": "rift",
       "name": "Rift",
-      "status": "later",
-      "guide": "story"
+      "status": "v1",
+      "guide": "story",
+      "note": "In the catalogue: Timecharms (800). Not yet: Rift Guide objectives (360)"
     },
     {
       "id": "quests",
       "name": "Quests & objectives",
-      "status": "later",
-      "guide": "story"
+      "status": "v1",
+      "guide": "story",
+      "note": "In the catalogue: Mage and Barbarian reputation (150). Not yet: Complete Objectives (212) and Chapters (560)"
     },
     {
       "id": "events",
       "name": "Events",
-      "status": "later",
-      "guide": "event"
+      "status": "v1",
+      "guide": "event",
+      "note": "In the catalogue: Spooky Festival brackets and four perk shops (421). Not yet: Mining Fiesta and Fishing Festival counters, Hoppity, Jacob (under Garden), Mythological and Harvest Feast perk shops, Harvest Feast seasoning, Year of the Witch. Events are not gated on being active"
     },
     {
       "id": "essence_shop",
       "name": "Essence Shop perks",
-      "status": "later",
-      "guide": "essence_shop"
+      "status": "v1",
+      "guide": "essence_shop",
+      "note": "In the catalogue: Crimson, Diamond, Forest, Gold and Spider (905), whose perks rebuilt from task IDs match the wiki totals. Not yet: Dragon, Undead, Ice, Wither, Fossil, Safari"
     },
     {
       "id": "exploration",
       "name": "Exploration & other one-time tasks",
-      "status": "later",
+      "status": "v1",
       "guide": "misc",
-      "note": "Includes community shop and island upgrades, still to be reviewed for monetary rules"
+      "note": "In the catalogue: Harp songs (236) and Dojo belts (425). Not yet: Carrolyn crops, Timecharm-like misc rows, attributes, Starlyn, beacon, fish family, Hootie, relays, powers; community shop and personal bank are coin purchases"
     },
     {
       "id": "consumables",

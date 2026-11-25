@@ -1,0 +1,7740 @@
+{
+  "source": "hypixelskyblock.minecraft.wiki SkyBlock_Levels/Tasks (raw wikitext), Template:Heart_of_the_Mountain/Leveling_Table and Template:Heart_of_the_Forest/Leveling_Table, fetched 2026-11-24. Hypixel task IDs from leveling.completed_tasks in test/fixtures.",
+  "note": "XP is from the wiki. Tasks with a Hypixel task ID are checked against the player's completed-task list; 'idSeen: false' marks an ID that follows its siblings' pattern but was never seen in a fixture, so a missing ID is treated as an estimate, not proof. Times are estimates unless the basis says otherwise. Essence shops: only Crimson, Diamond, Forest, Gold and Spider, whose perks rebuilt from task IDs add up exactly to the wiki's shop totals.",
+  "groups": [
+    {
+      "category": "dragons",
+      "group": "dragons.superior",
+      "name": "Slay Superior Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        120,
+        600
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Superior Dragon",
+          "xp": 50,
+          "id": "KILL_SUPERIOR_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "dragons",
+      "group": "dragons.old",
+      "name": "Slay Old Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Old Dragon",
+          "xp": 25,
+          "id": "KILL_OLD_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "dragons",
+      "group": "dragons.young",
+      "name": "Slay Young Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Young Dragon",
+          "xp": 25,
+          "id": "KILL_YOUNG_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "dragons",
+      "group": "dragons.wise",
+      "name": "Slay Wise Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Wise Dragon",
+          "xp": 25,
+          "id": "KILL_WISE_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "dragons",
+      "group": "dragons.protector",
+      "name": "Slay Protector Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Protector Dragon",
+          "xp": 25,
+          "id": "KILL_PROTECTOR_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "dragons",
+      "group": "dragons.unstable",
+      "name": "Slay Unstable Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Unstable Dragon",
+          "xp": 25,
+          "id": "KILL_UNSTABLE_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "dragons",
+      "group": "dragons.strong",
+      "name": "Slay Strong Dragon",
+      "location": "Dragon's Nest, The End",
+      "access": [
+        "the_end"
+      ],
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: farm 8 Summoning Eyes from Zealots, then the dragon type is random (Superior is the rarest)",
+      "tiers": [
+        {
+          "key": "kill",
+          "name": "Slay Strong Dragon",
+          "xp": 25,
+          "id": "KILL_STRONG_DRAGON"
+        }
+      ]
+    },
+    {
+      "category": "kuudra",
+      "group": "kuudra.tiers",
+      "name": "Defeat Kuudra",
+      "location": "Kuudra, Crimson Isle",
+      "access": [
+        "kuudra"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          10,
+          20
+        ],
+        [
+          12,
+          25
+        ],
+        [
+          15,
+          30
+        ],
+        [
+          15,
+          30
+        ],
+        [
+          20,
+          40
+        ]
+      ],
+      "minutesBasis": "estimate: one run per tier; needs that tier's key and faction reputation (1,000 / 3,000 / 7,000 / 12,000 for Hot to Infernal, wiki Kuudra)",
+      "tiers": [
+        {
+          "key": "none",
+          "name": "Defeat Kuudra (Basic tier)",
+          "xp": 20,
+          "id": "KILL_KUUDRA_NONE"
+        },
+        {
+          "key": "hot",
+          "name": "Defeat Kuudra (Hot tier)",
+          "xp": 40,
+          "id": "KILL_KUUDRA_HOT"
+        },
+        {
+          "key": "burning",
+          "name": "Defeat Kuudra (Burning tier)",
+          "xp": 60,
+          "id": "KILL_KUUDRA_BURNING"
+        },
+        {
+          "key": "fiery",
+          "name": "Defeat Kuudra (Fiery tier)",
+          "xp": 80,
+          "id": "KILL_KUUDRA_FIERY"
+        },
+        {
+          "key": "infernal",
+          "name": "Defeat Kuudra (Infernal tier)",
+          "xp": 100,
+          "id": "KILL_KUUDRA_INFERNAL"
+        }
+      ]
+    },
+    {
+      "category": "arachne",
+      "group": "arachne.tiers",
+      "name": "Defeat Arachne",
+      "location": "Arachne's Sanctuary, Spider's Den",
+      "access": [
+        "spiders_den"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          45
+        ],
+        [
+          45,
+          120
+        ]
+      ],
+      "minutesBasis": "estimate: collect the summoning item (Arachne's Calling, then Arachne's Keeper fragments for tier 2) and fight",
+      "tiers": [
+        {
+          "key": "tier1",
+          "name": "Defeat Arachne (tier 1)",
+          "xp": 20,
+          "id": "KILL_ARACHNE_TIER_1"
+        },
+        {
+          "key": "tier2",
+          "name": "Defeat Arachne (tier 2)",
+          "xp": 40,
+          "id": "KILL_ARACHNE_TIER_2"
+        }
+      ]
+    },
+    {
+      "category": "mythological",
+      "group": "mythological.kills",
+      "name": "Mythological Creature kills",
+      "location": "Hub (Diana mayor)",
+      "chain": true,
+      "minutes": [
+        15,
+        45
+      ],
+      "minutesBasis": "estimate: 100 kills from Griffin burrows during the Diana mayor",
+      "tiers": [
+        {
+          "key": "kills100",
+          "name": "Mythological Creature kills 100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 100
+        },
+        {
+          "key": "kills200",
+          "name": "Mythological Creature kills 200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 200
+        },
+        {
+          "key": "kills300",
+          "name": "Mythological Creature kills 300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 300
+        },
+        {
+          "key": "kills400",
+          "name": "Mythological Creature kills 400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 400
+        },
+        {
+          "key": "kills500",
+          "name": "Mythological Creature kills 500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 500
+        },
+        {
+          "key": "kills600",
+          "name": "Mythological Creature kills 600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 600
+        },
+        {
+          "key": "kills700",
+          "name": "Mythological Creature kills 700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 700
+        },
+        {
+          "key": "kills800",
+          "name": "Mythological Creature kills 800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 800
+        },
+        {
+          "key": "kills900",
+          "name": "Mythological Creature kills 900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 900
+        },
+        {
+          "key": "kills1000",
+          "name": "Mythological Creature kills 1,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1000
+        },
+        {
+          "key": "kills1100",
+          "name": "Mythological Creature kills 1,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1100
+        },
+        {
+          "key": "kills1200",
+          "name": "Mythological Creature kills 1,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1200
+        },
+        {
+          "key": "kills1300",
+          "name": "Mythological Creature kills 1,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1300
+        },
+        {
+          "key": "kills1400",
+          "name": "Mythological Creature kills 1,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1400
+        },
+        {
+          "key": "kills1500",
+          "name": "Mythological Creature kills 1,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1500
+        },
+        {
+          "key": "kills1600",
+          "name": "Mythological Creature kills 1,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1600
+        },
+        {
+          "key": "kills1700",
+          "name": "Mythological Creature kills 1,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1700
+        },
+        {
+          "key": "kills1800",
+          "name": "Mythological Creature kills 1,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1800
+        },
+        {
+          "key": "kills1900",
+          "name": "Mythological Creature kills 1,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 1900
+        },
+        {
+          "key": "kills2000",
+          "name": "Mythological Creature kills 2,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2000
+        },
+        {
+          "key": "kills2100",
+          "name": "Mythological Creature kills 2,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2100
+        },
+        {
+          "key": "kills2200",
+          "name": "Mythological Creature kills 2,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2200
+        },
+        {
+          "key": "kills2300",
+          "name": "Mythological Creature kills 2,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2300
+        },
+        {
+          "key": "kills2400",
+          "name": "Mythological Creature kills 2,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2400
+        },
+        {
+          "key": "kills2500",
+          "name": "Mythological Creature kills 2,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2500
+        },
+        {
+          "key": "kills2600",
+          "name": "Mythological Creature kills 2,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2600
+        },
+        {
+          "key": "kills2700",
+          "name": "Mythological Creature kills 2,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2700
+        },
+        {
+          "key": "kills2800",
+          "name": "Mythological Creature kills 2,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2800
+        },
+        {
+          "key": "kills2900",
+          "name": "Mythological Creature kills 2,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 2900
+        },
+        {
+          "key": "kills3000",
+          "name": "Mythological Creature kills 3,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3000
+        },
+        {
+          "key": "kills3100",
+          "name": "Mythological Creature kills 3,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3100
+        },
+        {
+          "key": "kills3200",
+          "name": "Mythological Creature kills 3,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3200
+        },
+        {
+          "key": "kills3300",
+          "name": "Mythological Creature kills 3,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3300
+        },
+        {
+          "key": "kills3400",
+          "name": "Mythological Creature kills 3,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3400
+        },
+        {
+          "key": "kills3500",
+          "name": "Mythological Creature kills 3,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3500
+        },
+        {
+          "key": "kills3600",
+          "name": "Mythological Creature kills 3,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3600
+        },
+        {
+          "key": "kills3700",
+          "name": "Mythological Creature kills 3,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3700
+        },
+        {
+          "key": "kills3800",
+          "name": "Mythological Creature kills 3,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3800
+        },
+        {
+          "key": "kills3900",
+          "name": "Mythological Creature kills 3,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 3900
+        },
+        {
+          "key": "kills4000",
+          "name": "Mythological Creature kills 4,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4000
+        },
+        {
+          "key": "kills4100",
+          "name": "Mythological Creature kills 4,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4100
+        },
+        {
+          "key": "kills4200",
+          "name": "Mythological Creature kills 4,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4200
+        },
+        {
+          "key": "kills4300",
+          "name": "Mythological Creature kills 4,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4300
+        },
+        {
+          "key": "kills4400",
+          "name": "Mythological Creature kills 4,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4400
+        },
+        {
+          "key": "kills4500",
+          "name": "Mythological Creature kills 4,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4500
+        },
+        {
+          "key": "kills4600",
+          "name": "Mythological Creature kills 4,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4600
+        },
+        {
+          "key": "kills4700",
+          "name": "Mythological Creature kills 4,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4700
+        },
+        {
+          "key": "kills4800",
+          "name": "Mythological Creature kills 4,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4800
+        },
+        {
+          "key": "kills4900",
+          "name": "Mythological Creature kills 4,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 4900
+        },
+        {
+          "key": "kills5000",
+          "name": "Mythological Creature kills 5,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5000
+        },
+        {
+          "key": "kills5100",
+          "name": "Mythological Creature kills 5,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5100
+        },
+        {
+          "key": "kills5200",
+          "name": "Mythological Creature kills 5,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5200
+        },
+        {
+          "key": "kills5300",
+          "name": "Mythological Creature kills 5,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5300
+        },
+        {
+          "key": "kills5400",
+          "name": "Mythological Creature kills 5,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5400
+        },
+        {
+          "key": "kills5500",
+          "name": "Mythological Creature kills 5,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5500
+        },
+        {
+          "key": "kills5600",
+          "name": "Mythological Creature kills 5,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5600
+        },
+        {
+          "key": "kills5700",
+          "name": "Mythological Creature kills 5,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5700
+        },
+        {
+          "key": "kills5800",
+          "name": "Mythological Creature kills 5,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5800
+        },
+        {
+          "key": "kills5900",
+          "name": "Mythological Creature kills 5,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 5900
+        },
+        {
+          "key": "kills6000",
+          "name": "Mythological Creature kills 6,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6000
+        },
+        {
+          "key": "kills6100",
+          "name": "Mythological Creature kills 6,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6100
+        },
+        {
+          "key": "kills6200",
+          "name": "Mythological Creature kills 6,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6200
+        },
+        {
+          "key": "kills6300",
+          "name": "Mythological Creature kills 6,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6300
+        },
+        {
+          "key": "kills6400",
+          "name": "Mythological Creature kills 6,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6400
+        },
+        {
+          "key": "kills6500",
+          "name": "Mythological Creature kills 6,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6500
+        },
+        {
+          "key": "kills6600",
+          "name": "Mythological Creature kills 6,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6600
+        },
+        {
+          "key": "kills6700",
+          "name": "Mythological Creature kills 6,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6700
+        },
+        {
+          "key": "kills6800",
+          "name": "Mythological Creature kills 6,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6800
+        },
+        {
+          "key": "kills6900",
+          "name": "Mythological Creature kills 6,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 6900
+        },
+        {
+          "key": "kills7000",
+          "name": "Mythological Creature kills 7,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7000
+        },
+        {
+          "key": "kills7100",
+          "name": "Mythological Creature kills 7,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7100
+        },
+        {
+          "key": "kills7200",
+          "name": "Mythological Creature kills 7,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7200
+        },
+        {
+          "key": "kills7300",
+          "name": "Mythological Creature kills 7,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7300
+        },
+        {
+          "key": "kills7400",
+          "name": "Mythological Creature kills 7,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7400
+        },
+        {
+          "key": "kills7500",
+          "name": "Mythological Creature kills 7,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7500
+        },
+        {
+          "key": "kills7600",
+          "name": "Mythological Creature kills 7,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7600
+        },
+        {
+          "key": "kills7700",
+          "name": "Mythological Creature kills 7,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7700
+        },
+        {
+          "key": "kills7800",
+          "name": "Mythological Creature kills 7,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7800
+        },
+        {
+          "key": "kills7900",
+          "name": "Mythological Creature kills 7,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 7900
+        },
+        {
+          "key": "kills8000",
+          "name": "Mythological Creature kills 8,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8000
+        },
+        {
+          "key": "kills8100",
+          "name": "Mythological Creature kills 8,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8100
+        },
+        {
+          "key": "kills8200",
+          "name": "Mythological Creature kills 8,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8200
+        },
+        {
+          "key": "kills8300",
+          "name": "Mythological Creature kills 8,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8300
+        },
+        {
+          "key": "kills8400",
+          "name": "Mythological Creature kills 8,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8400
+        },
+        {
+          "key": "kills8500",
+          "name": "Mythological Creature kills 8,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8500
+        },
+        {
+          "key": "kills8600",
+          "name": "Mythological Creature kills 8,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8600
+        },
+        {
+          "key": "kills8700",
+          "name": "Mythological Creature kills 8,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8700
+        },
+        {
+          "key": "kills8800",
+          "name": "Mythological Creature kills 8,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8800
+        },
+        {
+          "key": "kills8900",
+          "name": "Mythological Creature kills 8,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 8900
+        },
+        {
+          "key": "kills9000",
+          "name": "Mythological Creature kills 9,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9000
+        },
+        {
+          "key": "kills9100",
+          "name": "Mythological Creature kills 9,100",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9100
+        },
+        {
+          "key": "kills9200",
+          "name": "Mythological Creature kills 9,200",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9200
+        },
+        {
+          "key": "kills9300",
+          "name": "Mythological Creature kills 9,300",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9300
+        },
+        {
+          "key": "kills9400",
+          "name": "Mythological Creature kills 9,400",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9400
+        },
+        {
+          "key": "kills9500",
+          "name": "Mythological Creature kills 9,500",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9500
+        },
+        {
+          "key": "kills9600",
+          "name": "Mythological Creature kills 9,600",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9600
+        },
+        {
+          "key": "kills9700",
+          "name": "Mythological Creature kills 9,700",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9700
+        },
+        {
+          "key": "kills9800",
+          "name": "Mythological Creature kills 9,800",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9800
+        },
+        {
+          "key": "kills9900",
+          "name": "Mythological Creature kills 9,900",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 9900
+        },
+        {
+          "key": "kills10000",
+          "name": "Mythological Creature kills 10,000",
+          "xp": 1,
+          "metric": "mythological.kills",
+          "amount": 10000
+        }
+      ]
+    },
+    {
+      "category": "hotm",
+      "group": "hotm.tiers",
+      "name": "Heart of the Mountain",
+      "location": "Dwarven Mines",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          1,
+          5
+        ],
+        [
+          20,
+          60
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          167,
+          500
+        ],
+        [
+          400,
+          1200
+        ],
+        [
+          667,
+          2000
+        ],
+        [
+          1000,
+          3000
+        ],
+        [
+          1400,
+          4200
+        ],
+        [
+          1933,
+          5800
+        ],
+        [
+          2667,
+          8000
+        ]
+      ],
+      "minutesBasis": "HotM XP needed per tier / ~50-150 HotM XP per minute from commissions (+100 to +750 each, a few minutes each; estimate). Tier 1 is reaching any HotM XP.",
+      "tiers": [
+        {
+          "key": "tier1",
+          "name": "Heart of the Mountain tier 1",
+          "xp": 35,
+          "metric": "hotm.xp",
+          "amount": 1
+        },
+        {
+          "key": "tier2",
+          "name": "Heart of the Mountain tier 2",
+          "xp": 45,
+          "metric": "hotm.xp",
+          "amount": 3000
+        },
+        {
+          "key": "tier3",
+          "name": "Heart of the Mountain tier 3",
+          "xp": 60,
+          "metric": "hotm.xp",
+          "amount": 12000
+        },
+        {
+          "key": "tier4",
+          "name": "Heart of the Mountain tier 4",
+          "xp": 75,
+          "metric": "hotm.xp",
+          "amount": 37000
+        },
+        {
+          "key": "tier5",
+          "name": "Heart of the Mountain tier 5",
+          "xp": 90,
+          "metric": "hotm.xp",
+          "amount": 97000
+        },
+        {
+          "key": "tier6",
+          "name": "Heart of the Mountain tier 6",
+          "xp": 110,
+          "metric": "hotm.xp",
+          "amount": 197000
+        },
+        {
+          "key": "tier7",
+          "name": "Heart of the Mountain tier 7",
+          "xp": 130,
+          "metric": "hotm.xp",
+          "amount": 347000
+        },
+        {
+          "key": "tier8",
+          "name": "Heart of the Mountain tier 8",
+          "xp": 180,
+          "metric": "hotm.xp",
+          "amount": 557000
+        },
+        {
+          "key": "tier9",
+          "name": "Heart of the Mountain tier 9",
+          "xp": 210,
+          "metric": "hotm.xp",
+          "amount": 847000
+        },
+        {
+          "key": "tier10",
+          "name": "Heart of the Mountain tier 10",
+          "xp": 240,
+          "metric": "hotm.xp",
+          "amount": 1247000
+        }
+      ]
+    },
+    {
+      "category": "hotm",
+      "group": "hotm.nucleus",
+      "name": "Crystal Nucleus runs",
+      "location": "Crystal Hollows",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "minutes": [
+        15,
+        40
+      ],
+      "minutesBasis": "estimate: one run collects the five crystals across the Crystal Hollows",
+      "tiers": [
+        {
+          "key": "run1",
+          "name": "Crystal Nucleus run 1",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 1
+        },
+        {
+          "key": "run2",
+          "name": "Crystal Nucleus run 2",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 2
+        },
+        {
+          "key": "run3",
+          "name": "Crystal Nucleus run 3",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 3
+        },
+        {
+          "key": "run4",
+          "name": "Crystal Nucleus run 4",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 4
+        },
+        {
+          "key": "run5",
+          "name": "Crystal Nucleus run 5",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 5
+        },
+        {
+          "key": "run6",
+          "name": "Crystal Nucleus run 6",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 6
+        },
+        {
+          "key": "run7",
+          "name": "Crystal Nucleus run 7",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 7
+        },
+        {
+          "key": "run8",
+          "name": "Crystal Nucleus run 8",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 8
+        },
+        {
+          "key": "run9",
+          "name": "Crystal Nucleus run 9",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 9
+        },
+        {
+          "key": "run10",
+          "name": "Crystal Nucleus run 10",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 10
+        },
+        {
+          "key": "run11",
+          "name": "Crystal Nucleus run 11",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 11
+        },
+        {
+          "key": "run12",
+          "name": "Crystal Nucleus run 12",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 12
+        },
+        {
+          "key": "run13",
+          "name": "Crystal Nucleus run 13",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 13
+        },
+        {
+          "key": "run14",
+          "name": "Crystal Nucleus run 14",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 14
+        },
+        {
+          "key": "run15",
+          "name": "Crystal Nucleus run 15",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 15
+        },
+        {
+          "key": "run16",
+          "name": "Crystal Nucleus run 16",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 16
+        },
+        {
+          "key": "run17",
+          "name": "Crystal Nucleus run 17",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 17
+        },
+        {
+          "key": "run18",
+          "name": "Crystal Nucleus run 18",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 18
+        },
+        {
+          "key": "run19",
+          "name": "Crystal Nucleus run 19",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 19
+        },
+        {
+          "key": "run20",
+          "name": "Crystal Nucleus run 20",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 20
+        },
+        {
+          "key": "run21",
+          "name": "Crystal Nucleus run 21",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 21
+        },
+        {
+          "key": "run22",
+          "name": "Crystal Nucleus run 22",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 22
+        },
+        {
+          "key": "run23",
+          "name": "Crystal Nucleus run 23",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 23
+        },
+        {
+          "key": "run24",
+          "name": "Crystal Nucleus run 24",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 24
+        },
+        {
+          "key": "run25",
+          "name": "Crystal Nucleus run 25",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 25
+        },
+        {
+          "key": "run26",
+          "name": "Crystal Nucleus run 26",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 26
+        },
+        {
+          "key": "run27",
+          "name": "Crystal Nucleus run 27",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 27
+        },
+        {
+          "key": "run28",
+          "name": "Crystal Nucleus run 28",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 28
+        },
+        {
+          "key": "run29",
+          "name": "Crystal Nucleus run 29",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 29
+        },
+        {
+          "key": "run30",
+          "name": "Crystal Nucleus run 30",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 30
+        },
+        {
+          "key": "run31",
+          "name": "Crystal Nucleus run 31",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 31
+        },
+        {
+          "key": "run32",
+          "name": "Crystal Nucleus run 32",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 32
+        },
+        {
+          "key": "run33",
+          "name": "Crystal Nucleus run 33",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 33
+        },
+        {
+          "key": "run34",
+          "name": "Crystal Nucleus run 34",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 34
+        },
+        {
+          "key": "run35",
+          "name": "Crystal Nucleus run 35",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 35
+        },
+        {
+          "key": "run36",
+          "name": "Crystal Nucleus run 36",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 36
+        },
+        {
+          "key": "run37",
+          "name": "Crystal Nucleus run 37",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 37
+        },
+        {
+          "key": "run38",
+          "name": "Crystal Nucleus run 38",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 38
+        },
+        {
+          "key": "run39",
+          "name": "Crystal Nucleus run 39",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 39
+        },
+        {
+          "key": "run40",
+          "name": "Crystal Nucleus run 40",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 40
+        },
+        {
+          "key": "run41",
+          "name": "Crystal Nucleus run 41",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 41
+        },
+        {
+          "key": "run42",
+          "name": "Crystal Nucleus run 42",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 42
+        },
+        {
+          "key": "run43",
+          "name": "Crystal Nucleus run 43",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 43
+        },
+        {
+          "key": "run44",
+          "name": "Crystal Nucleus run 44",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 44
+        },
+        {
+          "key": "run45",
+          "name": "Crystal Nucleus run 45",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 45
+        },
+        {
+          "key": "run46",
+          "name": "Crystal Nucleus run 46",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 46
+        },
+        {
+          "key": "run47",
+          "name": "Crystal Nucleus run 47",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 47
+        },
+        {
+          "key": "run48",
+          "name": "Crystal Nucleus run 48",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 48
+        },
+        {
+          "key": "run49",
+          "name": "Crystal Nucleus run 49",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 49
+        },
+        {
+          "key": "run50",
+          "name": "Crystal Nucleus run 50",
+          "xp": 4,
+          "metric": "hotm.nucleus_runs",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.wheat",
+      "name": "Jacob's Contest gold: Wheat",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Wheat contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.WHEAT",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.carrot_item",
+      "name": "Jacob's Contest gold: Carrot",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Carrot contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.CARROT_ITEM",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.potato_item",
+      "name": "Jacob's Contest gold: Potato",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Potato contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.POTATO_ITEM",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.pumpkin",
+      "name": "Jacob's Contest gold: Pumpkin",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Pumpkin contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.PUMPKIN",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.melon",
+      "name": "Jacob's Contest gold: Melon",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Melon contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.MELON",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.mushroom_collection",
+      "name": "Jacob's Contest gold: Mushroom",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Mushroom contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.MUSHROOM_COLLECTION",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.cactus",
+      "name": "Jacob's Contest gold: Cactus",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Cactus contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.CACTUS",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.sugar_cane",
+      "name": "Jacob's Contest gold: Sugar Cane",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Sugar Cane contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.SUGAR_CANE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.nether_stalk",
+      "name": "Jacob's Contest gold: Nether Wart",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Nether Wart contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.NETHER_STALK",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.ink_sack_3",
+      "name": "Jacob's Contest gold: Cocoa Beans",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Cocoa Beans contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.INK_SACK:3",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.moonflower",
+      "name": "Jacob's Contest gold: Moonflower",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Moonflower contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.MOONFLOWER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.double_plant",
+      "name": "Jacob's Contest gold: Sunflower",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Sunflower contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.DOUBLE_PLANT",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.jacob.wild_rose",
+      "name": "Jacob's Contest gold: Wild Rose",
+      "location": "Jacob's Farming Contest",
+      "minutes": [
+        60,
+        240
+      ],
+      "minutesBasis": "estimate: wait for a contest with this crop (contests run hourly, 3 crops each) and place in the gold bracket",
+      "tiers": [
+        {
+          "key": "gold",
+          "name": "Gold medal in a Wild Rose contest",
+          "xp": 10,
+          "metric": "garden.jacob_gold.WILD_ROSE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.anita.double_drops",
+      "name": "Anita's Extra Farming Drops",
+      "location": "The Garden (Anita)",
+      "chain": true,
+      "minutes": [
+        60,
+        180
+      ],
+      "minutesBasis": "estimate: each tier costs medals from a few contests",
+      "tiers": [
+        {
+          "key": "tier1",
+          "name": "Extra Farming Drops 1",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 1
+        },
+        {
+          "key": "tier2",
+          "name": "Extra Farming Drops 2",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 2
+        },
+        {
+          "key": "tier3",
+          "name": "Extra Farming Drops 3",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 3
+        },
+        {
+          "key": "tier4",
+          "name": "Extra Farming Drops 4",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 4
+        },
+        {
+          "key": "tier5",
+          "name": "Extra Farming Drops 5",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 5
+        },
+        {
+          "key": "tier6",
+          "name": "Extra Farming Drops 6",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 6
+        },
+        {
+          "key": "tier7",
+          "name": "Extra Farming Drops 7",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 7
+        },
+        {
+          "key": "tier8",
+          "name": "Extra Farming Drops 8",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 8
+        },
+        {
+          "key": "tier9",
+          "name": "Extra Farming Drops 9",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 9
+        },
+        {
+          "key": "tier10",
+          "name": "Extra Farming Drops 10",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 10
+        },
+        {
+          "key": "tier11",
+          "name": "Extra Farming Drops 11",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 11
+        },
+        {
+          "key": "tier12",
+          "name": "Extra Farming Drops 12",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 12
+        },
+        {
+          "key": "tier13",
+          "name": "Extra Farming Drops 13",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 13
+        },
+        {
+          "key": "tier14",
+          "name": "Extra Farming Drops 14",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 14
+        },
+        {
+          "key": "tier15",
+          "name": "Extra Farming Drops 15",
+          "xp": 10,
+          "metric": "garden.anita.double_drops",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "category": "garden",
+      "group": "garden.anita.level_cap",
+      "name": "Anita's Farming Level Cap",
+      "location": "The Garden (Anita)",
+      "chain": true,
+      "minutes": [
+        60,
+        180
+      ],
+      "minutesBasis": "estimate: each tier costs medals from a few contests",
+      "tiers": [
+        {
+          "key": "tier1",
+          "name": "Farming Level Cap +1",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 1
+        },
+        {
+          "key": "tier2",
+          "name": "Farming Level Cap +2",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 2
+        },
+        {
+          "key": "tier3",
+          "name": "Farming Level Cap +3",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 3
+        },
+        {
+          "key": "tier4",
+          "name": "Farming Level Cap +4",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 4
+        },
+        {
+          "key": "tier5",
+          "name": "Farming Level Cap +5",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 5
+        },
+        {
+          "key": "tier6",
+          "name": "Farming Level Cap +6",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 6
+        },
+        {
+          "key": "tier7",
+          "name": "Farming Level Cap +7",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 7
+        },
+        {
+          "key": "tier8",
+          "name": "Farming Level Cap +8",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 8
+        },
+        {
+          "key": "tier9",
+          "name": "Farming Level Cap +9",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 9
+        },
+        {
+          "key": "tier10",
+          "name": "Farming Level Cap +10",
+          "xp": 10,
+          "metric": "garden.anita.farming_level_cap",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.blobfish",
+      "name": "Trophy Fish: Blobfish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Blobfish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_BLOBFISH_BRONZE",
+          "metric": "trophy.blobfish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Blobfish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_BLOBFISH_SILVER",
+          "metric": "trophy.blobfish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Blobfish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_BLOBFISH_GOLD",
+          "metric": "trophy.blobfish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Blobfish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_BLOBFISH_DIAMOND",
+          "metric": "trophy.blobfish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.flyfish",
+      "name": "Trophy Fish: Flyfish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Flyfish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_FLYFISH_BRONZE",
+          "metric": "trophy.flyfish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Flyfish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_FLYFISH_SILVER",
+          "metric": "trophy.flyfish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Flyfish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_FLYFISH_GOLD",
+          "metric": "trophy.flyfish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Flyfish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_FLYFISH_DIAMOND",
+          "metric": "trophy.flyfish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.golden_fish",
+      "name": "Trophy Fish: Golden Fish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Golden Fish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_GOLDEN_FISH_BRONZE",
+          "metric": "trophy.golden_fish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Golden Fish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_GOLDEN_FISH_SILVER",
+          "metric": "trophy.golden_fish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Golden Fish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_GOLDEN_FISH_GOLD",
+          "metric": "trophy.golden_fish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Golden Fish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_GOLDEN_FISH_DIAMOND",
+          "metric": "trophy.golden_fish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.gusher",
+      "name": "Trophy Fish: Gusher",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Gusher (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_GUSHER_BRONZE",
+          "metric": "trophy.gusher_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Gusher (Silver)",
+          "xp": 8,
+          "id": "TROPHY_GUSHER_SILVER",
+          "metric": "trophy.gusher_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Gusher (Gold)",
+          "xp": 16,
+          "id": "TROPHY_GUSHER_GOLD",
+          "metric": "trophy.gusher_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Gusher (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_GUSHER_DIAMOND",
+          "metric": "trophy.gusher_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.karate_fish",
+      "name": "Trophy Fish: Karate Fish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Karate Fish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_KARATE_FISH_BRONZE",
+          "metric": "trophy.karate_fish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Karate Fish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_KARATE_FISH_SILVER",
+          "metric": "trophy.karate_fish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Karate Fish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_KARATE_FISH_GOLD",
+          "metric": "trophy.karate_fish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Karate Fish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_KARATE_FISH_DIAMOND",
+          "metric": "trophy.karate_fish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.lava_horse",
+      "name": "Trophy Fish: Lava Horse",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Lava Horse (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_LAVA_HORSE_BRONZE",
+          "metric": "trophy.lava_horse_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Lava Horse (Silver)",
+          "xp": 8,
+          "id": "TROPHY_LAVA_HORSE_SILVER",
+          "metric": "trophy.lava_horse_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Lava Horse (Gold)",
+          "xp": 16,
+          "id": "TROPHY_LAVA_HORSE_GOLD",
+          "metric": "trophy.lava_horse_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Lava Horse (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_LAVA_HORSE_DIAMOND",
+          "metric": "trophy.lava_horse_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.mana_ray",
+      "name": "Trophy Fish: Mana Ray",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Mana Ray (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_MANA_RAY_BRONZE",
+          "metric": "trophy.mana_ray_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Mana Ray (Silver)",
+          "xp": 8,
+          "id": "TROPHY_MANA_RAY_SILVER",
+          "metric": "trophy.mana_ray_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Mana Ray (Gold)",
+          "xp": 16,
+          "id": "TROPHY_MANA_RAY_GOLD",
+          "metric": "trophy.mana_ray_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Mana Ray (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_MANA_RAY_DIAMOND",
+          "metric": "trophy.mana_ray_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.moldfin",
+      "name": "Trophy Fish: Moldfin",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Moldfin (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_MOLDFIN_BRONZE",
+          "metric": "trophy.moldfin_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Moldfin (Silver)",
+          "xp": 8,
+          "id": "TROPHY_MOLDFIN_SILVER",
+          "metric": "trophy.moldfin_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Moldfin (Gold)",
+          "xp": 16,
+          "id": "TROPHY_MOLDFIN_GOLD",
+          "metric": "trophy.moldfin_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Moldfin (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_MOLDFIN_DIAMOND",
+          "metric": "trophy.moldfin_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.obfuscated_fish_1",
+      "name": "Trophy Fish: Obfuscated Fish 1",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Obfuscated Fish 1 (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_OBFUSCATED_FISH_1_BRONZE",
+          "metric": "trophy.obfuscated_fish_1_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Obfuscated Fish 1 (Silver)",
+          "xp": 8,
+          "id": "TROPHY_OBFUSCATED_FISH_1_SILVER",
+          "metric": "trophy.obfuscated_fish_1_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Obfuscated Fish 1 (Gold)",
+          "xp": 16,
+          "id": "TROPHY_OBFUSCATED_FISH_1_GOLD",
+          "metric": "trophy.obfuscated_fish_1_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Obfuscated Fish 1 (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_OBFUSCATED_FISH_1_DIAMOND",
+          "metric": "trophy.obfuscated_fish_1_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.obfuscated_fish_2",
+      "name": "Trophy Fish: Obfuscated Fish 2",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Obfuscated Fish 2 (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_OBFUSCATED_FISH_2_BRONZE",
+          "metric": "trophy.obfuscated_fish_2_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Obfuscated Fish 2 (Silver)",
+          "xp": 8,
+          "id": "TROPHY_OBFUSCATED_FISH_2_SILVER",
+          "metric": "trophy.obfuscated_fish_2_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Obfuscated Fish 2 (Gold)",
+          "xp": 16,
+          "id": "TROPHY_OBFUSCATED_FISH_2_GOLD",
+          "metric": "trophy.obfuscated_fish_2_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Obfuscated Fish 2 (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_OBFUSCATED_FISH_2_DIAMOND",
+          "metric": "trophy.obfuscated_fish_2_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.obfuscated_fish_3",
+      "name": "Trophy Fish: Obfuscated Fish 3",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Obfuscated Fish 3 (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_OBFUSCATED_FISH_3_BRONZE",
+          "metric": "trophy.obfuscated_fish_3_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Obfuscated Fish 3 (Silver)",
+          "xp": 8,
+          "id": "TROPHY_OBFUSCATED_FISH_3_SILVER",
+          "metric": "trophy.obfuscated_fish_3_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Obfuscated Fish 3 (Gold)",
+          "xp": 16,
+          "id": "TROPHY_OBFUSCATED_FISH_3_GOLD",
+          "metric": "trophy.obfuscated_fish_3_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Obfuscated Fish 3 (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_OBFUSCATED_FISH_3_DIAMOND",
+          "metric": "trophy.obfuscated_fish_3_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.skeleton_fish",
+      "name": "Trophy Fish: Skeleton Fish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Skeleton Fish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_SKELETON_FISH_BRONZE",
+          "metric": "trophy.skeleton_fish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Skeleton Fish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_SKELETON_FISH_SILVER",
+          "metric": "trophy.skeleton_fish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Skeleton Fish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_SKELETON_FISH_GOLD",
+          "metric": "trophy.skeleton_fish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Skeleton Fish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_SKELETON_FISH_DIAMOND",
+          "metric": "trophy.skeleton_fish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.slugfish",
+      "name": "Trophy Fish: Slugfish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Slugfish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_SLUGFISH_BRONZE",
+          "metric": "trophy.slugfish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Slugfish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_SLUGFISH_SILVER",
+          "metric": "trophy.slugfish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Slugfish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_SLUGFISH_GOLD",
+          "metric": "trophy.slugfish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Slugfish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_SLUGFISH_DIAMOND",
+          "metric": "trophy.slugfish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.soul_fish",
+      "name": "Trophy Fish: Soul Fish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Soul Fish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_SOUL_FISH_BRONZE",
+          "metric": "trophy.soul_fish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Soul Fish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_SOUL_FISH_SILVER",
+          "metric": "trophy.soul_fish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Soul Fish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_SOUL_FISH_GOLD",
+          "metric": "trophy.soul_fish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Soul Fish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_SOUL_FISH_DIAMOND",
+          "metric": "trophy.soul_fish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.steaming_hot_flounder",
+      "name": "Trophy Fish: Steaming Hot Flounder",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Steaming Hot Flounder (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_STEAMING_HOT_FLOUNDER_BRONZE",
+          "metric": "trophy.steaming_hot_flounder_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Steaming Hot Flounder (Silver)",
+          "xp": 8,
+          "id": "TROPHY_STEAMING_HOT_FLOUNDER_SILVER",
+          "metric": "trophy.steaming_hot_flounder_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Steaming Hot Flounder (Gold)",
+          "xp": 16,
+          "id": "TROPHY_STEAMING_HOT_FLOUNDER_GOLD",
+          "metric": "trophy.steaming_hot_flounder_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Steaming Hot Flounder (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_STEAMING_HOT_FLOUNDER_DIAMOND",
+          "metric": "trophy.steaming_hot_flounder_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.sulphur_skitter",
+      "name": "Trophy Fish: Sulphur Skitter",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Sulphur Skitter (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_SULPHUR_SKITTER_BRONZE",
+          "metric": "trophy.sulphur_skitter_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Sulphur Skitter (Silver)",
+          "xp": 8,
+          "id": "TROPHY_SULPHUR_SKITTER_SILVER",
+          "metric": "trophy.sulphur_skitter_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Sulphur Skitter (Gold)",
+          "xp": 16,
+          "id": "TROPHY_SULPHUR_SKITTER_GOLD",
+          "metric": "trophy.sulphur_skitter_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Sulphur Skitter (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_SULPHUR_SKITTER_DIAMOND",
+          "metric": "trophy.sulphur_skitter_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.vanille",
+      "name": "Trophy Fish: Vanille",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Vanille (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_VANILLE_BRONZE",
+          "metric": "trophy.vanille_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Vanille (Silver)",
+          "xp": 8,
+          "id": "TROPHY_VANILLE_SILVER",
+          "metric": "trophy.vanille_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Vanille (Gold)",
+          "xp": 16,
+          "id": "TROPHY_VANILLE_GOLD",
+          "metric": "trophy.vanille_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Vanille (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_VANILLE_DIAMOND",
+          "metric": "trophy.vanille_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "trophy_fishing",
+      "group": "trophy.volcanic_stonefish",
+      "name": "Trophy Fish: Volcanic Stonefish",
+      "location": "Crimson Isle (lava fishing)",
+      "access": [
+        "crimson_isle"
+      ],
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          60,
+          300
+        ],
+        [
+          300,
+          1500
+        ]
+      ],
+      "minutesBasis": "estimate: each tier is rarer; Diamond is very rare",
+      "tiers": [
+        {
+          "key": "bronze",
+          "name": "Volcanic Stonefish (Bronze)",
+          "xp": 4,
+          "id": "TROPHY_VOLCANIC_STONEFISH_BRONZE",
+          "metric": "trophy.volcanic_stonefish_bronze",
+          "amount": 1
+        },
+        {
+          "key": "silver",
+          "name": "Volcanic Stonefish (Silver)",
+          "xp": 8,
+          "id": "TROPHY_VOLCANIC_STONEFISH_SILVER",
+          "metric": "trophy.volcanic_stonefish_silver",
+          "amount": 1
+        },
+        {
+          "key": "gold",
+          "name": "Volcanic Stonefish (Gold)",
+          "xp": 16,
+          "id": "TROPHY_VOLCANIC_STONEFISH_GOLD",
+          "metric": "trophy.volcanic_stonefish_gold",
+          "amount": 1
+        },
+        {
+          "key": "diamond",
+          "name": "Volcanic Stonefish (Diamond)",
+          "xp": 32,
+          "id": "TROPHY_VOLCANIC_STONEFISH_DIAMOND",
+          "metric": "trophy.volcanic_stonefish_diamond",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "category": "foraging_tasks",
+      "group": "hotf.tiers",
+      "name": "Heart of the Forest",
+      "location": "Galatea",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          1,
+          5
+        ],
+        [
+          20,
+          60
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          167,
+          500
+        ],
+        [
+          400,
+          1200
+        ],
+        [
+          667,
+          2000
+        ],
+        [
+          1000,
+          3000
+        ],
+        [
+          1333,
+          4000
+        ]
+      ],
+      "minutesBasis": "HotF XP needed per tier / ~50-150 HotF XP per minute (estimate, same as HotM). Tier 1 is reaching any HotF XP.",
+      "tiers": [
+        {
+          "key": "tier1",
+          "name": "Heart of the Forest tier 1",
+          "xp": 35,
+          "metric": "hotf.xp",
+          "amount": 1
+        },
+        {
+          "key": "tier2",
+          "name": "Heart of the Forest tier 2",
+          "xp": 45,
+          "metric": "hotf.xp",
+          "amount": 3000
+        },
+        {
+          "key": "tier3",
+          "name": "Heart of the Forest tier 3",
+          "xp": 60,
+          "metric": "hotf.xp",
+          "amount": 12000
+        },
+        {
+          "key": "tier4",
+          "name": "Heart of the Forest tier 4",
+          "xp": 75,
+          "metric": "hotf.xp",
+          "amount": 37000
+        },
+        {
+          "key": "tier5",
+          "name": "Heart of the Forest tier 5",
+          "xp": 90,
+          "metric": "hotf.xp",
+          "amount": 97000
+        },
+        {
+          "key": "tier6",
+          "name": "Heart of the Forest tier 6",
+          "xp": 110,
+          "metric": "hotf.xp",
+          "amount": 197000
+        },
+        {
+          "key": "tier7",
+          "name": "Heart of the Forest tier 7",
+          "xp": 130,
+          "metric": "hotf.xp",
+          "amount": 347000
+        },
+        {
+          "key": "tier8",
+          "name": "Heart of the Forest tier 8",
+          "xp": 180,
+          "metric": "hotf.xp",
+          "amount": 547000
+        }
+      ]
+    },
+    {
+      "category": "foraging_tasks",
+      "group": "safari.cavern",
+      "name": "Safari Milestones: Cavern Biome",
+      "location": "Critter Safari (Cavern Biome)",
+      "access": [
+        "critter_safari"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          15
+        ],
+        [
+          10,
+          30
+        ],
+        [
+          15,
+          45
+        ],
+        [
+          20,
+          60
+        ],
+        [
+          25,
+          75
+        ],
+        [
+          30,
+          90
+        ],
+        [
+          35,
+          105
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          45,
+          135
+        ],
+        [
+          50,
+          150
+        ]
+      ],
+      "minutesBasis": "estimate: later milestones need more critters",
+      "tiers": [
+        {
+          "key": "m1",
+          "name": "Cavern Biome Safari Milestone 1",
+          "xp": 1,
+          "id": "SAFARI_MILESTONE_CAVERN_1"
+        },
+        {
+          "key": "m2",
+          "name": "Cavern Biome Safari Milestone 2",
+          "xp": 2,
+          "id": "SAFARI_MILESTONE_CAVERN_2"
+        },
+        {
+          "key": "m3",
+          "name": "Cavern Biome Safari Milestone 3",
+          "xp": 3,
+          "id": "SAFARI_MILESTONE_CAVERN_3"
+        },
+        {
+          "key": "m4",
+          "name": "Cavern Biome Safari Milestone 4",
+          "xp": 4,
+          "id": "SAFARI_MILESTONE_CAVERN_4"
+        },
+        {
+          "key": "m5",
+          "name": "Cavern Biome Safari Milestone 5",
+          "xp": 5,
+          "id": "SAFARI_MILESTONE_CAVERN_5"
+        },
+        {
+          "key": "m6",
+          "name": "Cavern Biome Safari Milestone 6",
+          "xp": 6,
+          "id": "SAFARI_MILESTONE_CAVERN_6"
+        },
+        {
+          "key": "m7",
+          "name": "Cavern Biome Safari Milestone 7",
+          "xp": 7,
+          "id": "SAFARI_MILESTONE_CAVERN_7"
+        },
+        {
+          "key": "m8",
+          "name": "Cavern Biome Safari Milestone 8",
+          "xp": 8,
+          "id": "SAFARI_MILESTONE_CAVERN_8"
+        },
+        {
+          "key": "m9",
+          "name": "Cavern Biome Safari Milestone 9",
+          "xp": 9,
+          "id": "SAFARI_MILESTONE_CAVERN_9"
+        },
+        {
+          "key": "m10",
+          "name": "Cavern Biome Safari Milestone 10",
+          "xp": 10,
+          "id": "SAFARI_MILESTONE_CAVERN_10"
+        }
+      ]
+    },
+    {
+      "category": "foraging_tasks",
+      "group": "safari.forest",
+      "name": "Safari Milestones: Forest Biome",
+      "location": "Critter Safari (Forest Biome)",
+      "access": [
+        "critter_safari"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          15
+        ],
+        [
+          10,
+          30
+        ],
+        [
+          15,
+          45
+        ],
+        [
+          20,
+          60
+        ],
+        [
+          25,
+          75
+        ],
+        [
+          30,
+          90
+        ],
+        [
+          35,
+          105
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          45,
+          135
+        ],
+        [
+          50,
+          150
+        ]
+      ],
+      "minutesBasis": "estimate: later milestones need more critters",
+      "tiers": [
+        {
+          "key": "m1",
+          "name": "Forest Biome Safari Milestone 1",
+          "xp": 1,
+          "id": "SAFARI_MILESTONE_FOREST_1"
+        },
+        {
+          "key": "m2",
+          "name": "Forest Biome Safari Milestone 2",
+          "xp": 2,
+          "id": "SAFARI_MILESTONE_FOREST_2"
+        },
+        {
+          "key": "m3",
+          "name": "Forest Biome Safari Milestone 3",
+          "xp": 3,
+          "id": "SAFARI_MILESTONE_FOREST_3"
+        },
+        {
+          "key": "m4",
+          "name": "Forest Biome Safari Milestone 4",
+          "xp": 4,
+          "id": "SAFARI_MILESTONE_FOREST_4"
+        },
+        {
+          "key": "m5",
+          "name": "Forest Biome Safari Milestone 5",
+          "xp": 5,
+          "id": "SAFARI_MILESTONE_FOREST_5"
+        },
+        {
+          "key": "m6",
+          "name": "Forest Biome Safari Milestone 6",
+          "xp": 6,
+          "id": "SAFARI_MILESTONE_FOREST_6"
+        },
+        {
+          "key": "m7",
+          "name": "Forest Biome Safari Milestone 7",
+          "xp": 7,
+          "id": "SAFARI_MILESTONE_FOREST_7"
+        },
+        {
+          "key": "m8",
+          "name": "Forest Biome Safari Milestone 8",
+          "xp": 8,
+          "id": "SAFARI_MILESTONE_FOREST_8"
+        },
+        {
+          "key": "m9",
+          "name": "Forest Biome Safari Milestone 9",
+          "xp": 9,
+          "id": "SAFARI_MILESTONE_FOREST_9"
+        },
+        {
+          "key": "m10",
+          "name": "Forest Biome Safari Milestone 10",
+          "xp": 10,
+          "id": "SAFARI_MILESTONE_FOREST_10"
+        }
+      ]
+    },
+    {
+      "category": "foraging_tasks",
+      "group": "safari.haunted",
+      "name": "Safari Milestones: Haunted Biome",
+      "location": "Critter Safari (Haunted Biome)",
+      "access": [
+        "critter_safari"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          15
+        ],
+        [
+          10,
+          30
+        ],
+        [
+          15,
+          45
+        ],
+        [
+          20,
+          60
+        ],
+        [
+          25,
+          75
+        ],
+        [
+          30,
+          90
+        ],
+        [
+          35,
+          105
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          45,
+          135
+        ],
+        [
+          50,
+          150
+        ]
+      ],
+      "minutesBasis": "estimate: later milestones need more critters",
+      "tiers": [
+        {
+          "key": "m1",
+          "name": "Haunted Biome Safari Milestone 1",
+          "xp": 1,
+          "id": "SAFARI_MILESTONE_HAUNTED_1"
+        },
+        {
+          "key": "m2",
+          "name": "Haunted Biome Safari Milestone 2",
+          "xp": 2,
+          "id": "SAFARI_MILESTONE_HAUNTED_2"
+        },
+        {
+          "key": "m3",
+          "name": "Haunted Biome Safari Milestone 3",
+          "xp": 3,
+          "id": "SAFARI_MILESTONE_HAUNTED_3"
+        },
+        {
+          "key": "m4",
+          "name": "Haunted Biome Safari Milestone 4",
+          "xp": 4,
+          "id": "SAFARI_MILESTONE_HAUNTED_4"
+        },
+        {
+          "key": "m5",
+          "name": "Haunted Biome Safari Milestone 5",
+          "xp": 5,
+          "id": "SAFARI_MILESTONE_HAUNTED_5"
+        },
+        {
+          "key": "m6",
+          "name": "Haunted Biome Safari Milestone 6",
+          "xp": 6,
+          "id": "SAFARI_MILESTONE_HAUNTED_6"
+        },
+        {
+          "key": "m7",
+          "name": "Haunted Biome Safari Milestone 7",
+          "xp": 7,
+          "id": "SAFARI_MILESTONE_HAUNTED_7"
+        },
+        {
+          "key": "m8",
+          "name": "Haunted Biome Safari Milestone 8",
+          "xp": 8,
+          "id": "SAFARI_MILESTONE_HAUNTED_8"
+        },
+        {
+          "key": "m9",
+          "name": "Haunted Biome Safari Milestone 9",
+          "xp": 9,
+          "id": "SAFARI_MILESTONE_HAUNTED_9"
+        },
+        {
+          "key": "m10",
+          "name": "Haunted Biome Safari Milestone 10",
+          "xp": 10,
+          "id": "SAFARI_MILESTONE_HAUNTED_10"
+        }
+      ]
+    },
+    {
+      "category": "foraging_tasks",
+      "group": "safari.icy",
+      "name": "Safari Milestones: Icy Biome",
+      "location": "Critter Safari (Icy Biome)",
+      "access": [
+        "critter_safari"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          15
+        ],
+        [
+          10,
+          30
+        ],
+        [
+          15,
+          45
+        ],
+        [
+          20,
+          60
+        ],
+        [
+          25,
+          75
+        ],
+        [
+          30,
+          90
+        ],
+        [
+          35,
+          105
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          45,
+          135
+        ],
+        [
+          50,
+          150
+        ]
+      ],
+      "minutesBasis": "estimate: later milestones need more critters",
+      "tiers": [
+        {
+          "key": "m1",
+          "name": "Icy Biome Safari Milestone 1",
+          "xp": 1,
+          "id": "SAFARI_MILESTONE_ICY_1"
+        },
+        {
+          "key": "m2",
+          "name": "Icy Biome Safari Milestone 2",
+          "xp": 2,
+          "id": "SAFARI_MILESTONE_ICY_2"
+        },
+        {
+          "key": "m3",
+          "name": "Icy Biome Safari Milestone 3",
+          "xp": 3,
+          "id": "SAFARI_MILESTONE_ICY_3"
+        },
+        {
+          "key": "m4",
+          "name": "Icy Biome Safari Milestone 4",
+          "xp": 4,
+          "id": "SAFARI_MILESTONE_ICY_4"
+        },
+        {
+          "key": "m5",
+          "name": "Icy Biome Safari Milestone 5",
+          "xp": 5,
+          "id": "SAFARI_MILESTONE_ICY_5"
+        },
+        {
+          "key": "m6",
+          "name": "Icy Biome Safari Milestone 6",
+          "xp": 6,
+          "id": "SAFARI_MILESTONE_ICY_6"
+        },
+        {
+          "key": "m7",
+          "name": "Icy Biome Safari Milestone 7",
+          "xp": 7,
+          "id": "SAFARI_MILESTONE_ICY_7"
+        },
+        {
+          "key": "m8",
+          "name": "Icy Biome Safari Milestone 8",
+          "xp": 8,
+          "id": "SAFARI_MILESTONE_ICY_8"
+        },
+        {
+          "key": "m9",
+          "name": "Icy Biome Safari Milestone 9",
+          "xp": 9,
+          "id": "SAFARI_MILESTONE_ICY_9"
+        },
+        {
+          "key": "m10",
+          "name": "Icy Biome Safari Milestone 10",
+          "xp": 10,
+          "id": "SAFARI_MILESTONE_ICY_10"
+        }
+      ]
+    },
+    {
+      "category": "rift",
+      "group": "rift.timecharms",
+      "name": "Rift Timecharms",
+      "location": "The Rift",
+      "access": [
+        "the_rift"
+      ],
+      "chain": true,
+      "minutes": [
+        30,
+        120
+      ],
+      "minutesBasis": "estimate: each Timecharm is a multi-step puzzle or challenge in a different Rift area, some limited by Rift time",
+      "tiers": [
+        {
+          "key": "charm1",
+          "name": "Secure Timecharm 1",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 1
+        },
+        {
+          "key": "charm2",
+          "name": "Secure Timecharm 2",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 2
+        },
+        {
+          "key": "charm3",
+          "name": "Secure Timecharm 3",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 3
+        },
+        {
+          "key": "charm4",
+          "name": "Secure Timecharm 4",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 4
+        },
+        {
+          "key": "charm5",
+          "name": "Secure Timecharm 5",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 5
+        },
+        {
+          "key": "charm6",
+          "name": "Secure Timecharm 6",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 6
+        },
+        {
+          "key": "charm7",
+          "name": "Secure Timecharm 7",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 7
+        },
+        {
+          "key": "charm8",
+          "name": "Secure Timecharm 8",
+          "xp": 100,
+          "metric": "rift.timecharms",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "category": "quests",
+      "group": "reputation.mages",
+      "name": "Mage Reputation",
+      "location": "Crimson Isle",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          60,
+          180
+        ],
+        [
+          120,
+          360
+        ],
+        [
+          360,
+          1080
+        ],
+        [
+          720,
+          2400
+        ]
+      ],
+      "minutesBasis": "estimate: faction quests and Kuudra give reputation; Hero takes many days of dailies",
+      "tiers": [
+        {
+          "key": "friendly",
+          "name": "Mage Friendly status",
+          "xp": 5,
+          "id": "MAGES_FRIENDLY"
+        },
+        {
+          "key": "trusted",
+          "name": "Mage Trusted status",
+          "xp": 10,
+          "id": "MAGES_TRUSTED"
+        },
+        {
+          "key": "honored",
+          "name": "Mage Honored status",
+          "xp": 20,
+          "id": "MAGES_HONORED"
+        },
+        {
+          "key": "hero",
+          "name": "Mage Hero status",
+          "xp": 40,
+          "id": "MAGES_HERO"
+        }
+      ]
+    },
+    {
+      "category": "quests",
+      "group": "reputation.barbarians",
+      "name": "Barbarian Reputation",
+      "location": "Crimson Isle",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          60,
+          180
+        ],
+        [
+          120,
+          360
+        ],
+        [
+          360,
+          1080
+        ],
+        [
+          720,
+          2400
+        ]
+      ],
+      "minutesBasis": "estimate: faction quests and Kuudra give reputation; Hero takes many days of dailies",
+      "tiers": [
+        {
+          "key": "friendly",
+          "name": "Barbarian Friendly status",
+          "xp": 5,
+          "id": "BARBARIANS_FRIENDLY"
+        },
+        {
+          "key": "trusted",
+          "name": "Barbarian Trusted status",
+          "xp": 10,
+          "id": "BARBARIANS_TRUSTED"
+        },
+        {
+          "key": "honored",
+          "name": "Barbarian Honored status",
+          "xp": 20,
+          "id": "BARBARIANS_HONORED"
+        },
+        {
+          "key": "hero",
+          "name": "Barbarian Hero status",
+          "xp": 40,
+          "id": "BARBARIANS_HERO"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.spooky_brackets",
+      "name": "Spooky Festival brackets",
+      "location": "Spooky Festival (any island)",
+      "chain": true,
+      "perTier": [
+        [
+          10,
+          20
+        ],
+        [
+          15,
+          30
+        ],
+        [
+          20,
+          40
+        ],
+        [
+          30,
+          50
+        ],
+        [
+          40,
+          60
+        ],
+        [
+          55,
+          60
+        ]
+      ],
+      "minutesBasis": "estimate: points within one hour-long Spooky Festival; the bot does not check whether the event is running",
+      "tiers": [
+        {
+          "key": "wood",
+          "name": "Spooky Festival Wood Bracket",
+          "xp": 10,
+          "id": "SPOOKY_FESTIVAL_WOOD"
+        },
+        {
+          "key": "stone",
+          "name": "Spooky Festival Stone Bracket",
+          "xp": 20,
+          "id": "SPOOKY_FESTIVAL_STONE"
+        },
+        {
+          "key": "iron",
+          "name": "Spooky Festival Iron Bracket",
+          "xp": 30,
+          "id": "SPOOKY_FESTIVAL_IRON"
+        },
+        {
+          "key": "gold",
+          "name": "Spooky Festival Gold Bracket",
+          "xp": 40,
+          "id": "SPOOKY_FESTIVAL_GOLD"
+        },
+        {
+          "key": "diamond",
+          "name": "Spooky Festival Diamond Bracket",
+          "xp": 50,
+          "id": "SPOOKY_FESTIVAL_DIAMOND"
+        },
+        {
+          "key": "emerald",
+          "name": "Spooky Festival Emerald Bracket",
+          "xp": 75,
+          "id": "SPOOKY_FESTIVAL_EMERALD",
+          "idSeen": false
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.spooky_festival.candy_scavenger",
+      "name": "Spooky Festival Perk Shop: Candy Scavenger",
+      "location": "Spooky Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Candy Scavenger I",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_CANDY_SCAVENGER_1"
+        },
+        {
+          "key": "t2",
+          "name": "Candy Scavenger II",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_CANDY_SCAVENGER_2"
+        },
+        {
+          "key": "t3",
+          "name": "Candy Scavenger III",
+          "xp": 3,
+          "id": "SPOOKY_FESTIVAL_CANDY_SCAVENGER_3"
+        },
+        {
+          "key": "t4",
+          "name": "Candy Scavenger IV",
+          "xp": 5,
+          "id": "SPOOKY_FESTIVAL_CANDY_SCAVENGER_4",
+          "idSeen": false
+        },
+        {
+          "key": "t5",
+          "name": "Candy Scavenger V",
+          "xp": 7,
+          "id": "SPOOKY_FESTIVAL_CANDY_SCAVENGER_5",
+          "idSeen": false
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.spooky_festival.spooky_hook",
+      "name": "Spooky Festival Perk Shop: Spooky Hook",
+      "location": "Spooky Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Spooky Hook I",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_SPOOKY_HOOK_1"
+        },
+        {
+          "key": "t2",
+          "name": "Spooky Hook II",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_SPOOKY_HOOK_2"
+        },
+        {
+          "key": "t3",
+          "name": "Spooky Hook III",
+          "xp": 3,
+          "id": "SPOOKY_FESTIVAL_SPOOKY_HOOK_3"
+        },
+        {
+          "key": "t4",
+          "name": "Spooky Hook IV",
+          "xp": 5,
+          "id": "SPOOKY_FESTIVAL_SPOOKY_HOOK_4"
+        },
+        {
+          "key": "t5",
+          "name": "Spooky Hook V",
+          "xp": 7,
+          "id": "SPOOKY_FESTIVAL_SPOOKY_HOOK_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.spooky_festival.purple_vogue",
+      "name": "Spooky Festival Perk Shop: Purple Vogue",
+      "location": "Spooky Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Purple Vogue I",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_PURPLE_VOGUE_1"
+        },
+        {
+          "key": "t2",
+          "name": "Purple Vogue II",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_PURPLE_VOGUE_2"
+        },
+        {
+          "key": "t3",
+          "name": "Purple Vogue III",
+          "xp": 3,
+          "id": "SPOOKY_FESTIVAL_PURPLE_VOGUE_3",
+          "idSeen": false
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.spooky_festival.trick_or_treat_enthusiast",
+      "name": "Spooky Festival Perk Shop: Trick Or Treat Enthusiast",
+      "location": "Spooky Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Trick Or Treat Enthusiast I",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_TRICK_OR_TREAT_ENTHUSIAST_1"
+        },
+        {
+          "key": "t2",
+          "name": "Trick Or Treat Enthusiast II",
+          "xp": 2,
+          "id": "SPOOKY_FESTIVAL_TRICK_OR_TREAT_ENTHUSIAST_2",
+          "idSeen": false
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.winter.icy_hook",
+      "name": "Season of Jerry Perk Shop: Icy Hook",
+      "location": "Season of Jerry",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Icy Hook I",
+          "xp": 2,
+          "id": "WINTER_ICY_HOOK_1"
+        },
+        {
+          "key": "t2",
+          "name": "Icy Hook II",
+          "xp": 2,
+          "id": "WINTER_ICY_HOOK_2"
+        },
+        {
+          "key": "t3",
+          "name": "Icy Hook III",
+          "xp": 3,
+          "id": "WINTER_ICY_HOOK_3"
+        },
+        {
+          "key": "t4",
+          "name": "Icy Hook IV",
+          "xp": 5,
+          "id": "WINTER_ICY_HOOK_4"
+        },
+        {
+          "key": "t5",
+          "name": "Icy Hook V",
+          "xp": 7,
+          "id": "WINTER_ICY_HOOK_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.winter.present_connoisseur",
+      "name": "Season of Jerry Perk Shop: Present Connoisseur",
+      "location": "Season of Jerry",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Present Connoisseur I",
+          "xp": 2,
+          "id": "WINTER_PRESENT_CONNOISSEUR_1"
+        },
+        {
+          "key": "t2",
+          "name": "Present Connoisseur II",
+          "xp": 2,
+          "id": "WINTER_PRESENT_CONNOISSEUR_2"
+        },
+        {
+          "key": "t3",
+          "name": "Present Connoisseur III",
+          "xp": 3,
+          "id": "WINTER_PRESENT_CONNOISSEUR_3"
+        },
+        {
+          "key": "t4",
+          "name": "Present Connoisseur IV",
+          "xp": 5,
+          "id": "WINTER_PRESENT_CONNOISSEUR_4"
+        },
+        {
+          "key": "t5",
+          "name": "Present Connoisseur V",
+          "xp": 7,
+          "id": "WINTER_PRESENT_CONNOISSEUR_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.winter.professional_gifter",
+      "name": "Season of Jerry Perk Shop: Professional Gifter",
+      "location": "Season of Jerry",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Professional Gifter I",
+          "xp": 2,
+          "id": "WINTER_PROFESSIONAL_GIFTER_1",
+          "idSeen": false
+        },
+        {
+          "key": "t2",
+          "name": "Professional Gifter II",
+          "xp": 2,
+          "id": "WINTER_PROFESSIONAL_GIFTER_2",
+          "idSeen": false
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.winter.red_fad",
+      "name": "Season of Jerry Perk Shop: Red Fad",
+      "location": "Season of Jerry",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Red Fad I",
+          "xp": 2,
+          "id": "WINTER_RED_FAD_1"
+        },
+        {
+          "key": "t2",
+          "name": "Red Fad II",
+          "xp": 2,
+          "id": "WINTER_RED_FAD_2"
+        },
+        {
+          "key": "t3",
+          "name": "Red Fad III",
+          "xp": 3,
+          "id": "WINTER_RED_FAD_3"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.fishing_festival.fishing_prodigy",
+      "name": "Fishing Festival Perk Shop: Fishing Prodigy",
+      "location": "Fishing Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Fishing Prodigy I",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_FISHING_PRODIGY_1"
+        },
+        {
+          "key": "t2",
+          "name": "Fishing Prodigy II",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_FISHING_PRODIGY_2"
+        },
+        {
+          "key": "t3",
+          "name": "Fishing Prodigy III",
+          "xp": 3,
+          "id": "FISHING_FESTIVAL_FISHING_PRODIGY_3"
+        },
+        {
+          "key": "t4",
+          "name": "Fishing Prodigy IV",
+          "xp": 5,
+          "id": "FISHING_FESTIVAL_FISHING_PRODIGY_4"
+        },
+        {
+          "key": "t5",
+          "name": "Fishing Prodigy V",
+          "xp": 7,
+          "id": "FISHING_FESTIVAL_FISHING_PRODIGY_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.fishing_festival.shark_sonar",
+      "name": "Fishing Festival Perk Shop: Shark Sonar",
+      "location": "Fishing Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Shark Sonar I",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_SHARK_SONAR_1"
+        },
+        {
+          "key": "t2",
+          "name": "Shark Sonar II",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_SHARK_SONAR_2"
+        },
+        {
+          "key": "t3",
+          "name": "Shark Sonar III",
+          "xp": 3,
+          "id": "FISHING_FESTIVAL_SHARK_SONAR_3"
+        },
+        {
+          "key": "t4",
+          "name": "Shark Sonar IV",
+          "xp": 5,
+          "id": "FISHING_FESTIVAL_SHARK_SONAR_4"
+        },
+        {
+          "key": "t5",
+          "name": "Shark Sonar V",
+          "xp": 7,
+          "id": "FISHING_FESTIVAL_SHARK_SONAR_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.fishing_festival.denture_collector",
+      "name": "Fishing Festival Perk Shop: Denture Collector",
+      "location": "Fishing Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Denture Collector I",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_DENTURE_COLLECTOR_1"
+        },
+        {
+          "key": "t2",
+          "name": "Denture Collector II",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_DENTURE_COLLECTOR_2"
+        },
+        {
+          "key": "t3",
+          "name": "Denture Collector III",
+          "xp": 3,
+          "id": "FISHING_FESTIVAL_DENTURE_COLLECTOR_3"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.fishing_festival.elasmobranchii_affinity",
+      "name": "Fishing Festival Perk Shop: Elasmobranchii Affinity",
+      "location": "Fishing Festival",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Elasmobranchii Affinity I",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_ELASMOBRANCHII_AFFINITY_1"
+        },
+        {
+          "key": "t2",
+          "name": "Elasmobranchii Affinity II",
+          "xp": 2,
+          "id": "FISHING_FESTIVAL_ELASMOBRANCHII_AFFINITY_2"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.national_mining_month.refined_mind",
+      "name": "Mining Fiesta Perk Shop: Refined Mind",
+      "location": "Mining Fiesta",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Refined Mind I",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_REFINED_MIND_1"
+        },
+        {
+          "key": "t2",
+          "name": "Refined Mind II",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_REFINED_MIND_2"
+        },
+        {
+          "key": "t3",
+          "name": "Refined Mind III",
+          "xp": 3,
+          "id": "NATIONAL_MINING_MONTH_REFINED_MIND_3"
+        },
+        {
+          "key": "t4",
+          "name": "Refined Mind IV",
+          "xp": 5,
+          "id": "NATIONAL_MINING_MONTH_REFINED_MIND_4"
+        },
+        {
+          "key": "t5",
+          "name": "Refined Mind V",
+          "xp": 7,
+          "id": "NATIONAL_MINING_MONTH_REFINED_MIND_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.national_mining_month.fortunate_festivity",
+      "name": "Mining Fiesta Perk Shop: Fortunate Festivity",
+      "location": "Mining Fiesta",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ],
+        [
+          80,
+          240
+        ],
+        [
+          100,
+          300
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Fortunate Festivity I",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_FORTUNATE_FESTIVITY_1"
+        },
+        {
+          "key": "t2",
+          "name": "Fortunate Festivity II",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_FORTUNATE_FESTIVITY_2"
+        },
+        {
+          "key": "t3",
+          "name": "Fortunate Festivity III",
+          "xp": 3,
+          "id": "NATIONAL_MINING_MONTH_FORTUNATE_FESTIVITY_3"
+        },
+        {
+          "key": "t4",
+          "name": "Fortunate Festivity IV",
+          "xp": 5,
+          "id": "NATIONAL_MINING_MONTH_FORTUNATE_FESTIVITY_4"
+        },
+        {
+          "key": "t5",
+          "name": "Fortunate Festivity V",
+          "xp": 7,
+          "id": "NATIONAL_MINING_MONTH_FORTUNATE_FESTIVITY_5"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.national_mining_month.powder_hoarder",
+      "name": "Mining Fiesta Perk Shop: Powder Hoarder",
+      "location": "Mining Fiesta",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ],
+        [
+          60,
+          180
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Powder Hoarder I",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_POWDER_HOARDER_1"
+        },
+        {
+          "key": "t2",
+          "name": "Powder Hoarder II",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_POWDER_HOARDER_2"
+        },
+        {
+          "key": "t3",
+          "name": "Powder Hoarder III",
+          "xp": 3,
+          "id": "NATIONAL_MINING_MONTH_POWDER_HOARDER_3"
+        }
+      ]
+    },
+    {
+      "category": "events",
+      "group": "events.national_mining_month.titanium_tenacity",
+      "name": "Mining Fiesta Perk Shop: Titanium Tenacity",
+      "location": "Mining Fiesta",
+      "chain": true,
+      "perTier": [
+        [
+          20,
+          60
+        ],
+        [
+          40,
+          120
+        ]
+      ],
+      "minutesBasis": "estimate: event currency for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Titanium Tenacity I",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_TITANIUM_TENACITY_1"
+        },
+        {
+          "key": "t2",
+          "name": "Titanium Tenacity II",
+          "xp": 2,
+          "id": "NATIONAL_MINING_MONTH_TITANIUM_TENACITY_2",
+          "idSeen": false
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.crimson_training",
+      "name": "Crimson Essence: Crimson Training",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Crimson Training I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_CRIMSON_TRAINING_1"
+        },
+        {
+          "key": "t2",
+          "name": "Crimson Training II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_CRIMSON_TRAINING_2"
+        },
+        {
+          "key": "t3",
+          "name": "Crimson Training III",
+          "xp": 3,
+          "id": "CRIMSON_ESSENCE_CRIMSON_TRAINING_3"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.fresh_tools_kuudra",
+      "name": "Crimson Essence: Fresh Tools Kuudra",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Fresh Tools Kuudra I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_FRESH_TOOLS_KUUDRA_1"
+        },
+        {
+          "key": "t2",
+          "name": "Fresh Tools Kuudra II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_FRESH_TOOLS_KUUDRA_2"
+        },
+        {
+          "key": "t3",
+          "name": "Fresh Tools Kuudra III",
+          "xp": 3,
+          "id": "CRIMSON_ESSENCE_FRESH_TOOLS_KUUDRA_3"
+        },
+        {
+          "key": "t4",
+          "name": "Fresh Tools Kuudra IV",
+          "xp": 5,
+          "id": "CRIMSON_ESSENCE_FRESH_TOOLS_KUUDRA_4"
+        },
+        {
+          "key": "t5",
+          "name": "Fresh Tools Kuudra V",
+          "xp": 7,
+          "id": "CRIMSON_ESSENCE_FRESH_TOOLS_KUUDRA_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.fungus_fortuna",
+      "name": "Crimson Essence: Fungus Fortuna",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Fungus Fortuna I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_1"
+        },
+        {
+          "key": "t2",
+          "name": "Fungus Fortuna II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_2"
+        },
+        {
+          "key": "t3",
+          "name": "Fungus Fortuna III",
+          "xp": 3,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_3"
+        },
+        {
+          "key": "t4",
+          "name": "Fungus Fortuna IV",
+          "xp": 5,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_4"
+        },
+        {
+          "key": "t5",
+          "name": "Fungus Fortuna V",
+          "xp": 7,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_5"
+        },
+        {
+          "key": "t6",
+          "name": "Fungus Fortuna VI",
+          "xp": 8,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_6"
+        },
+        {
+          "key": "t7",
+          "name": "Fungus Fortuna VII",
+          "xp": 8,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_7"
+        },
+        {
+          "key": "t8",
+          "name": "Fungus Fortuna VIII",
+          "xp": 8,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_8"
+        },
+        {
+          "key": "t9",
+          "name": "Fungus Fortuna IX",
+          "xp": 9,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_9"
+        },
+        {
+          "key": "t10",
+          "name": "Fungus Fortuna X",
+          "xp": 10,
+          "id": "CRIMSON_ESSENCE_FUNGUS_FORTUNA_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.harena_fortuna",
+      "name": "Crimson Essence: Harena Fortuna",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Harena Fortuna I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_1"
+        },
+        {
+          "key": "t2",
+          "name": "Harena Fortuna II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_2"
+        },
+        {
+          "key": "t3",
+          "name": "Harena Fortuna III",
+          "xp": 3,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_3"
+        },
+        {
+          "key": "t4",
+          "name": "Harena Fortuna IV",
+          "xp": 5,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_4"
+        },
+        {
+          "key": "t5",
+          "name": "Harena Fortuna V",
+          "xp": 7,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_5"
+        },
+        {
+          "key": "t6",
+          "name": "Harena Fortuna VI",
+          "xp": 8,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_6"
+        },
+        {
+          "key": "t7",
+          "name": "Harena Fortuna VII",
+          "xp": 8,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_7"
+        },
+        {
+          "key": "t8",
+          "name": "Harena Fortuna VIII",
+          "xp": 8,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_8"
+        },
+        {
+          "key": "t9",
+          "name": "Harena Fortuna IX",
+          "xp": 9,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_9"
+        },
+        {
+          "key": "t10",
+          "name": "Harena Fortuna X",
+          "xp": 10,
+          "id": "CRIMSON_ESSENCE_HARENA_FORTUNA_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.headstart_kuudra",
+      "name": "Crimson Essence: Headstart Kuudra",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Headstart Kuudra I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_HEADSTART_KUUDRA_1"
+        },
+        {
+          "key": "t2",
+          "name": "Headstart Kuudra II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_HEADSTART_KUUDRA_2"
+        },
+        {
+          "key": "t3",
+          "name": "Headstart Kuudra III",
+          "xp": 3,
+          "id": "CRIMSON_ESSENCE_HEADSTART_KUUDRA_3"
+        },
+        {
+          "key": "t4",
+          "name": "Headstart Kuudra IV",
+          "xp": 5,
+          "id": "CRIMSON_ESSENCE_HEADSTART_KUUDRA_4"
+        },
+        {
+          "key": "t5",
+          "name": "Headstart Kuudra V",
+          "xp": 7,
+          "id": "CRIMSON_ESSENCE_HEADSTART_KUUDRA_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.master_kuudra",
+      "name": "Crimson Essence: Master Kuudra",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Master Kuudra I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_MASTER_KUUDRA_1"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.strongarm_kuudra",
+      "name": "Crimson Essence: Strongarm Kuudra",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Strongarm Kuudra I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_STRONGARM_KUUDRA_1"
+        },
+        {
+          "key": "t2",
+          "name": "Strongarm Kuudra II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_STRONGARM_KUUDRA_2"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.crimson.wither_piper",
+      "name": "Crimson Essence: Wither Piper",
+      "location": "Crimson Essence Shop",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Wither Piper I",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_WITHER_PIPER_1"
+        },
+        {
+          "key": "t2",
+          "name": "Wither Piper II",
+          "xp": 2,
+          "id": "CRIMSON_ESSENCE_WITHER_PIPER_2"
+        },
+        {
+          "key": "t3",
+          "name": "Wither Piper III",
+          "xp": 3,
+          "id": "CRIMSON_ESSENCE_WITHER_PIPER_3"
+        },
+        {
+          "key": "t4",
+          "name": "Wither Piper IV",
+          "xp": 5,
+          "id": "CRIMSON_ESSENCE_WITHER_PIPER_4"
+        },
+        {
+          "key": "t5",
+          "name": "Wither Piper V",
+          "xp": 7,
+          "id": "CRIMSON_ESSENCE_WITHER_PIPER_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.diamond.diamond_in_the_rough",
+      "name": "Diamond Essence: Diamond In The Rough",
+      "location": "Diamond Essence Shop",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Diamond In The Rough I",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_DIAMOND_IN_THE_ROUGH_1"
+        },
+        {
+          "key": "t2",
+          "name": "Diamond In The Rough II",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_DIAMOND_IN_THE_ROUGH_2"
+        },
+        {
+          "key": "t3",
+          "name": "Diamond In The Rough III",
+          "xp": 3,
+          "id": "DIAMOND_ESSENCE_DIAMOND_IN_THE_ROUGH_3"
+        },
+        {
+          "key": "t4",
+          "name": "Diamond In The Rough IV",
+          "xp": 5,
+          "id": "DIAMOND_ESSENCE_DIAMOND_IN_THE_ROUGH_4"
+        },
+        {
+          "key": "t5",
+          "name": "Diamond In The Rough V",
+          "xp": 7,
+          "id": "DIAMOND_ESSENCE_DIAMOND_IN_THE_ROUGH_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.diamond.high_roller",
+      "name": "Diamond Essence: High Roller",
+      "location": "Diamond Essence Shop",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "High Roller I",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_HIGH_ROLLER_1"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.diamond.radiant_fisher",
+      "name": "Diamond Essence: Radiant Fisher",
+      "location": "Diamond Essence Shop",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Radiant Fisher I",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_1"
+        },
+        {
+          "key": "t2",
+          "name": "Radiant Fisher II",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_2"
+        },
+        {
+          "key": "t3",
+          "name": "Radiant Fisher III",
+          "xp": 3,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_3"
+        },
+        {
+          "key": "t4",
+          "name": "Radiant Fisher IV",
+          "xp": 5,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_4"
+        },
+        {
+          "key": "t5",
+          "name": "Radiant Fisher V",
+          "xp": 7,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_5"
+        },
+        {
+          "key": "t6",
+          "name": "Radiant Fisher VI",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_6"
+        },
+        {
+          "key": "t7",
+          "name": "Radiant Fisher VII",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_7"
+        },
+        {
+          "key": "t8",
+          "name": "Radiant Fisher VIII",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_8"
+        },
+        {
+          "key": "t9",
+          "name": "Radiant Fisher IX",
+          "xp": 9,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_9"
+        },
+        {
+          "key": "t10",
+          "name": "Radiant Fisher X",
+          "xp": 10,
+          "id": "DIAMOND_ESSENCE_RADIANT_FISHER_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.diamond.return_to_sender",
+      "name": "Diamond Essence: Return To Sender",
+      "location": "Diamond Essence Shop",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Return To Sender I",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_1"
+        },
+        {
+          "key": "t2",
+          "name": "Return To Sender II",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_2"
+        },
+        {
+          "key": "t3",
+          "name": "Return To Sender III",
+          "xp": 3,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_3"
+        },
+        {
+          "key": "t4",
+          "name": "Return To Sender IV",
+          "xp": 5,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_4"
+        },
+        {
+          "key": "t5",
+          "name": "Return To Sender V",
+          "xp": 7,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_5"
+        },
+        {
+          "key": "t6",
+          "name": "Return To Sender VI",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_6"
+        },
+        {
+          "key": "t7",
+          "name": "Return To Sender VII",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_7"
+        },
+        {
+          "key": "t8",
+          "name": "Return To Sender VIII",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_8"
+        },
+        {
+          "key": "t9",
+          "name": "Return To Sender IX",
+          "xp": 9,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_9"
+        },
+        {
+          "key": "t10",
+          "name": "Return To Sender X",
+          "xp": 10,
+          "id": "DIAMOND_ESSENCE_RETURN_TO_SENDER_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.diamond.rhinestone_infusion",
+      "name": "Diamond Essence: Rhinestone Infusion",
+      "location": "Diamond Essence Shop",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Rhinestone Infusion I",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_1"
+        },
+        {
+          "key": "t2",
+          "name": "Rhinestone Infusion II",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_2"
+        },
+        {
+          "key": "t3",
+          "name": "Rhinestone Infusion III",
+          "xp": 3,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_3"
+        },
+        {
+          "key": "t4",
+          "name": "Rhinestone Infusion IV",
+          "xp": 5,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_4"
+        },
+        {
+          "key": "t5",
+          "name": "Rhinestone Infusion V",
+          "xp": 7,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_5"
+        },
+        {
+          "key": "t6",
+          "name": "Rhinestone Infusion VI",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_6"
+        },
+        {
+          "key": "t7",
+          "name": "Rhinestone Infusion VII",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_7"
+        },
+        {
+          "key": "t8",
+          "name": "Rhinestone Infusion VIII",
+          "xp": 8,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_8"
+        },
+        {
+          "key": "t9",
+          "name": "Rhinestone Infusion IX",
+          "xp": 9,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_9"
+        },
+        {
+          "key": "t10",
+          "name": "Rhinestone Infusion X",
+          "xp": 10,
+          "id": "DIAMOND_ESSENCE_RHINESTONE_INFUSION_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.diamond.under_pressure",
+      "name": "Diamond Essence: Under Pressure",
+      "location": "Diamond Essence Shop",
+      "access": [
+        "crystal_hollows"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Under Pressure I",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_UNDER_PRESSURE_1"
+        },
+        {
+          "key": "t2",
+          "name": "Under Pressure II",
+          "xp": 2,
+          "id": "DIAMOND_ESSENCE_UNDER_PRESSURE_2"
+        },
+        {
+          "key": "t3",
+          "name": "Under Pressure III",
+          "xp": 3,
+          "id": "DIAMOND_ESSENCE_UNDER_PRESSURE_3"
+        },
+        {
+          "key": "t4",
+          "name": "Under Pressure IV",
+          "xp": 5,
+          "id": "DIAMOND_ESSENCE_UNDER_PRESSURE_4"
+        },
+        {
+          "key": "t5",
+          "name": "Under Pressure V",
+          "xp": 7,
+          "id": "DIAMOND_ESSENCE_UNDER_PRESSURE_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.forest.axed",
+      "name": "Forest Essence: Axed",
+      "location": "Forest Essence Shop",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Axed I",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_AXED_1"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.forest.extreme_pressure",
+      "name": "Forest Essence: Extreme Pressure",
+      "location": "Forest Essence Shop",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Extreme Pressure I",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_1"
+        },
+        {
+          "key": "t2",
+          "name": "Extreme Pressure II",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_2"
+        },
+        {
+          "key": "t3",
+          "name": "Extreme Pressure III",
+          "xp": 3,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_3"
+        },
+        {
+          "key": "t4",
+          "name": "Extreme Pressure IV",
+          "xp": 5,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_4"
+        },
+        {
+          "key": "t5",
+          "name": "Extreme Pressure V",
+          "xp": 7,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_5"
+        },
+        {
+          "key": "t6",
+          "name": "Extreme Pressure VI",
+          "xp": 8,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_6"
+        },
+        {
+          "key": "t7",
+          "name": "Extreme Pressure VII",
+          "xp": 8,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_7"
+        },
+        {
+          "key": "t8",
+          "name": "Extreme Pressure VIII",
+          "xp": 8,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_8"
+        },
+        {
+          "key": "t9",
+          "name": "Extreme Pressure IX",
+          "xp": 9,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_9"
+        },
+        {
+          "key": "t10",
+          "name": "Extreme Pressure X",
+          "xp": 10,
+          "id": "FOREST_ESSENCE_EXTREME_PRESSURE_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.forest.forest_training",
+      "name": "Forest Essence: Forest Training",
+      "location": "Forest Essence Shop",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Forest Training I",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_FOREST_TRAINING_1"
+        },
+        {
+          "key": "t2",
+          "name": "Forest Training II",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_FOREST_TRAINING_2"
+        },
+        {
+          "key": "t3",
+          "name": "Forest Training III",
+          "xp": 3,
+          "id": "FOREST_ESSENCE_FOREST_TRAINING_3"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.forest.lumberjack",
+      "name": "Forest Essence: Lumberjack",
+      "location": "Forest Essence Shop",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Lumberjack I",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_LUMBERJACK_1"
+        },
+        {
+          "key": "t2",
+          "name": "Lumberjack II",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_LUMBERJACK_2"
+        },
+        {
+          "key": "t3",
+          "name": "Lumberjack III",
+          "xp": 3,
+          "id": "FOREST_ESSENCE_LUMBERJACK_3"
+        },
+        {
+          "key": "t4",
+          "name": "Lumberjack IV",
+          "xp": 5,
+          "id": "FOREST_ESSENCE_LUMBERJACK_4"
+        },
+        {
+          "key": "t5",
+          "name": "Lumberjack V",
+          "xp": 7,
+          "id": "FOREST_ESSENCE_LUMBERJACK_5"
+        },
+        {
+          "key": "t6",
+          "name": "Lumberjack VI",
+          "xp": 8,
+          "id": "FOREST_ESSENCE_LUMBERJACK_6"
+        },
+        {
+          "key": "t7",
+          "name": "Lumberjack VII",
+          "xp": 8,
+          "id": "FOREST_ESSENCE_LUMBERJACK_7"
+        },
+        {
+          "key": "t8",
+          "name": "Lumberjack VIII",
+          "xp": 8,
+          "id": "FOREST_ESSENCE_LUMBERJACK_8"
+        },
+        {
+          "key": "t9",
+          "name": "Lumberjack IX",
+          "xp": 9,
+          "id": "FOREST_ESSENCE_LUMBERJACK_9"
+        },
+        {
+          "key": "t10",
+          "name": "Lumberjack X",
+          "xp": 10,
+          "id": "FOREST_ESSENCE_LUMBERJACK_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.forest.tasty",
+      "name": "Forest Essence: Tasty",
+      "location": "Forest Essence Shop",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Tasty I",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_TASTY_1"
+        },
+        {
+          "key": "t2",
+          "name": "Tasty II",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_TASTY_2"
+        },
+        {
+          "key": "t3",
+          "name": "Tasty III",
+          "xp": 3,
+          "id": "FOREST_ESSENCE_TASTY_3"
+        },
+        {
+          "key": "t4",
+          "name": "Tasty IV",
+          "xp": 5,
+          "id": "FOREST_ESSENCE_TASTY_4"
+        },
+        {
+          "key": "t5",
+          "name": "Tasty V",
+          "xp": 7,
+          "id": "FOREST_ESSENCE_TASTY_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.forest.trapped",
+      "name": "Forest Essence: Trapped",
+      "location": "Forest Essence Shop",
+      "access": [
+        "moonglade_marsh"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Trapped I",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_TRAPPED_1"
+        },
+        {
+          "key": "t2",
+          "name": "Trapped II",
+          "xp": 2,
+          "id": "FOREST_ESSENCE_TRAPPED_2"
+        },
+        {
+          "key": "t3",
+          "name": "Trapped III",
+          "xp": 3,
+          "id": "FOREST_ESSENCE_TRAPPED_3"
+        },
+        {
+          "key": "t4",
+          "name": "Trapped IV",
+          "xp": 5,
+          "id": "FOREST_ESSENCE_TRAPPED_4"
+        },
+        {
+          "key": "t5",
+          "name": "Trapped V",
+          "xp": 7,
+          "id": "FOREST_ESSENCE_TRAPPED_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.gold.dwarven_training",
+      "name": "Gold Essence: Dwarven Training",
+      "location": "Gold Essence Shop",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Dwarven Training I",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_DWARVEN_TRAINING_1"
+        },
+        {
+          "key": "t2",
+          "name": "Dwarven Training II",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_DWARVEN_TRAINING_2"
+        },
+        {
+          "key": "t3",
+          "name": "Dwarven Training III",
+          "xp": 3,
+          "id": "GOLD_ESSENCE_DWARVEN_TRAINING_3"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.gold.eager_miner",
+      "name": "Gold Essence: Eager Miner",
+      "location": "Gold Essence Shop",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Eager Miner I",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_EAGER_MINER_1"
+        },
+        {
+          "key": "t2",
+          "name": "Eager Miner II",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_EAGER_MINER_2"
+        },
+        {
+          "key": "t3",
+          "name": "Eager Miner III",
+          "xp": 3,
+          "id": "GOLD_ESSENCE_EAGER_MINER_3"
+        },
+        {
+          "key": "t4",
+          "name": "Eager Miner IV",
+          "xp": 5,
+          "id": "GOLD_ESSENCE_EAGER_MINER_4"
+        },
+        {
+          "key": "t5",
+          "name": "Eager Miner V",
+          "xp": 7,
+          "id": "GOLD_ESSENCE_EAGER_MINER_5"
+        },
+        {
+          "key": "t6",
+          "name": "Eager Miner VI",
+          "xp": 8,
+          "id": "GOLD_ESSENCE_EAGER_MINER_6"
+        },
+        {
+          "key": "t7",
+          "name": "Eager Miner VII",
+          "xp": 8,
+          "id": "GOLD_ESSENCE_EAGER_MINER_7"
+        },
+        {
+          "key": "t8",
+          "name": "Eager Miner VIII",
+          "xp": 8,
+          "id": "GOLD_ESSENCE_EAGER_MINER_8"
+        },
+        {
+          "key": "t9",
+          "name": "Eager Miner IX",
+          "xp": 9,
+          "id": "GOLD_ESSENCE_EAGER_MINER_9"
+        },
+        {
+          "key": "t10",
+          "name": "Eager Miner X",
+          "xp": 10,
+          "id": "GOLD_ESSENCE_EAGER_MINER_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.gold.heart_of_gold",
+      "name": "Gold Essence: Heart Of Gold",
+      "location": "Gold Essence Shop",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Heart Of Gold I",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_HEART_OF_GOLD_1"
+        },
+        {
+          "key": "t2",
+          "name": "Heart Of Gold II",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_HEART_OF_GOLD_2"
+        },
+        {
+          "key": "t3",
+          "name": "Heart Of Gold III",
+          "xp": 3,
+          "id": "GOLD_ESSENCE_HEART_OF_GOLD_3"
+        },
+        {
+          "key": "t4",
+          "name": "Heart Of Gold IV",
+          "xp": 5,
+          "id": "GOLD_ESSENCE_HEART_OF_GOLD_4"
+        },
+        {
+          "key": "t5",
+          "name": "Heart Of Gold V",
+          "xp": 7,
+          "id": "GOLD_ESSENCE_HEART_OF_GOLD_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.gold.midas_lure",
+      "name": "Gold Essence: Midas Lure",
+      "location": "Gold Essence Shop",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Midas Lure I",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_1"
+        },
+        {
+          "key": "t2",
+          "name": "Midas Lure II",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_2"
+        },
+        {
+          "key": "t3",
+          "name": "Midas Lure III",
+          "xp": 3,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_3"
+        },
+        {
+          "key": "t4",
+          "name": "Midas Lure IV",
+          "xp": 5,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_4"
+        },
+        {
+          "key": "t5",
+          "name": "Midas Lure V",
+          "xp": 7,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_5"
+        },
+        {
+          "key": "t6",
+          "name": "Midas Lure VI",
+          "xp": 8,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_6"
+        },
+        {
+          "key": "t7",
+          "name": "Midas Lure VII",
+          "xp": 8,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_7"
+        },
+        {
+          "key": "t8",
+          "name": "Midas Lure VIII",
+          "xp": 8,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_8"
+        },
+        {
+          "key": "t9",
+          "name": "Midas Lure IX",
+          "xp": 9,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_9"
+        },
+        {
+          "key": "t10",
+          "name": "Midas Lure X",
+          "xp": 10,
+          "id": "GOLD_ESSENCE_MIDAS_LURE_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.gold.treasures_of_the_earth",
+      "name": "Gold Essence: Treasures Of The Earth",
+      "location": "Gold Essence Shop",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Treasures Of The Earth I",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_TREASURES_OF_THE_EARTH_1"
+        },
+        {
+          "key": "t2",
+          "name": "Treasures Of The Earth II",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_TREASURES_OF_THE_EARTH_2"
+        },
+        {
+          "key": "t3",
+          "name": "Treasures Of The Earth III",
+          "xp": 3,
+          "id": "GOLD_ESSENCE_TREASURES_OF_THE_EARTH_3"
+        },
+        {
+          "key": "t4",
+          "name": "Treasures Of The Earth IV",
+          "xp": 5,
+          "id": "GOLD_ESSENCE_TREASURES_OF_THE_EARTH_4"
+        },
+        {
+          "key": "t5",
+          "name": "Treasures Of The Earth V",
+          "xp": 7,
+          "id": "GOLD_ESSENCE_TREASURES_OF_THE_EARTH_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.gold.unbreaking",
+      "name": "Gold Essence: Unbreaking",
+      "location": "Gold Essence Shop",
+      "access": [
+        "dwarven_mines"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Unbreaking I",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_UNBREAKING_1"
+        },
+        {
+          "key": "t2",
+          "name": "Unbreaking II",
+          "xp": 2,
+          "id": "GOLD_ESSENCE_UNBREAKING_2"
+        },
+        {
+          "key": "t3",
+          "name": "Unbreaking III",
+          "xp": 3,
+          "id": "GOLD_ESSENCE_UNBREAKING_3"
+        },
+        {
+          "key": "t4",
+          "name": "Unbreaking IV",
+          "xp": 5,
+          "id": "GOLD_ESSENCE_UNBREAKING_4"
+        },
+        {
+          "key": "t5",
+          "name": "Unbreaking V",
+          "xp": 7,
+          "id": "GOLD_ESSENCE_UNBREAKING_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.spider.bane",
+      "name": "Spider Essence: Bane",
+      "location": "Spider Essence Shop",
+      "access": [
+        "spiders_den"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Bane I",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_BANE_1"
+        },
+        {
+          "key": "t2",
+          "name": "Bane II",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_BANE_2"
+        },
+        {
+          "key": "t3",
+          "name": "Bane III",
+          "xp": 3,
+          "id": "SPIDER_ESSENCE_BANE_3"
+        },
+        {
+          "key": "t4",
+          "name": "Bane IV",
+          "xp": 5,
+          "id": "SPIDER_ESSENCE_BANE_4"
+        },
+        {
+          "key": "t5",
+          "name": "Bane V",
+          "xp": 7,
+          "id": "SPIDER_ESSENCE_BANE_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.spider.empowered_agility",
+      "name": "Spider Essence: Empowered Agility",
+      "location": "Spider Essence Shop",
+      "access": [
+        "spiders_den"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ],
+        [
+          30,
+          120
+        ],
+        [
+          35,
+          140
+        ],
+        [
+          40,
+          160
+        ],
+        [
+          45,
+          180
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Empowered Agility I",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_1"
+        },
+        {
+          "key": "t2",
+          "name": "Empowered Agility II",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_2"
+        },
+        {
+          "key": "t3",
+          "name": "Empowered Agility III",
+          "xp": 3,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_3"
+        },
+        {
+          "key": "t4",
+          "name": "Empowered Agility IV",
+          "xp": 5,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_4"
+        },
+        {
+          "key": "t5",
+          "name": "Empowered Agility V",
+          "xp": 7,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_5"
+        },
+        {
+          "key": "t6",
+          "name": "Empowered Agility VI",
+          "xp": 8,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_6"
+        },
+        {
+          "key": "t7",
+          "name": "Empowered Agility VII",
+          "xp": 8,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_7"
+        },
+        {
+          "key": "t8",
+          "name": "Empowered Agility VIII",
+          "xp": 8,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_8"
+        },
+        {
+          "key": "t9",
+          "name": "Empowered Agility IX",
+          "xp": 9,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_9"
+        },
+        {
+          "key": "t10",
+          "name": "Empowered Agility X",
+          "xp": 10,
+          "id": "SPIDER_ESSENCE_EMPOWERED_AGILITY_10"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.spider.spider_training",
+      "name": "Spider Essence: Spider Training",
+      "location": "Spider Essence Shop",
+      "access": [
+        "spiders_den"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Spider Training I",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_SPIDER_TRAINING_1"
+        },
+        {
+          "key": "t2",
+          "name": "Spider Training II",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_SPIDER_TRAINING_2"
+        },
+        {
+          "key": "t3",
+          "name": "Spider Training III",
+          "xp": 3,
+          "id": "SPIDER_ESSENCE_SPIDER_TRAINING_3"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.spider.toxophilite",
+      "name": "Spider Essence: Toxophilite",
+      "location": "Spider Essence Shop",
+      "access": [
+        "spiders_den"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Toxophilite I",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_TOXOPHILITE_1"
+        },
+        {
+          "key": "t2",
+          "name": "Toxophilite II",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_TOXOPHILITE_2"
+        },
+        {
+          "key": "t3",
+          "name": "Toxophilite III",
+          "xp": 3,
+          "id": "SPIDER_ESSENCE_TOXOPHILITE_3"
+        },
+        {
+          "key": "t4",
+          "name": "Toxophilite IV",
+          "xp": 5,
+          "id": "SPIDER_ESSENCE_TOXOPHILITE_4"
+        },
+        {
+          "key": "t5",
+          "name": "Toxophilite V",
+          "xp": 7,
+          "id": "SPIDER_ESSENCE_TOXOPHILITE_5"
+        }
+      ]
+    },
+    {
+      "category": "essence_shop",
+      "group": "essence.spider.vermin_control",
+      "name": "Spider Essence: Vermin Control",
+      "location": "Spider Essence Shop",
+      "access": [
+        "spiders_den"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          5,
+          20
+        ],
+        [
+          10,
+          40
+        ],
+        [
+          15,
+          60
+        ],
+        [
+          20,
+          80
+        ],
+        [
+          25,
+          100
+        ]
+      ],
+      "minutesBasis": "estimate: farming the essence for each tier; later tiers cost more",
+      "tiers": [
+        {
+          "key": "t1",
+          "name": "Vermin Control I",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_VERMIN_CONTROL_1"
+        },
+        {
+          "key": "t2",
+          "name": "Vermin Control II",
+          "xp": 2,
+          "id": "SPIDER_ESSENCE_VERMIN_CONTROL_2"
+        },
+        {
+          "key": "t3",
+          "name": "Vermin Control III",
+          "xp": 3,
+          "id": "SPIDER_ESSENCE_VERMIN_CONTROL_3"
+        },
+        {
+          "key": "t4",
+          "name": "Vermin Control IV",
+          "xp": 5,
+          "id": "SPIDER_ESSENCE_VERMIN_CONTROL_4"
+        },
+        {
+          "key": "t5",
+          "name": "Vermin Control V",
+          "xp": 7,
+          "id": "SPIDER_ESSENCE_VERMIN_CONTROL_5"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.hymn_joy",
+      "name": "Harp: Hymn to the Joy",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Hymn to the Joy (50%)",
+          "xp": 1,
+          "id": "SONG_HYMN_JOY_50"
+        },
+        {
+          "key": "p70",
+          "name": "Hymn to the Joy (70%)",
+          "xp": 1,
+          "id": "SONG_HYMN_JOY_70"
+        },
+        {
+          "key": "p80",
+          "name": "Hymn to the Joy (80%)",
+          "xp": 1,
+          "id": "SONG_HYMN_JOY_80"
+        },
+        {
+          "key": "p90",
+          "name": "Hymn to the Joy (90%)",
+          "xp": 1,
+          "id": "SONG_HYMN_JOY_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.frere_jacques",
+      "name": "Harp: Frère Jacques",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Frère Jacques (50%)",
+          "xp": 1,
+          "id": "SONG_FRERE_JACQUES_50"
+        },
+        {
+          "key": "p70",
+          "name": "Frère Jacques (70%)",
+          "xp": 1,
+          "id": "SONG_FRERE_JACQUES_70"
+        },
+        {
+          "key": "p80",
+          "name": "Frère Jacques (80%)",
+          "xp": 1,
+          "id": "SONG_FRERE_JACQUES_80"
+        },
+        {
+          "key": "p90",
+          "name": "Frère Jacques (90%)",
+          "xp": 1,
+          "id": "SONG_FRERE_JACQUES_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.amazing_grace",
+      "name": "Harp: Amazing Grace",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Amazing Grace (50%)",
+          "xp": 1,
+          "id": "SONG_AMAZING_GRACE_50"
+        },
+        {
+          "key": "p70",
+          "name": "Amazing Grace (70%)",
+          "xp": 1,
+          "id": "SONG_AMAZING_GRACE_70"
+        },
+        {
+          "key": "p80",
+          "name": "Amazing Grace (80%)",
+          "xp": 1,
+          "id": "SONG_AMAZING_GRACE_80"
+        },
+        {
+          "key": "p90",
+          "name": "Amazing Grace (90%)",
+          "xp": 1,
+          "id": "SONG_AMAZING_GRACE_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.brahms",
+      "name": "Harp: Brahm's Lullaby",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Brahm's Lullaby (50%)",
+          "xp": 2,
+          "id": "SONG_BRAHMS_50"
+        },
+        {
+          "key": "p70",
+          "name": "Brahm's Lullaby (70%)",
+          "xp": 2,
+          "id": "SONG_BRAHMS_70"
+        },
+        {
+          "key": "p80",
+          "name": "Brahm's Lullaby (80%)",
+          "xp": 2,
+          "id": "SONG_BRAHMS_80"
+        },
+        {
+          "key": "p90",
+          "name": "Brahm's Lullaby (90%)",
+          "xp": 2,
+          "id": "SONG_BRAHMS_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.happy_birthday",
+      "name": "Harp: Happy Birthday to You",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Happy Birthday to You (50%)",
+          "xp": 2,
+          "id": "SONG_HAPPY_BIRTHDAY_50"
+        },
+        {
+          "key": "p70",
+          "name": "Happy Birthday to You (70%)",
+          "xp": 2,
+          "id": "SONG_HAPPY_BIRTHDAY_70"
+        },
+        {
+          "key": "p80",
+          "name": "Happy Birthday to You (80%)",
+          "xp": 2,
+          "id": "SONG_HAPPY_BIRTHDAY_80"
+        },
+        {
+          "key": "p90",
+          "name": "Happy Birthday to You (90%)",
+          "xp": 2,
+          "id": "SONG_HAPPY_BIRTHDAY_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.greensleeves",
+      "name": "Harp: Greensleeves",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Greensleeves (50%)",
+          "xp": 2,
+          "id": "SONG_GREENSLEEVES_50"
+        },
+        {
+          "key": "p70",
+          "name": "Greensleeves (70%)",
+          "xp": 2,
+          "id": "SONG_GREENSLEEVES_70"
+        },
+        {
+          "key": "p80",
+          "name": "Greensleeves (80%)",
+          "xp": 2,
+          "id": "SONG_GREENSLEEVES_80"
+        },
+        {
+          "key": "p90",
+          "name": "Greensleeves (90%)",
+          "xp": 2,
+          "id": "SONG_GREENSLEEVES_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.jeopardy",
+      "name": "Harp: Geothermy?",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Geothermy? (50%)",
+          "xp": 4,
+          "id": "SONG_JEOPARDY_50"
+        },
+        {
+          "key": "p70",
+          "name": "Geothermy? (70%)",
+          "xp": 4,
+          "id": "SONG_JEOPARDY_70"
+        },
+        {
+          "key": "p80",
+          "name": "Geothermy? (80%)",
+          "xp": 4,
+          "id": "SONG_JEOPARDY_80"
+        },
+        {
+          "key": "p90",
+          "name": "Geothermy? (90%)",
+          "xp": 4,
+          "id": "SONG_JEOPARDY_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.minuet",
+      "name": "Harp: Minuet",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Minuet (50%)",
+          "xp": 4,
+          "id": "SONG_MINUET_50"
+        },
+        {
+          "key": "p70",
+          "name": "Minuet (70%)",
+          "xp": 4,
+          "id": "SONG_MINUET_70"
+        },
+        {
+          "key": "p80",
+          "name": "Minuet (80%)",
+          "xp": 4,
+          "id": "SONG_MINUET_80"
+        },
+        {
+          "key": "p90",
+          "name": "Minuet (90%)",
+          "xp": 4,
+          "id": "SONG_MINUET_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.joy_world",
+      "name": "Harp: Joy to the World",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Joy to the World (50%)",
+          "xp": 4,
+          "id": "SONG_JOY_WORLD_50"
+        },
+        {
+          "key": "p70",
+          "name": "Joy to the World (70%)",
+          "xp": 4,
+          "id": "SONG_JOY_WORLD_70"
+        },
+        {
+          "key": "p80",
+          "name": "Joy to the World (80%)",
+          "xp": 4,
+          "id": "SONG_JOY_WORLD_80"
+        },
+        {
+          "key": "p90",
+          "name": "Joy to the World (90%)",
+          "xp": 4,
+          "id": "SONG_JOY_WORLD_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.pure_imagination",
+      "name": "Harp: Godly Imagination",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Godly Imagination (50%)",
+          "xp": 7,
+          "id": "SONG_PURE_IMAGINATION_50"
+        },
+        {
+          "key": "p70",
+          "name": "Godly Imagination (70%)",
+          "xp": 7,
+          "id": "SONG_PURE_IMAGINATION_70"
+        },
+        {
+          "key": "p80",
+          "name": "Godly Imagination (80%)",
+          "xp": 7,
+          "id": "SONG_PURE_IMAGINATION_80"
+        },
+        {
+          "key": "p90",
+          "name": "Godly Imagination (90%)",
+          "xp": 7,
+          "id": "SONG_PURE_IMAGINATION_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.vie_en_rose",
+      "name": "Harp: La Vie en Rose",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "La Vie en Rose (50%)",
+          "xp": 7,
+          "id": "SONG_VIE_EN_ROSE_50"
+        },
+        {
+          "key": "p70",
+          "name": "La Vie en Rose (70%)",
+          "xp": 7,
+          "id": "SONG_VIE_EN_ROSE_70"
+        },
+        {
+          "key": "p80",
+          "name": "La Vie en Rose (80%)",
+          "xp": 7,
+          "id": "SONG_VIE_EN_ROSE_80"
+        },
+        {
+          "key": "p90",
+          "name": "La Vie en Rose (90%)",
+          "xp": 7,
+          "id": "SONG_VIE_EN_ROSE_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.fire_and_flames",
+      "name": "Harp: Through the Campfire",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Through the Campfire (50%)",
+          "xp": 12,
+          "id": "SONG_FIRE_AND_FLAMES_50"
+        },
+        {
+          "key": "p70",
+          "name": "Through the Campfire (70%)",
+          "xp": 12,
+          "id": "SONG_FIRE_AND_FLAMES_70"
+        },
+        {
+          "key": "p80",
+          "name": "Through the Campfire (80%)",
+          "xp": 12,
+          "id": "SONG_FIRE_AND_FLAMES_80"
+        },
+        {
+          "key": "p90",
+          "name": "Through the Campfire (90%)",
+          "xp": 12,
+          "id": "SONG_FIRE_AND_FLAMES_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "harp.pachelbel",
+      "name": "Harp: Pachelbel",
+      "location": "Melody's Harp (Melody's Plateau, The Park)",
+      "access": [
+        "the_park"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "minutesBasis": "estimate: replaying the song at a higher accuracy",
+      "tiers": [
+        {
+          "key": "p50",
+          "name": "Pachelbel (50%)",
+          "xp": 12,
+          "id": "SONG_PACHELBEL_50"
+        },
+        {
+          "key": "p70",
+          "name": "Pachelbel (70%)",
+          "xp": 12,
+          "id": "SONG_PACHELBEL_70"
+        },
+        {
+          "key": "p80",
+          "name": "Pachelbel (80%)",
+          "xp": 12,
+          "id": "SONG_PACHELBEL_80"
+        },
+        {
+          "key": "p90",
+          "name": "Pachelbel (90%)",
+          "xp": 12,
+          "id": "SONG_PACHELBEL_90"
+        }
+      ]
+    },
+    {
+      "category": "exploration",
+      "group": "dojo.belts",
+      "name": "Dojo Belts",
+      "location": "The Dojo, Crimson Isle",
+      "access": [
+        "crimson_isle"
+      ],
+      "chain": true,
+      "perTier": [
+        [
+          10,
+          20
+        ],
+        [
+          15,
+          30
+        ],
+        [
+          20,
+          40
+        ],
+        [
+          30,
+          60
+        ],
+        [
+          45,
+          90
+        ],
+        [
+          60,
+          180
+        ]
+      ],
+      "minutesBasis": "estimate: belts need more Dojo points across the seven trials",
+      "tiers": [
+        {
+          "key": "white",
+          "name": "White Belt",
+          "xp": 20,
+          "id": "DOJO_BELT_WHITE"
+        },
+        {
+          "key": "yellow",
+          "name": "Yellow Belt",
+          "xp": 30,
+          "id": "DOJO_BELT_YELLOW"
+        },
+        {
+          "key": "green",
+          "name": "Green Belt",
+          "xp": 50,
+          "id": "DOJO_BELT_GREEN"
+        },
+        {
+          "key": "blue",
+          "name": "Blue Belt",
+          "xp": 75,
+          "id": "DOJO_BELT_BLUE"
+        },
+        {
+          "key": "brown",
+          "name": "Brown Belt",
+          "xp": 100,
+          "id": "DOJO_BELT_BROWN",
+          "idSeen": false
+        },
+        {
+          "key": "black",
+          "name": "Black Belt",
+          "xp": 150,
+          "id": "DOJO_BELT_BLACK",
+          "idSeen": false
+        }
+      ]
+    }
+  ]
+}

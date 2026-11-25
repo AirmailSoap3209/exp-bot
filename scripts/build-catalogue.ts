@@ -44,6 +44,7 @@ function task(t: Omit<Task, 'monetary' | 'tracking'> & Partial<Pick<Task, 'monet
   if (t.hypixelTaskId) out.hypixelTaskId = t.hypixelTaskId;
   if (t.minutes) out.minutes = t.minutes;
   if (t.access) out.access = t.access;
+  if (t.hypixelTaskIdUnconfirmed) out.hypixelTaskIdUnconfirmed = true;
   return out;
 }
 
@@ -396,6 +397,49 @@ function buildRates(tasks: Task[], families: { id: string; bracket: number }[]):
 }
 
 // ---------- Write ----------
+// ---------- SkyBlock Leveling task groups (data/sources/leveling-tasks.json) ----------
+interface LevelingGroup {
+  category: string;
+  group: string;
+  name: string;
+  location?: string;
+  access?: string[];
+  chain?: boolean;
+  minutes?: Range;
+  perTier?: Range[];
+  minutesBasis: string;
+  tiers: { key: string; name: string; xp: number; id?: string; idSeen?: false; metric?: string; amount?: number }[];
+}
+
+/**
+ * Every group becomes one tiered source. A tier with a Hypixel task ID is checked against the
+ * completed-task list (metric task.<ID>); a tier with a metric is read by its category's reader.
+ * Chained groups need the tier before; all tiers use fixed time estimates.
+ */
+function buildLeveling(): Record<string, Task[]> {
+  const src = read<{ source: string; groups: LevelingGroup[] }>('data/sources/leveling-tasks.json');
+  const out: Record<string, Task[]> = {};
+  for (const g of src.groups) {
+    const acc = g.access ? access(g.access) : undefined;
+    const tasks = tiers(g.tiers.length, (n, prev) => {
+      const t = g.tiers[n - 1]!;
+      const minutes = g.perTier?.[n - 1] ?? g.minutes;
+      if (!minutes) throw new Error(`leveling-tasks: ${g.group} has no minutes for tier ${n}`);
+      return task({
+        id: `${g.group}.${t.key}`, category: g.category, name: t.name,
+        description: `${g.name}${g.tiers.length > 1 ? `, step ${n} of ${g.tiers.length}` : ''}`, xp: t.xp,
+        requires: { metric: t.metric ?? `task.${t.id}`, amount: t.amount ?? 1 },
+        prerequisites: g.chain && prev ? [prev] : [], activity: null, minutes,
+        location: g.location, group: g.group, tier: n, access: acc,
+        source: `XP: ${src.source.split(',')[0]}; time: ${g.minutesBasis}${acc ? `; access: ${ACCESS_SRC}` : ''}`,
+        ...(t.id ? { hypixelTaskId: t.id } : {}), ...(t.idSeen === false ? { hypixelTaskIdUnconfirmed: true } : {}),
+      });
+    });
+    (out[g.category] ??= []).push(...tasks);
+  }
+  return out;
+}
+
 function main() {
   const bestiary = buildBestiary();
   const collections = buildCollections();
@@ -407,6 +451,7 @@ function main() {
     bestiary: bestiary.tasks,
     slayer: buildSlayer(),
     catacombs: buildCatacombs(),
+    ...buildLeveling(),
   };
   // Validate before writing anything.
   const meta = read<Meta>('data/meta.json');

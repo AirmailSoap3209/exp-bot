@@ -168,6 +168,34 @@ pm2 logs xp-bot
     - Yields that didn't move aren't saved: a zero usually means API lag, not a true zero.
     - Anything else done during the session counts too, so stick to the one activity.
 
+- [x] 12. SkyBlock Leveling categories from one data file, `data/sources/leveling-tasks.json`: 654 tasks, about 6,400 XP, in 13 categories.
+  - XP comes from the wiki's raw `SkyBlock_Levels/Tasks` wikitext plus the HotM/HotF leveling tables. Every category total matches the wiki (a test checks this).
+  - **Task IDs:** a task with a Hypixel task ID is decided by the player's `completed_tasks` list (metric `task.<ID>`), with no reader. IDs come from the fixtures.
+    - 10 IDs were never seen, only follow their siblings' pattern. These are `hypixelTaskIdUnconfirmed`: missing from the list means "estimated", not proof, and they can be ticked.
+  - **Counters,** read from new profile sections: HotM/HotF XP (`skill_tree.experience`), Crystal Nucleus runs (`leveling.completions`), Jacob gold medals and Anita upgrades (`jacobs_contest`), trophy fish catches (`trophy_fish`), secured Timecharms (`rift.gallery`), Mythological kills (bestiary families, approximate).
+  - **Covered now:**
+    - Dragons, Kuudra, Arachne, Mythological kills.
+    - HotM tiers and Nucleus runs.
+    - Jacob gold per crop and Anita upgrades.
+    - Trophy Fish.
+    - HotF tiers and Safari milestones.
+    - Timecharms.
+    - Mage and Barbarian reputation.
+    - Spooky brackets and four event perk shops.
+    - Five essence shops (only the ones whose perks, rebuilt from IDs, match the wiki totals).
+    - Harp songs and Dojo belts.
+  - **Not yet** (each category's note in `data/meta.json` says what's missing):
+    - Boss Collections (no breakdown on the wiki).
+    - Mob Types.
+    - Powder, Commission and Corpse milestones.
+    - Garden-endpoint tasks (Garden level, plots, visitors…), which need a separate API call.
+    - Trophy Frogs and pet milestones.
+    - Rift Guide, objectives and chapters.
+    - The other six essence shops.
+    - Most misc rows.
+  - Times are fixed estimates, labelled as such in each task's source. Area gates use `access.json`. Events aren't gated on being active.
+  - `/xp coverage` splits long sections over several fields.
+
 ## API check findings (2026-11-24)
 
 - **`leveling.completed_tasks` exists**, but only holds one-time tasks: slayer first kills (`DEFEAT_ZOMBIE_SLAYER_ONE`), floor completions (`COMPLETE_CATACOMBS0`–`7`, `COMPLETE_MASTER_CATACOMBS1`–`7`), objectives, songs, essence perks, Abiphone, bank. Skills, collections, bestiary, minions and fairy souls never appear, so those need their own readers. A task entry can carry the Hypixel task ID so "verified complete" comes straight from the list.

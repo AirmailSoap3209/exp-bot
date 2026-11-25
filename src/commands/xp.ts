@@ -34,8 +34,18 @@ import * as settings from './settings.js';
 import { NotLinkedError, resolveTarget, type Target } from './target.js';
 
 export function coverageEmbed(c: Coverage): EmbedBuilder {
-  const section = (status: 'v1' | 'later' | 'never') =>
-    c.rows.filter((r) => r.status === status).map((r) => `• ${formatRow(r)}`).join('\n') || '—';
+  // Discord caps a field at 1,024 characters, so long sections continue in further fields.
+  const section = (status: 'v1' | 'later' | 'never', name: string) => {
+    const lines = c.rows.filter((r) => r.status === status).map((r) => `• ${formatRow(r)}`);
+    if (!lines.length) return [{ name, value: '—' }];
+    const fields: { name: string; value: string }[] = [];
+    for (const l of lines) {
+      const last = fields.at(-1);
+      if (last && last.value.length + 1 + l.length <= 1024) last.value += `\n${l}`;
+      else fields.push({ name: fields.length ? `${name} (cont.)` : name, value: l.slice(0, 1024) });
+    }
+    return fields;
+  };
   const guides = c.guides
     .map((g) => {
       const max = g.maxXp !== null ? g.maxXp.toLocaleString('en-US') : g.wikiEstimate !== null ? `~${g.wikiEstimate.toLocaleString('en-US')}` : '?';
@@ -46,9 +56,9 @@ export function coverageEmbed(c: Coverage): EmbedBuilder {
     .setTitle('SkyBlock XP coverage')
     .setDescription(formatTotal(c.total, c.checked))
     .addFields(
-      { name: 'In v1', value: section('v1') },
-      { name: 'Later versions', value: section('later') },
-      { name: 'Excluded (monetary)', value: section('never') },
+      ...section('v1', 'In the catalogue'),
+      ...section('later', 'Later versions'),
+      ...section('never', 'Excluded (monetary)'),
       { name: 'By SkyBlock Guide category', value: guides },
     )
     .setFooter({ text: 'Built from data/tasks and data/meta.json' });

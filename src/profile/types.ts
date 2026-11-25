@@ -88,4 +88,18 @@ export interface NormalizedProfile {
   catacombs: Section<CatacombsProgress>;
   fairySouls: Section<{ collected: number; exchanges: number }>;
   minions: Section<{ crafted: Set<string> }>;
+  /** Heart of the Mountain / Heart of the Forest XP (skill_tree.experience). */
+  skillTree: Section<{ hotmXp: number; hotfXp: number }>;
+  /** Counters Hypixel keeps for repeatable leveling tasks (leveling.completions), e.g. NUCLEUS_RUNS. */
+  completions: Section<Record<string, number>>;
+  jacob: Section<{
+    /** Crops with at least a gold medal (gold, platinum or diamond) in some contest. */
+    goldCrops: Set<string>;
+    /** Anita's shop upgrade tiers. */
+    doubleDrops: number;
+    farmingLevelCap: number;
+  }>;
+  /** Trophy fish caught per "<fish>_<tier>" key. */
+  trophyFish: Section<Record<string, number>>;
+  rift: Section<{ timecharms: number }>;
 }

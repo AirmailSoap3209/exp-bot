@@ -27,6 +27,11 @@ export interface Task {
   tier?: number;
   /** Hypixel's ID in leveling.completed_tasks, when the game reports this task directly. */
   hypixelTaskId?: string;
+  /**
+   * The ID follows its siblings' pattern but was never seen in real data, so its absence from the
+   * list isn't proof the task is undone: it's then an estimate (and can be ticked).
+   */
+  hypixelTaskIdUnconfirmed?: boolean;
   /** Fixed time range for tasks that don't depend on gear. */
   minutes?: [number, number];
   /** Where the task can be done and what it takes to get there (data/sources/access.json). */

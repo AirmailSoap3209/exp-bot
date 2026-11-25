@@ -17,6 +17,7 @@
     "coverage": "tsx scripts/coverage.ts",
     "overview": "tsx scripts/overview.ts",
     "optimize": "tsx scripts/optimize.ts",
+    "target": "tsx scripts/target.ts",
     "deploy-commands": "node dist/deploy-commands.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

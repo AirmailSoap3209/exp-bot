@@ -77,8 +77,8 @@ export function optimizeEmbed(
     });
 }
 
-export function pageButtons(stateId: string, page: number, total: number): ActionRowBuilder<ButtonBuilder> {
-  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+export function pageButtons(stateId: string, page: number, total: number, pageSize = PAGE_SIZE): ActionRowBuilder<ButtonBuilder> {
+  const pages = Math.max(1, Math.ceil(total / pageSize));
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder().setCustomId(`xpopt:${stateId}:${page - 1}`).setLabel('Prev').setStyle(ButtonStyle.Secondary).setDisabled(page <= 0),
     new ButtonBuilder().setCustomId(`xpopt:${stateId}:${page + 1}`).setLabel('Next').setStyle(ButtonStyle.Secondary).setDisabled(page >= pages - 1),

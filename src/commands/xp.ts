@@ -11,6 +11,8 @@ import { rankTasks, type RankResult } from '../optimizer/rank.js';
 import { profileKey, userData } from '../storage/userData.js';
 import type { NormalizedProfile } from '../profile/types.js';
 import { optimizeEmbed, pageButtons, PAGE_SIZE } from './optimize.js';
+import { TARGET_PAGE_SIZE, targetEmbed, targetLineCount } from './targetPlan.js';
+import { planTarget, xpToLevel } from '../optimizer/target.js';
 import { taskEmbed } from './taskDetail.js';
 import { categoryView } from '../optimizer/category.js';
 import { estimateTask, type EstimateContext } from '../estimate/estimate.js';
@@ -69,15 +71,13 @@ async function overview(i: ChatInputCommandInteraction): Promise<void> {
   }
 }
 
-/** Rankings kept for Next/Prev, so paging never re-fetches. Expire after 15 minutes. */
+/** Paged results kept for Next/Prev, so paging never re-fetches or re-plans. Expire after 15 minutes. */
 interface PageState {
   userId: string;
-  playerName: string;
-  profile: NormalizedProfile;
-  result: RankResult;
-  isLinked: boolean;
-  title?: string;
-  header?: string;
+  render: (page: number) => EmbedBuilder;
+  /** Entries and entries per page, for the buttons. */
+  total: number;
+  pageSize: number;
   expires: number;
 }
 const pages = new Map<string, PageState>();
@@ -91,19 +91,46 @@ async function estimateContext(t: Target): Promise<EstimateContext> {
   return { book: rateBook, overrides, sessionRates };
 }
 
-/** Sends page 1 of a ranking, with Prev/Next when there is more than one page. */
-async function showRanking(i: ChatInputCommandInteraction, t: Target, result: RankResult, view: { title?: string; header?: string } = {}): Promise<void> {
+/** Sends page 1 of a paged result, with Prev/Next when there is more than one page. */
+async function showPaged(i: ChatInputCommandInteraction, t: Target, render: (page: number) => EmbedBuilder, total: number, pageSize: number): Promise<void> {
   const now = Date.now();
   for (const [k, v] of pages) if (v.expires < now) pages.delete(k);
   const id = randomUUID().slice(0, 8);
-  const state: PageState = { userId: i.user.id, playerName: t.loaded.playerName, profile: t.loaded.profile, result, isLinked: t.isLinked, ...view, expires: now + PAGE_TTL_MS };
-  pages.set(id, state);
+  pages.set(id, { userId: i.user.id, render, total, pageSize, expires: now + PAGE_TTL_MS });
   const content = t.clearedTicks.length ? `Cleared ${t.clearedTicks.length} tick(s) the API now shows incomplete.` : undefined;
-  await i.editReply({
-    content,
-    embeds: [optimizeEmbed(state.playerName, state.profile, result, 0, { isLinked: state.isLinked, title: state.title, header: state.header })],
-    components: result.ranked.length > PAGE_SIZE ? [pageButtons(id, 0, result.ranked.length)] : [],
-  });
+  await i.editReply({ content, embeds: [render(0)], components: total > pageSize ? [pageButtons(id, 0, total, pageSize)] : [] });
+}
+
+async function showRanking(i: ChatInputCommandInteraction, t: Target, result: RankResult, view: { title?: string; header?: string } = {}): Promise<void> {
+  const { playerName } = t.loaded;
+  const { profile } = t.loaded;
+  const render = (page: number) => optimizeEmbed(playerName, profile, result, page, { isLinked: t.isLinked, ...view });
+  await showPaged(i, t, render, result.ranked.length, PAGE_SIZE);
+}
+
+async function target(i: ChatInputCommandInteraction): Promise<void> {
+  await i.deferReply();
+  try {
+    const xpOpt = i.options.getInteger('xp');
+    const levelOpt = i.options.getInteger('level');
+    if ((xpOpt === null) === (levelOpt === null)) {
+      await i.editReply({ content: 'Give either `xp:` (XP to gain) or `level:` (SkyBlock level to reach), not both.' });
+      return;
+    }
+    const t = await resolveTarget(i);
+    const { profile, playerName } = t.loaded;
+    const need = xpOpt ?? xpToLevel(levelOpt!, profile.leveling.experience);
+    if (need <= 0) {
+      await i.editReply({ content: `${playerName} is already level ${profile.leveling.level}, at or above level ${levelOpt}.` });
+      return;
+    }
+    const plan = planTarget(t.evaluation.progress, profile, await estimateContext(t), need, { excluded: t.excluded, excludedSources: t.excludedSources });
+    const ask = levelOpt !== null ? { kind: 'level' as const, level: levelOpt } : { kind: 'xp' as const, xp: need };
+    const render = (page: number) => targetEmbed(playerName, profile, plan, page, { ask, isLinked: t.isLinked });
+    await showPaged(i, t, render, targetLineCount(plan), TARGET_PAGE_SIZE);
+  } catch (err) {
+    await i.editReply({ content: userError(err) });
+  }
 }
 
 async function optimize(i: ChatInputCommandInteraction): Promise<void> {
@@ -179,10 +206,7 @@ async function optimizePage(i: ButtonInteraction): Promise<void> {
     return;
   }
   const page = Number(pageStr);
-  await i.update({
-    embeds: [optimizeEmbed(state.playerName, state.profile, state.result, page, { isLinked: state.isLinked, title: state.title, header: state.header })],
-    components: [pageButtons(id!, page, state.result.ranked.length)],
-  });
+  await i.update({ embeds: [state.render(page)], components: [pageButtons(id!, page, state.total, state.pageSize)] });
 }
 
 /** Settings replies are private; the work may hit the API, so defer first. */
@@ -216,6 +240,13 @@ export const xp: Command = {
     )
     .addSubcommand((s) =>
       s.setName('optimize').setDescription('The 10 quickest SkyBlock XP tasks left, without buying progression')
+        .addStringOption((o) => o.setName('player').setDescription('Minecraft username (default: your linked account)'))
+        .addStringOption((o) => o.setName('profile').setDescription('Profile name (default: linked or selected profile)')),
+    )
+    .addSubcommand((s) =>
+      s.setName('target').setDescription('The quickest set of tasks to gain an amount of XP or reach a SkyBlock level')
+        .addIntegerOption((o) => o.setName('xp').setDescription('SkyBlock XP to gain').setMinValue(1).setMaxValue(100_000))
+        .addIntegerOption((o) => o.setName('level').setDescription('SkyBlock level to reach (100 XP per level)').setMinValue(1).setMaxValue(1_000))
         .addStringOption((o) => o.setName('player').setDescription('Minecraft username (default: your linked account)'))
         .addStringOption((o) => o.setName('profile').setDescription('Profile name (default: linked or selected profile)')),
     )
@@ -274,6 +305,7 @@ export const xp: Command = {
     switch (i.options.getSubcommand()) {
       case 'overview': return overview(i);
       case 'optimize': return optimize(i);
+      case 'target': return target(i);
       case 'category': return category(i);
       case 'task': return task(i);
       case 'link': return privately(i, () => settings.link(i));

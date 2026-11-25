@@ -109,6 +109,14 @@ pm2 logs xp-bot
   - Category view: each source's next tier, quickest first, 5 per page. It works for categories that are excluded or left out by default (minions), and prerequisites in other categories still apply.
   - Task detail: status and reason, progress, the estimate with its rate source, bracket and range, prerequisites with their status, next tier, and data source. It uses your linked profile, or shows task data only without a link.
 
+- [x] 9. `/xp target xp:<n>` or `level:<n>` (plus `player`/`profile`): the quickest set of tasks to gain that much XP. `npm run target -- <fixture player> [profile] --xp N` (or `--level N`) prints it offline.
+  - `level:` is the target level × 100 minus the profile's **total** SkyBlock XP (`leveling.experience`).
+  - Runs on `PlanState` (`src/optimizer/plan.ts`), a simulated copy of the profile's progress. Each step completes tasks once, opens their next tiers and any task they unlock, and carries progress forward.
+  - Greedy pick by XP per minute (midpoint estimate). When one task covers everything still needed faster than the best-ratio pick, that task is taken instead.
+  - Trim pass: drops steps the target doesn't need, slowest first, only if replaying the plan from scratch still works (no prerequisite or shared progress lost), still reaches the target, and is quicker.
+  - XP is exact (fixed rewards). Time is the sum of each step's range. Unreachable targets plan as far as eligible tasks go and say so. Stops at 5,000 steps.
+  - Back-to-back tiers of one source show as one line ("Combat level 31→33"). 8 lines per page with Prev/Next.
+
 ## API check findings (2026-11-24)
 
 - **`leveling.completed_tasks` exists**, but only holds one-time tasks: slayer first kills (`DEFEAT_ZOMBIE_SLAYER_ONE`), floor completions (`COMPLETE_CATACOMBS0`–`7`, `COMPLETE_MASTER_CATACOMBS1`–`7`), objectives, songs, essence perks, Abiphone, bank. Skills, collections, bestiary, minions and fairy souls never appear, so those need their own readers. A task entry can carry the Hypixel task ID so "verified complete" comes straight from the list.

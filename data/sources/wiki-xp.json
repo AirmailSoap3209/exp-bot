@@ -86,6 +86,28 @@
         "maxTier": 5,
         "location": "Stillgore Chateau, The Rift"
       }
+    },
+    "unlocks": {
+      "source": "hypixelskyblock.minecraft.wiki/w/Slayer, fetched 2026-11-24",
+      "bossUnlock": {
+        "spider": "zombie.tier2",
+        "wolf": "spider.tier2",
+        "enderman": "wolf.tier4",
+        "blaze": "enderman.tier3",
+        "vampire": "wolf.tier2"
+      },
+      "tierCombatLevel": [
+        null,
+        5,
+        10,
+        15,
+        25
+      ],
+      "tier5SlayerLevel": 7,
+      "exempt": [
+        "vampire"
+      ],
+      "note": "Tier II-V need Combat 5/10/15/25 and Tier V also needs slayer level VII of that boss, except Riftstalker (Vampire), which has its own Rift-based requirements that are not modelled. Riftstalker also needs Rift access, not modelled."
     }
   },
   "catacombs": {
@@ -113,6 +135,29 @@
       "5": 50,
       "6": 50,
       "7": 50
+    },
+    "unlocks": {
+      "source": "hypixelskyblock.minecraft.wiki/w/Catacombs/Floors (last edited 2026-11-05), fetched 2026-11-24",
+      "entranceCombatLevel": 15,
+      "floorCatacombsLevel": {
+        "1": 1,
+        "2": 3,
+        "3": 5,
+        "4": 9,
+        "5": 14,
+        "6": 19,
+        "7": 24
+      },
+      "masterCatacombsLevel": {
+        "1": 24,
+        "2": 26,
+        "3": 28,
+        "4": 30,
+        "5": 32,
+        "6": 34,
+        "7": 36
+      },
+      "note": "Combat 15 is needed to start (lead) a dungeon; the page has separate Combat and Catacombs columns and the Entrance figure (15) is read as Combat."
     }
   },
   "bestiary": {

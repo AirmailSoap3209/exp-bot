@@ -209,19 +209,29 @@ function buildSlayer(): Task[] {
     const cumulative = slayerTable.cumulativeXp[boss];
     if (!cumulative) throw new Error(`no slayer XP table for ${boss}`);
     const levelNote = boss === 'vampire' ? `; ${s.levelXpNote}` : '';
+    // Unlocks: another boss's tier opens this boss; Combat level (and slayer level for Tier V) gates each tier.
+    const u = s.unlocks;
+    const unlock: string[] = u.bossUnlock[boss] ? [`slayer.${u.bossUnlock[boss]}`] : [];
+    const exempt = (u.exempt as string[]).includes(boss);
+    const gates = (tier: number): string[] => {
+      if (exempt) return [];
+      const combat = u.tierCombatLevel[tier - 1] as number | null;
+      return [...(combat ? [`skills.combat.level${combat}`] : []), ...(tier === 5 ? [`slayer.${boss}.level${u.tier5SlayerLevel}`] : [])];
+    };
+    const unlockNote = `; unlocks: ${u.source}`;
     const levels = tiers(cumulative.length, (lv, prev) => task({
       id: `slayer.${boss}.level${lv}`, category: 'slayer', name: `${b.name} Slayer level ${lv}`,
       description: `Reach ${cumulative[lv - 1]!.toLocaleString('en-US')} ${b.name} Slayer XP`, xp: s.levelXp[lv - 1],
       requires: { metric: `slayer.${boss}.xp`, amount: cumulative[lv - 1]! },
-      prerequisites: prev ? [prev] : [], activity: `slayer.${boss}`, location: b.location,
-      source: `XP: ${WIKI}${levelNote}; thresholds: ${slayerTable.source}`, group: `slayer.${boss}.level`, tier: lv,
+      prerequisites: prev ? [prev] : unlock, activity: `slayer.${boss}`, location: b.location,
+      source: `XP: ${WIKI}${levelNote}; thresholds: ${slayerTable.source}${unlock.length ? unlockNote : ''}`, group: `slayer.${boss}.level`, tier: lv,
     }));
     const kills = tiers(b.maxTier, (tier, prev) => task({
       id: `slayer.${boss}.tier${tier}`, category: 'slayer', name: `Defeat ${b.name} ${ROMAN[tier - 1]}`,
       description: `Defeat a tier ${ROMAN[tier - 1]} ${b.name} for the first time`, xp: s.bossTierXp[tier - 1],
       requires: { metric: `slayer.${boss}.kills.tier${tier}`, amount: 1 },
-      prerequisites: prev ? [prev] : [], activity: `slayer.${boss}.t${tier}`, location: b.location,
-      source: WIKI, group: `slayer.${boss}.tier`, tier,
+      prerequisites: [...(prev ? [prev] : unlock), ...gates(tier)], activity: `slayer.${boss}.t${tier}`, location: b.location,
+      source: `${WIKI}${unlock.length || gates(tier).length ? unlockNote : ''}`, group: `slayer.${boss}.tier`, tier,
       hypixelTaskId: `DEFEAT_${b.taskId}_SLAYER_${WORDS[tier - 1]}`,
     }));
     return [...levels, ...kills];
@@ -249,14 +259,19 @@ function buildCatacombs(): Task[] {
     })),
   );
   const floorName = (f: number) => (f === 0 ? 'Entrance' : `Floor ${ROMAN[f - 1]}`);
+  // Catacombs level needed to enter a floor; level 0 or missing means no gate.
+  const cataGate = (lv: number | undefined): string[] => (lv && lv > 0 ? [`catacombs.level${lv}`] : []);
   const floors: Task[] = [];
   for (const f of Object.keys(c.floorXp).map(Number).sort((a, b) => a - b)) {
     floors.push(task({
       id: `catacombs.floor${f}`, category: 'catacombs', name: `Complete Catacombs ${floorName(f)}`,
       description: `Complete The Catacombs ${floorName(f)} once`, xp: c.floorXp[f],
       requires: { metric: `catacombs.completions.${f}`, amount: 1 },
-      prerequisites: f > 0 ? [`catacombs.floor${f - 1}`] : [], activity: `dungeons.f${f}`,
-      source: WIKI, hypixelTaskId: `COMPLETE_CATACOMBS${f}`, group: 'catacombs.floor', tier: f + 1,
+      prerequisites: f > 0
+        ? [`catacombs.floor${f - 1}`, ...cataGate(c.unlocks.floorCatacombsLevel[f])]
+        : [`skills.combat.level${c.unlocks.entranceCombatLevel}`],
+      activity: `dungeons.f${f}`,
+      source: `${WIKI}; unlocks: ${c.unlocks.source}`, hypixelTaskId: `COMPLETE_CATACOMBS${f}`, group: 'catacombs.floor', tier: f + 1,
     }));
   }
   for (const f of Object.keys(c.masterFloorXp).map(Number).sort((a, b) => a - b)) {
@@ -264,8 +279,9 @@ function buildCatacombs(): Task[] {
       id: `catacombs.master${f}`, category: 'catacombs', name: `Complete Master Mode ${floorName(f)}`,
       description: `Complete Master Mode Catacombs ${floorName(f)} once`, xp: c.masterFloorXp[f],
       requires: { metric: `catacombs.master.${f}`, amount: 1 },
-      prerequisites: [f > 1 ? `catacombs.master${f - 1}` : 'catacombs.floor7'], activity: `dungeons.m${f}`,
-      source: WIKI, hypixelTaskId: `COMPLETE_MASTER_CATACOMBS${f}`, group: 'catacombs.master', tier: f,
+      prerequisites: [f > 1 ? `catacombs.master${f - 1}` : 'catacombs.floor7', ...cataGate(c.unlocks.masterCatacombsLevel[f])],
+      activity: `dungeons.m${f}`,
+      source: `${WIKI}; unlocks: ${c.unlocks.source}`, hypixelTaskId: `COMPLETE_MASTER_CATACOMBS${f}`, group: 'catacombs.master', tier: f,
     }));
   }
   return [...level, ...classes, ...floors];

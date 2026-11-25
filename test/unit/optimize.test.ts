@@ -146,6 +146,9 @@ describe('formatting', () => {
     [[30, 90], '~0.5–1.5 h'],
     [[120, 300], '~2–5 h'],
     [[900, 1800], '~15–30 h'],
+    [[2000, 2800], '~33–47 h'],
+    [[4320, 8640], '~3–6 days'],
+    [[1_628_340, 4_106_340], '~1,131–2,852 days'],
   ] as [[number, number], string][])('formatMinutes(%j) = %s', (r, s) => expect(formatMinutes(r)).toBe(s));
 
   it('formats an entry in the four-line spec layout', () => {

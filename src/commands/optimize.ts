@@ -7,12 +7,15 @@ import { dataAge } from './overview.js';
 export const PAGE_SIZE = 5;
 const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 
-/** "<1 min", "~2–5 min", "~1.5–4 h", "~12–30 h": minutes under an hour, hours above. */
+/** "<1 min", "~2–5 min", "~1.5–4 h", "~12–30 h", "~3–7 days": minutes under an hour, hours under two days, days above. */
 export function formatMinutes([lo, hi]: [number, number]): string {
   if (hi < 1) return '<1 min';
   let a: string, b: string, unit: string;
   if (hi < 60) {
     [a, b, unit] = [lo < 1 ? '<1' : String(Math.round(lo)), String(Math.round(hi)), 'min'];
+  } else if (hi >= 48 * 60) {
+    const d = (m: number) => Number((m / 1440).toFixed(m < 14_400 ? 1 : 0)).toLocaleString('en-US');
+    [a, b, unit] = [d(lo), d(hi), 'days'];
   } else {
     const h = (m: number) => String(Number((m / 60).toFixed(m < 600 ? 1 : 0)));
     [a, b, unit] = [h(lo), h(hi), 'h'];

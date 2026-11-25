@@ -166,3 +166,27 @@ describe('coverage totals', () => {
     expect(formatTotal(t, meta.checked)).toMatch(/total unknown/);
   });
 });
+
+describe('unlock requirements (wiki, 2026-11-24)', () => {
+  const pre = (id: string) => loadCatalogue().byId.get(id)!.prerequisites;
+  it('chains slayer bosses and gates tiers on Combat and slayer level', () => {
+    expect(pre('slayer.zombie.tier1')).toEqual([]);
+    expect(pre('slayer.spider.tier1')).toEqual(['slayer.zombie.tier2']);
+    expect(pre('slayer.spider.level1')).toEqual(['slayer.zombie.tier2']);
+    expect(pre('slayer.wolf.tier1')).toEqual(['slayer.spider.tier2']);
+    expect(pre('slayer.enderman.tier1')).toEqual(['slayer.wolf.tier4']);
+    expect(pre('slayer.blaze.tier1')).toEqual(['slayer.enderman.tier3']);
+    expect(pre('slayer.vampire.tier1')).toEqual(['slayer.wolf.tier2']);
+    expect(pre('slayer.zombie.tier2')).toEqual(['slayer.zombie.tier1', 'skills.combat.level5']);
+    expect(pre('slayer.zombie.tier5')).toEqual(['slayer.zombie.tier4', 'skills.combat.level25', 'slayer.zombie.level7']);
+    expect(pre('slayer.vampire.tier5')).toEqual(['slayer.vampire.tier4']); // Rift requirements not modelled
+  });
+
+  it('gates dungeon floors on Combat 15 and Catacombs level', () => {
+    expect(pre('catacombs.floor0')).toEqual(['skills.combat.level15']);
+    expect(pre('catacombs.floor1')).toEqual(['catacombs.floor0', 'catacombs.level1']);
+    expect(pre('catacombs.floor7')).toEqual(['catacombs.floor6', 'catacombs.level24']);
+    expect(pre('catacombs.master1')).toEqual(['catacombs.floor7', 'catacombs.level24']);
+    expect(pre('catacombs.master7')).toEqual(['catacombs.master6', 'catacombs.level36']);
+  });
+});

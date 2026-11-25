@@ -42,7 +42,7 @@ function formatCombo(n: number, r: RankedTask): string {
     `**${n}. ⚡ ${row.combo.name}** · +${fmt(row.xp)} XP across ${row.tasks.length} tasks`,
     `${shown.join(' · ')}${more}`,
     `${formatMinutes(row.minutes)} (${sourceLabel(r.estimate)}) · ${xpRate(r.estimate.xpPerMin)} XP/min`,
-    [row.combo.location, 'side tasks counted at the low end'].filter(Boolean).join(' · '),
+    [row.combo.location, row.measured.length ? 'your measured ratios, low end' : 'side tasks counted at the low end'].filter(Boolean).join(' · '),
   ].join('\n');
 }
 

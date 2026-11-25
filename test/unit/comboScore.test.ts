@@ -152,3 +152,16 @@ describe('combos on a real profile', () => {
     expect(plan.picks.reduce((n, p) => n + p.xp, 0)).toBe(plan.xp);
   });
 });
+
+describe('measured combo ratios', () => {
+  it("replace the data file's ratio (±15%, low end claimed) and are flagged on the row", () => {
+    const s = new PlanState([tp('items1', 'items', 100, 0, { xp: 4 }), tp('xp1', 'xp', 150, 0, { xp: 5 })]);
+    // Data says 2-4 per item; the player measured 1, so 100 items give 85 (not 200): xp1 isn't reached at the primary tier.
+    const row = scoreCombo(combo(), s, profile, { book, comboRatios: { 'combo.grind': { xp: 1 } } })!;
+    expect(row.measured).toEqual(['xp']);
+    expect(row.horizon.task.id).toBe('xp1');
+    expect(row.units).toBeCloseTo(150 / 0.85);
+    expect(scoreCombo(combo(), s, profile, ctx)!.measured).toEqual([]);
+    expect(formatEntry(1, comboEntry(row))).toContain('your measured ratios, low end');
+  });
+});

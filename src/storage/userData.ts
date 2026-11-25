@@ -54,7 +54,12 @@ interface Stores {
   settings: JsonStore<Record<string, UserSettings>>;
   ticks: JsonStore<Record<string, string[]>>;
   rates: JsonStore<Record<string, Record<string, RateOverride>>>;
-  sessions: JsonStore<{ open: Record<string, OpenSession>; rates: Record<string, Record<string, StoredSessionRate>> }>;
+  sessions: JsonStore<{
+    open: Record<string, OpenSession>;
+    rates: Record<string, Record<string, StoredSessionRate>>;
+    /** Measured combo yields: profile key -> combo ID -> metric -> blended ratio (in `rate`). Missing in older files. */
+    ratios?: Record<string, Record<string, Record<string, StoredSessionRate>>>;
+  }>;
 }
 
 /** Everything the bot remembers, keyed by Discord user ID or profile key. */
@@ -67,7 +72,7 @@ export class UserData {
       settings: new JsonStore(join(dir, 'settings.json'), () => ({})),
       ticks: new JsonStore(join(dir, 'ticks.json'), () => ({})),
       rates: new JsonStore(join(dir, 'rate-overrides.json'), () => ({})),
-      sessions: new JsonStore(join(dir, 'sessions.json'), () => ({ open: {}, rates: {} })),
+      sessions: new JsonStore(join(dir, 'sessions.json'), () => ({ open: {}, rates: {}, ratios: {} })),
     };
   }
 
@@ -106,6 +111,24 @@ export class UserData {
   /** Measured rates as plain numbers, for the estimator. */
   async getSessionRateNumbers(key: string): Promise<Record<string, number>> {
     return Object.fromEntries(Object.entries(await this.getSessionRates(key)).map(([a, r]) => [a, r.rate]));
+  }
+
+  /** Measured combo ratios for a profile: combo ID -> metric -> blended ratio. */
+  async getComboRatios(key: string): Promise<Record<string, Record<string, StoredSessionRate>>> {
+    return structuredClone((await this.s.sessions.read()).ratios?.[key] ?? {});
+  }
+
+  /** Measured ratios as plain numbers, for combo scoring. */
+  async getComboRatioNumbers(key: string): Promise<Record<string, Record<string, number>>> {
+    const all = await this.getComboRatios(key);
+    return Object.fromEntries(Object.entries(all).map(([c, m]) => [c, Object.fromEntries(Object.entries(m).map(([k, r]) => [k, r.rate]))]));
+  }
+
+  setComboRatio(key: string, combo: string, metric: string, ratio: StoredSessionRate): Promise<void> {
+    return this.s.sessions.update((d) => {
+      ((d.ratios ??= {})[key] ??= {})[combo] ??= {};
+      d.ratios[key]![combo]![metric] = ratio;
+    });
   }
 
   setSessionRate(key: string, activity: string, rate: StoredSessionRate): Promise<void> {

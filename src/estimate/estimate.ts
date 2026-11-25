@@ -7,7 +7,7 @@ import type { Bracket, Range } from './types.js';
 
 /** A single measured or typed rate becomes a range of ±15%, so every estimate stays a range. */
 const SPREAD = 0.15;
-const spread = (r: number): Range => [r * (1 - SPREAD), r * (1 + SPREAD)];
+export const spread = (r: number): Range => [r * (1 - SPREAD), r * (1 + SPREAD)];
 
 export type RateSource = 'fixed' | 'session' | 'override' | 'default';
 
@@ -33,6 +33,8 @@ export interface EstimateContext {
   overrides?: Record<string, RateOverride>;
   /** Measured rates per activity (step 7). Only for the linked profile. */
   sessionRates?: Record<string, number>;
+  /** Measured combo yields: combo ID -> metric -> ratio per primary unit. Only for the linked profile. */
+  comboRatios?: Record<string, Record<string, number>>;
 }
 
 /** The rate an activity runs at for this profile: session, then override, then bracket default. */

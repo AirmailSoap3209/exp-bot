@@ -75,6 +75,41 @@ export function blend(previous: SessionRate | undefined, rate: number, minutes: 
   };
 }
 
+/** One combo yield measured in a session: how much of it came per unit of the primary. */
+export interface RatioMeasurement {
+  combo: string;
+  metric: string;
+  /** Yield change ÷ primary change over the session. */
+  ratio: number;
+  delta: number;
+}
+
+/**
+ * For every combo built on the session's activity, each yield's change per unit of the primary.
+ * Yields that didn't move, or aren't visible in both snapshots, aren't measured: zero usually
+ * means the API hadn't caught up or the yield is off for this profile, not a true zero.
+ */
+export function measureRatios(
+  combos: readonly { id: string; primary: string; yields: readonly { metric: string }[] }[],
+  activity: string,
+  start: Record<string, number>,
+  end: Record<string, number>,
+  primaryDelta: number,
+): RatioMeasurement[] {
+  if (!(primaryDelta > 0)) return [];
+  const out: RatioMeasurement[] = [];
+  for (const c of combos) {
+    if (c.primary !== activity) continue;
+    for (const y of c.yields) {
+      const a = start[y.metric];
+      const b = end[y.metric];
+      if (a === undefined || b === undefined || b - a <= 0) continue;
+      out.push({ combo: c.id, metric: y.metric, ratio: (b - a) / primaryDelta, delta: b - a });
+    }
+  }
+  return out;
+}
+
 /** Metrics that moved, largest change first, for the end-of-session summary. */
 export function changes(start: Record<string, number>, end: Record<string, number>): { metric: string; delta: number }[] {
   return Object.keys(end)

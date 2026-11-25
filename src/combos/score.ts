@@ -1,11 +1,11 @@
-import { activityRate, minutesFor, type ActivityRate, type EstimateContext } from '../estimate/estimate.js';
-import type { Range } from '../estimate/types.js';
+import { activityRate, minutesFor, spread, type ActivityRate, type EstimateContext } from '../estimate/estimate.js';
+import type { Bracket, Range } from '../estimate/types.js';
 import { isExcluded, type Exclusions } from '../optimizer/eligible.js';
 import type { PlanState } from '../optimizer/plan.js';
 import type { NormalizedProfile } from '../profile/types.js';
 import type { TaskProgress } from '../tasks/progress.js';
 import type { Task } from '../tasks/types.js';
-import { yieldPer, type Combo } from './combos.js';
+import { yieldPer, type Combo, type ComboYield } from './combos.js';
 
 /** One combo, scored against a plan state: how long it runs and what it completes. */
 export interface ComboRow {
@@ -22,6 +22,14 @@ export interface ComboRow {
   /** Rewarded tasks it completes, the horizon first. */
   tasks: Task[];
   xp: number;
+  /** Yield metrics that used the player's measured ratio instead of the data file's. */
+  measured: string[];
+}
+
+/** A yield's range: the player's measured ratio (±15%, like measured rates) when there is one, else the data file's. */
+function perFor(combo: Combo, y: ComboYield, bracket: Bracket, ctx: EstimateContext): Range {
+  const m = ctx.comboRatios?.[combo.id]?.[y.metric];
+  return m && m > 0 ? spread(m) : yieldPer(y, bracket);
 }
 
 /**
@@ -57,7 +65,7 @@ export function scoreCombo(
   }
   for (const y of combo.yields) {
     const p = state.nextOpen(y.metric, offered);
-    const u = p ? state.remainingFor(p.task) / yieldPer(y, rate.gearBracket)[0] : 0;
+    const u = p ? state.remainingFor(p.task) / perFor(combo, y, rate.gearBracket, ctx)[0] : 0;
     if (p && u > 0 && Number.isFinite(u)) stops.push({ p, units: u });
   }
   stops.sort((a, b) => a.units - b.units);
@@ -67,7 +75,7 @@ export function scoreCombo(
   const deltasFor = (units: number) => {
     const d: Record<string, number> = {};
     for (const m of combo.primaryMetrics) d[m] = units;
-    for (const y of combo.yields) d[y.metric] = (d[y.metric] ?? 0) + units * yieldPer(y, rate.gearBracket)[0];
+    for (const y of combo.yields) d[y.metric] = (d[y.metric] ?? 0) + units * perFor(combo, y, rate.gearBracket, ctx)[0];
     return d;
   };
   // Run until the primary's next tier; if nothing else finishes by then, run on to the first
@@ -92,6 +100,7 @@ export function scoreCombo(
   return {
     combo, horizon, units, minutes, midMinutes: (minutes[0] + minutes[1]) / 2, rate, deltas,
     tasks, xp: tasks.reduce((n, t) => n + t.xp, 0),
+    measured: combo.yields.filter((y) => (ctx.comboRatios?.[combo.id]?.[y.metric] ?? 0) > 0).map((y) => y.metric),
   };
 }
 

@@ -157,6 +157,12 @@ pm2 logs xp-bot
   - [x] `/xp target`: combos compete with single tasks on XP per minute. Picking one applies all of it to the plan. Steps are replayed, so trimming keeps combos valid. Back-to-back rounds show as "⚡ Kill Zealots ×3".
   - [x] `/xp exclude activity:` / `include activity:`: never recommend that activity or a combo built on it. Unlike category and source exclusions, its tasks still count when something else finishes them.
   - [x] `/xp task` shows "Also progressed by" with the combos that feed the task.
+  - [x] Sessions learn combo ratios:
+    - A session on a combo's primary activity also measures each yield as change in the yield ÷ change in the primary. For example, Combat XP gained per Revenant slayer XP.
+    - Ratios blend 60/40 with earlier ones, like rates, in `storage-data/sessions.json` under `ratios`.
+    - On your linked profile a measured ratio replaces the data file's, as ±15% around it, with the low end still used for claims. ⚡ rows then say "your measured ratios".
+    - Yields that didn't move aren't saved: a zero usually means API lag, not a true zero.
+    - Anything else done during the session counts too, so stick to the one activity.
 
 ## API check findings (2026-11-24)
 

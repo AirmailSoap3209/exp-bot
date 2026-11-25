@@ -1,11 +1,12 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
 import { metricLabel } from '../optimizer/category.js';
 import { loadProfile } from '../profile/load.js';
+import { yieldPer } from '../combos/combos.js';
 import {
-  activityMetric, blend, changes, MAX_SESSION_MINUTES, measurableActivities, measure, MIN_SESSION_MINUTES, takeSnapshot,
+  activityMetric, blend, changes, MAX_SESSION_MINUTES, measurableActivities, measure, measureRatios, MIN_SESSION_MINUTES, takeSnapshot,
 } from '../sessions/sessions.js';
 import { profileKey, userData, type OpenSession } from '../storage/userData.js';
-import { catalogue, rateBook } from '../tasks/instance.js';
+import { catalogue, combos, rateBook } from '../tasks/instance.js';
 import { activities, searchActivities, type Choice } from '../tasks/search.js';
 import { NotLinkedError } from './target.js';
 
@@ -48,11 +49,14 @@ export async function start(i: ChatInputCommandInteraction): Promise<string> {
     startedAt: Date.now(), snapshot,
   };
   await userData.startSession(i.user.id, session);
+  const learns = combos.filter((c) => c.primary === activity)
+    .flatMap((c) => c.yields.filter((y) => snapshot[y.metric] !== undefined).map((y) => `${metricLabel(catalogue, y.metric)} (${c.name})`));
   return [
     `Session started: **${labelOf(activity)}** on ${link.name} · ${link.profileName}.`,
     `Starting value: ${fmt(value)} ${unitOf(activity)}.`,
+    learns.length ? `It also measures how much ${learns.join(', ')} you get per ${unitOf(activity).replace(/s$/, '')}, for ⚡ combo rows.` : '',
     `Play for at least ${MIN_SESSION_MINUTES} min, then run \`/xp session end\`. The API lags a few minutes, so wait a moment after you stop. Sessions expire after ${MAX_SESSION_MINUTES / 60} h.`,
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 }
 
 export async function end(i: ChatInputCommandInteraction): Promise<string> {
@@ -83,13 +87,29 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
   const next = blend(previous, m.rate, m.minutes, new Date().toISOString());
   await userData.setSessionRate(key, open.activity, next);
 
-  const others = changes(open.snapshot, snapshot).filter((c) => c.metric !== open.metric).slice(0, 5);
+  // Combos built on this activity learn each yield's ratio from what moved alongside it.
+  const ratios = measureRatios(combos, open.activity, open.snapshot, snapshot, m.delta);
+  const saved = await userData.getComboRatios(key);
+  const ratioLines: string[] = [];
+  for (const r of ratios) {
+    const prev = saved[r.combo]?.[r.metric];
+    const blended = blend(prev, r.ratio, m.minutes, new Date().toISOString());
+    await userData.setComboRatio(key, r.combo, r.metric, blended);
+    const c = combos.find((x) => x.id === r.combo)!;
+    const y = c.yields.find((x) => x.metric === r.metric)!;
+    const data = yieldPer(y, 'mid');
+    ratioLines.push(`• ${c.name}: ${metricLabel(catalogue, r.metric)} **${fmt(blended.rate)}** per ${unit.replace(/s$/, '')}` +
+      ` (this session ${fmt(r.ratio)}${prev ? `, ${blended.sessions} sessions` : ''}; data ${fmt(data[0])}${data[1] !== data[0] ? `–${fmt(data[1])}` : ''})`);
+  }
+  const ratioMetrics = new Set(ratios.map((r) => r.metric));
+  const others = changes(open.snapshot, snapshot).filter((c) => c.metric !== open.metric && !ratioMetrics.has(c.metric)).slice(0, 5);
   return [
     `**${label}** session saved: +${fmt(m.delta)} ${unit} in ${Math.round(m.minutes)} min = **${fmt(m.rate)} ${unit}/min**.`,
     previous
       ? `Blended with ${previous.sessions} earlier session(s): ${fmt(previous.rate)} → **${fmt(next.rate)} ${unit}/min**.`
       : `First session for this activity: **${fmt(next.rate)} ${unit}/min**.`,
     '`/xp optimize` now uses this rate for your linked profile.',
+    ratioLines.length ? `Combo ratios saved (used for ⚡ rows on your linked profile):\n${ratioLines.join('\n')}` : '',
     others.length ? `Also moved this session (not saved): ${others.map((c) => `${metricLabel(catalogue, c.metric)} +${fmt(c.delta)}`).join(', ')}` : '',
   ].filter(Boolean).join('\n');
 }
@@ -115,6 +135,13 @@ export async function status(i: ChatInputCommandInteraction): Promise<string> {
         lines.push(`• ${labelOf(activity)}: ${fmt(r.rate)} ${unitOf(activity)}/min (${r.sessions} session${r.sessions === 1 ? '' : 's'})`);
       }
     } else lines.push('', 'No measured rates yet.');
+    const ratios = await userData.getComboRatios(profileKey(link.uuid, link.profileId));
+    const ratioLines = Object.entries(ratios).flatMap(([id, byMetric]) => {
+      const c = combos.find((x) => x.id === id);
+      return Object.entries(byMetric).map(([metric, r]) =>
+        `• ${c?.name ?? id}: ${metricLabel(catalogue, metric)} ${fmt(r.rate)} per ${c ? unitOf(c.primary).replace(/s$/, '') : 'unit'} (${r.sessions} session${r.sessions === 1 ? '' : 's'})`);
+    });
+    if (ratioLines.length) lines.push('', 'Measured combo ratios:', ...ratioLines.slice(0, 15));
   }
   return lines.join('\n');
 }

@@ -92,8 +92,10 @@ const PAGE_TTL_MS = 15 * 60_000;
 async function estimateContext(t: Target): Promise<EstimateContext> {
   if (!t.isLinked) return { book: rateBook };
   const key = profileKey(t.loaded.profile.uuid, t.loaded.profile.profileId);
-  const [overrides, sessionRates] = await Promise.all([userData.getRateOverrides(key), userData.getSessionRateNumbers(key)]);
-  return { book: rateBook, overrides, sessionRates };
+  const [overrides, sessionRates, comboRatios] = await Promise.all([
+    userData.getRateOverrides(key), userData.getSessionRateNumbers(key), userData.getComboRatioNumbers(key),
+  ]);
+  return { book: rateBook, overrides, sessionRates, comboRatios };
 }
 
 /** Sends page 1 of a paged result, with Prev/Next when there is more than one page. */

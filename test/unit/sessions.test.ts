@@ -8,7 +8,7 @@ import type { ProfilesResponse } from '../../src/hypixel/client.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
 import type { NormalizedProfile } from '../../src/profile/types.js';
 import {
-  activityMetric, blend, BLEND_WEIGHT, changes, measurableActivities, measure, takeSnapshot,
+  activityMetric, blend, BLEND_WEIGHT, changes, measurableActivities, measure, measureRatios, takeSnapshot,
 } from '../../src/sessions/sessions.js';
 import { UserData, type OpenSession } from '../../src/storage/userData.js';
 import { loadCatalogue } from '../../src/tasks/catalogue.js';
@@ -116,5 +116,40 @@ describe('session storage', () => {
     expect(await u.getSessionRateNumbers('u:p')).toEqual({ 'slayer.zombie': 150 });
     expect(await u.getSessionRateNumbers('u:other')).toEqual({});
     expect(JSON.parse(await readFile(join(dir, 'sessions.json'), 'utf8'))).toMatchObject({ open: {}, rates: { 'u:p': { 'slayer.zombie': { rate: 150 } } } });
+  });
+});
+
+describe('combo ratios from sessions', () => {
+  const combos = [
+    { id: 'combo.slayer.zombie', primary: 'slayer.zombie', yields: [{ metric: 'skills.combat.xp' }, { metric: 'collections.ROTTEN_FLESH' }] },
+    { id: 'combo.other', primary: 'collect.wheat', yields: [{ metric: 'skills.farming.xp' }] },
+  ];
+  const start = { 'slayer.zombie.xp': 1000, 'skills.combat.xp': 50_000, 'collections.ROTTEN_FLESH': 10, 'skills.farming.xp': 5 };
+
+  it("measures each yield's change per primary unit, only for combos on the session's activity", () => {
+    const end = { ...start, 'slayer.zombie.xp': 1500, 'skills.combat.xp': 56_000, 'skills.farming.xp': 900 };
+    expect(measureRatios(combos, 'slayer.zombie', start, end, 500)).toEqual([
+      { combo: 'combo.slayer.zombie', metric: 'skills.combat.xp', ratio: 12, delta: 6000 },
+    ]); // rotten flesh didn't move, so it isn't measured; the wheat combo isn't this activity
+  });
+
+  it('skips yields missing from a snapshot, and sessions with no primary progress', () => {
+    const { 'skills.combat.xp': _, ...noCombat } = start;
+    expect(measureRatios(combos, 'slayer.zombie', noCombat, { ...start, 'skills.combat.xp': 60_000 }, 500)).toEqual([]);
+    expect(measureRatios(combos, 'slayer.zombie', start, { ...start, 'skills.combat.xp': 60_000 }, 0)).toEqual([]);
+  });
+
+  it('stores and blends ratios per profile and combo', async () => {
+
+
+
+
+    const u = new UserData(await mkdtemp(join(tmpdir(), 'xpbot-ratio-')));
+    expect(await u.getComboRatios('k')).toEqual({});
+    const first = blend(undefined, 12, 30, 't1');
+    await u.setComboRatio('k', 'combo.slayer.zombie', 'skills.combat.xp', first);
+    await u.setComboRatio('k', 'combo.slayer.zombie', 'skills.combat.xp', blend(first, 8, 30, 't2'));
+    expect(await u.getComboRatioNumbers('k')).toEqual({ 'combo.slayer.zombie': { 'skills.combat.xp': 0.6 * 8 + 0.4 * 12 } });
+    expect(await u.getComboRatioNumbers('other')).toEqual({});
   });
 });

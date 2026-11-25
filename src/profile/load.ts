@@ -29,9 +29,11 @@ export async function loadProfile(player: string, profileQuery?: string, opts: {
   const names = list.map((p) => p.cute_name ?? p.profile_id);
   const raw = pickProfile(list, profileQuery);
   if (!raw) throw new ProfileNotFoundError(name, profileQuery, names);
+  // The Garden is a separate keyed call; if it fails, only the Garden tasks go unavailable.
+  const garden = await hypixel.getGarden(raw.profile_id, opts).then((g) => g.data, (err: unknown) => (err instanceof Error ? err : new Error(String(err))));
   return {
     playerName: name,
-    profile: normalizeProfile(raw, uuid, skills.data as SkillsResource, profiles.fetchedAt),
+    profile: normalizeProfile(raw, uuid, skills.data as SkillsResource, profiles.fetchedAt, garden),
     profileNames: names,
     fromCache: profiles.fromCache,
   };

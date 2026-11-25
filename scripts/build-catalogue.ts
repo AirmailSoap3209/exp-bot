@@ -57,7 +57,7 @@ function access(areaIds: string[], extra: { skills?: Record<string, number>; oth
   const anyOf = areaIds.map((id) => {
     const a = accessSrc.areas[id];
     if (!a) throw new Error(`access.json: unknown area ${id}`);
-    return { id, name: a.name, ...(a.skills ? { skills: a.skills } : {}), ...(a.sbLevel ? { sbLevel: a.sbLevel } : {}), ...(a.other ? { other: a.other } : {}) };
+    return { id, name: a.name, ...(a.skills ? { skills: a.skills } : {}), ...(a.sbLevel ? { sbLevel: a.sbLevel } : {}), ...(a.hotm ? { hotm: a.hotm } : {}), ...(a.other ? { other: a.other } : {}) };
   });
   if (!anyOf.length && !extra.skills && !extra.other) return undefined;
   return { anyOf, ...(extra.skills ? { skills: extra.skills } : {}), ...(extra.other ? { other: extra.other } : {}) };
@@ -368,6 +368,14 @@ function buildRates(tasks: Task[], families: { id: string; bracket: number }[]):
       const c = cat && d.collections.byResourceCategory[cat];
       if (!c) throw new Error(`rates: no collection rate class for ${a}`);
       put('collections', { activity: a, unit: d.collections.unit, bracketBy: c.bracketBy, brackets: only(c.brackets), source: why(c.basis) });
+    } else if (parts[0] === 'garden' && parts[1] === 'crop') {
+      // Crop milestones: farming that crop in the Garden, at the crop's collection rate. Its own
+      // activity, so a session measures milestone crops and collection items separately.
+      const item = parts.slice(2).join('.');
+      const cat = collectionCategory.get(item);
+      const c = cat && d.collections.byResourceCategory[cat];
+      if (!c) throw new Error(`rates: no collection rate class for ${a}`);
+      put('collections', { activity: a, unit: 'crops/min', bracketBy: c.bracketBy, brackets: only(c.brackets), source: `${why(c.basis)}; same as collect.${item}, farmed in the Garden` });
     } else if (parts[0] === 'skill') {
       const b = d.skills.bySkill[parts[1]!];
       if (!b) throw new Error(`rates: no skill rate for ${a}`);
@@ -405,16 +413,18 @@ interface LevelingGroup {
   location?: string;
   access?: string[];
   chain?: boolean;
+  /** A rated activity (e.g. collect.wheat for crop milestones): time comes from its rate, not fixed minutes. */
+  activity?: string;
   minutes?: Range;
   perTier?: Range[];
   minutesBasis: string;
-  tiers: { key: string; name: string; xp: number; id?: string; idSeen?: false; metric?: string; amount?: number }[];
+  tiers: { key: string; name: string; xp: number; id?: string; idSeen?: false; metric?: string; amount?: number; prerequisites?: string[]; tracking?: 'manual' }[];
 }
 
 /**
  * Every group becomes one tiered source. A tier with a Hypixel task ID is checked against the
  * completed-task list (metric task.<ID>); a tier with a metric is read by its category's reader.
- * Chained groups need the tier before; all tiers use fixed time estimates.
+ * Chained groups need the tier before. Tiers use fixed time estimates, or the group's activity rate.
  */
 function buildLeveling(): Record<string, Task[]> {
   const src = read<{ source: string; groups: LevelingGroup[] }>('data/sources/leveling-tasks.json');
@@ -423,13 +433,14 @@ function buildLeveling(): Record<string, Task[]> {
     const acc = g.access ? access(g.access) : undefined;
     const tasks = tiers(g.tiers.length, (n, prev) => {
       const t = g.tiers[n - 1]!;
-      const minutes = g.perTier?.[n - 1] ?? g.minutes;
-      if (!minutes) throw new Error(`leveling-tasks: ${g.group} has no minutes for tier ${n}`);
+      const minutes = g.activity ? undefined : g.perTier?.[n - 1] ?? g.minutes;
+      if (!minutes && !g.activity) throw new Error(`leveling-tasks: ${g.group} has no minutes for tier ${n}`);
       return task({
         id: `${g.group}.${t.key}`, category: g.category, name: t.name,
         description: `${g.name}${g.tiers.length > 1 ? `, step ${n} of ${g.tiers.length}` : ''}`, xp: t.xp,
         requires: { metric: t.metric ?? `task.${t.id}`, amount: t.amount ?? 1 },
-        prerequisites: g.chain && prev ? [prev] : [], activity: null, minutes,
+        prerequisites: [...(g.chain && prev ? [prev] : []), ...(t.prerequisites ?? [])], activity: g.activity ?? null, minutes,
+        ...(t.tracking ? { tracking: t.tracking } : {}),
         location: g.location, group: g.group, tier: n, access: acc,
         source: `XP: ${src.source.split(',')[0]}; time: ${g.minutesBasis}${acc ? `; access: ${ACCESS_SRC}` : ''}`,
         ...(t.id ? { hypixelTaskId: t.id } : {}), ...(t.idSeen === false ? { hypixelTaskIdUnconfirmed: true } : {}),

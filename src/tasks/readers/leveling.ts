@@ -1,4 +1,4 @@
-import type { NormalizedProfile, Section } from '../../profile/types.js';
+import type { GardenProgress, NormalizedProfile, Section } from '../../profile/types.js';
 import type { Reader, Reading } from '../progress.js';
 import { familyMobs } from './bestiary.js';
 import { unknownMetric } from './util.js';
@@ -24,9 +24,24 @@ export const foragingTasks: Reader = (task, p) => {
   return m === 'hotf.xp' ? fromSection(p.skillTree, (v) => v.hotfXp, m) : unknownMetric(m);
 };
 
-/** garden.jacob_gold.<CROP> (1 once a gold or better medal is held), garden.anita.<perk> (tier) */
+const GARDEN: Record<string, (g: GardenProgress) => number> = {
+  'garden.xp': (g) => g.xp,
+  'garden.plots': (g) => g.plots,
+  'garden.visitors_unique': (g) => g.uniqueVisitors,
+  'garden.visitors_accepted': (g) => g.offersAccepted,
+};
+
+/**
+ * Profile data: garden.jacob_gold.<CROP> (1 once a gold or better medal is held), garden.anita.<perk> (tier).
+ * Garden endpoint: garden.xp, garden.plots, garden.visitors_unique, garden.visitors_accepted,
+ * garden.crop_upgrade.<CROP> (tier), garden.crop_milestone.<CROP> (crops farmed in the Garden).
+ */
 export const garden: Reader = (task, p) => {
   const m = task.requires.metric;
+  const g = GARDEN[m];
+  if (g) return fromSection(p.garden, g, m);
+  if (m.startsWith('garden.crop_upgrade.')) return fromSection(p.garden, (v) => v.cropUpgrades[m.slice('garden.crop_upgrade.'.length)] ?? 0, m);
+  if (m.startsWith('garden.crop_milestone.')) return fromSection(p.garden, (v) => v.cropMilestones[m.slice('garden.crop_milestone.'.length)] ?? 0, m);
   if (m.startsWith('garden.jacob_gold.')) return fromSection(p.jacob, (v) => (v.goldCrops.has(m.slice('garden.jacob_gold.'.length)) ? 1 : 0), m);
   if (m === 'garden.anita.double_drops') return fromSection(p.jacob, (v) => v.doubleDrops, m);
   if (m === 'garden.anita.farming_level_cap') return fromSection(p.jacob, (v) => v.farmingLevelCap, m);
@@ -40,10 +55,16 @@ export const trophyFishing: Reader = (task, p) => {
   return fromSection(p.trophyFish, (v) => v[m.slice('trophy.'.length)] ?? 0, m);
 };
 
-/** rift.timecharms: secured Timecharms (rift.gallery.secured_trophies). */
+/**
+ * rift.timecharms: secured Timecharms (rift.gallery.secured_trophies).
+ * rift.guide.<check>: 1 when the rift section proves that Rift Guide objective done (see readRift).
+ * Objectives with no check are tracked manually and never reach a reader.
+ */
 export const rift: Reader = (task, p) => {
   const m = task.requires.metric;
-  return m === 'rift.timecharms' ? fromSection(p.rift, (v) => v.timecharms, m) : unknownMetric(m);
+  if (m === 'rift.timecharms') return fromSection(p.rift, (v) => v.timecharms, m);
+  if (m.startsWith('rift.guide.')) return fromSection(p.rift, (v) => (v.guide.has(m.slice('rift.guide.'.length)) ? 1 : 0), m);
+  return unknownMetric(m);
 };
 
 /** Bestiary families of the Mythological Creatures island, from families.json. */

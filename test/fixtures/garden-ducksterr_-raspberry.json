@@ -1,0 +1,656 @@
+{
+ "profileId": "e4613a22-a9a1-431f-9354-2357db72cd1e",
+ "response": {
+  "success": true,
+  "garden": {
+   "uuid": "e4613a22a9a1431f93542357db72cd1e",
+   "commission_data": {
+    "visits": {
+     "jerry": 17,
+     "jacob": 25,
+     "leo": 29,
+     "jamie": 40,
+     "jack": 31,
+     "rusty": 20,
+     "tia": 15,
+     "weaponsmith": 39,
+     "librarian": 53,
+     "seraphine": 12,
+     "fear_mongerer": 31,
+     "gold_forger": 15,
+     "adventurer": 36,
+     "anita": 31,
+     "grandma_wolf": 13,
+     "beth": 11,
+     "oringo": 32,
+     "iron_forger": 13,
+     "andrew": 34,
+     "trevor": 31,
+     "gwendolyn": 12,
+     "vex": 27,
+     "liam": 29,
+     "emissary_ceanna": 37,
+     "bartender": 15,
+     "duke": 27,
+     "emissary_carlton": 30,
+     "banker_broadjaw": 26,
+     "bear_pete": 12,
+     "tammy": 22,
+     "fragilis": 22,
+     "lumina": 14,
+     "lazy_miner": 11,
+     "madame_eleanor": 11,
+     "plumber_joe": 31,
+     "emissary_sisko": 6,
+     "shifty": 12,
+     "alchemist": 30,
+     "wizard": 22,
+     "emissary_wilson": 12,
+     "guy": 19,
+     "old_man_garry": 11,
+     "ryu": 14,
+     "tom": 17,
+     "shaggy": 14,
+     "felix": 9,
+     "odawa": 21,
+     "stella": 8,
+     "emissary_fraiser": 14,
+     "seymour": 7,
+     "lynn": 14,
+     "puzzler": 5,
+     "pest_wrangler": 2,
+     "vinyl_collector": 4,
+     "rhys": 11,
+     "sirius": 4,
+     "xalx": 5,
+     "arthur": 4,
+     "fisherman": 5,
+     "hornum": 4,
+     "tarwen": 5,
+     "jotraeline_greatforge": 4,
+     "farmhand": 5,
+     "gimley": 7,
+     "sargwyn": 4,
+     "carpenter": 2,
+     "lumberjack": 5,
+     "lift_operator": 2,
+     "farm_merchant": 3,
+     "maeve": 1,
+     "jacobus": 4,
+     "bednom": 2,
+     "fire_guy": 4,
+     "romero": 1,
+     "ophelia": 1,
+     "elle": 1,
+     "pet_trainer": 2,
+     "end_dealer": 2,
+     "mayor_cole": 2,
+     "mason": 2,
+     "moby": 1,
+     "zog": 1,
+     "archaeologist": 1
+    },
+    "completed": {
+     "jerry": 17,
+     "jacob": 15,
+     "leo": 16,
+     "jamie": 23,
+     "jack": 17,
+     "rusty": 17,
+     "tia": 10,
+     "librarian": 28,
+     "seraphine": 12,
+     "fear_mongerer": 20,
+     "adventurer": 23,
+     "weaponsmith": 24,
+     "oringo": 23,
+     "andrew": 17,
+     "emissary_ceanna": 20,
+     "bartender": 8,
+     "iron_forger": 7,
+     "bear_pete": 10,
+     "tammy": 13,
+     "trevor": 18,
+     "fragilis": 15,
+     "lumina": 10,
+     "anita": 16,
+     "madame_eleanor": 11,
+     "plumber_joe": 20,
+     "liam": 17,
+     "beth": 10,
+     "gold_forger": 2,
+     "gwendolyn": 8,
+     "vex": 18,
+     "duke": 19,
+     "emissary_carlton": 19,
+     "emissary_sisko": 5,
+     "grandma_wolf": 8,
+     "shifty": 9,
+     "alchemist": 12,
+     "lazy_miner": 7,
+     "banker_broadjaw": 13,
+     "wizard": 9,
+     "guy": 14,
+     "emissary_wilson": 8,
+     "odawa": 18,
+     "old_man_garry": 9,
+     "tom": 11,
+     "stella": 8,
+     "felix": 8,
+     "shaggy": 10,
+     "ryu": 7,
+     "emissary_fraiser": 10,
+     "seymour": 7,
+     "lynn": 14,
+     "puzzler": 5,
+     "pest_wrangler": 2,
+     "vinyl_collector": 4,
+     "sirius": 4,
+     "arthur": 4,
+     "fisherman": 4,
+     "hornum": 3,
+     "tarwen": 5,
+     "jotraeline_greatforge": 4,
+     "farmhand": 3,
+     "gimley": 6,
+     "xalx": 3,
+     "sargwyn": 4,
+     "carpenter": 2,
+     "lift_operator": 1,
+     "farm_merchant": 3,
+     "maeve": 1,
+     "lumberjack": 3,
+     "jacobus": 3,
+     "bednom": 2,
+     "fire_guy": 2,
+     "romero": 1,
+     "ophelia": 1,
+     "elle": 1,
+     "pet_trainer": 2,
+     "end_dealer": 1,
+     "mayor_cole": 1,
+     "rhys": 1,
+     "mason": 1,
+     "moby": 1,
+     "zog": 1
+    },
+    "total_completed": 769,
+    "unique_npcs_served": 82
+   },
+   "unlocked_plots_ids": [
+    "beginner_2",
+    "beginner_4",
+    "beginner_1",
+    "beginner_3",
+    "intermediate_2",
+    "intermediate_1",
+    "intermediate_4",
+    "advanced_6",
+    "advanced_4",
+    "advanced_5",
+    "intermediate_3",
+    "advanced_10",
+    "advanced_1"
+   ],
+   "composter_data": {
+    "organic_matter": 894,
+    "fuel_units": 51000,
+    "compost_units": 0,
+    "compost_items": 0,
+    "conversion_ticks": 300,
+    "last_save": 1795529765840,
+    "upgrades": {}
+   },
+   "resources_collected": {
+    "WHEAT": 3203191,
+    "PUMPKIN": 295724,
+    "CARROT_ITEM": 655415,
+    "POTATO_ITEM": 696865,
+    "SUGAR_CANE": 454256,
+    "MELON": 6618376,
+    "INK_SACK:3": 325484,
+    "MUSHROOM_COLLECTION": 3564212,
+    "CACTUS": 278854,
+    "NETHER_STALK": 383776,
+    "WILD_ROSE": 92308,
+    "DOUBLE_PLANT": 109574,
+    "MOONFLOWER": 15360
+   },
+   "garden_experience": 43519,
+   "active_commissions": {
+    "jack": {
+     "requirement": [
+      {
+       "original_item": "RED_MUSHROOM",
+       "original_amount": 30123,
+       "item": "ENCHANTED_RED_MUSHROOM",
+       "amount": 188
+      }
+     ],
+     "status": "NOT_STARTED",
+     "position": 1
+    },
+    "grandma_wolf": {
+     "requirement": [
+      {
+       "original_item": "DOUBLE_PLANT",
+       "original_amount": 36305,
+       "item": "ENCHANTED_SUNFLOWER",
+       "amount": 227
+      }
+     ],
+     "status": "NOT_STARTED",
+     "position": 2
+    },
+    "archaeologist": {
+     "requirement": [
+      {
+       "original_item": "NETHER_STALK",
+       "original_amount": 110791,
+       "item": "MUTANT_NETHER_STALK",
+       "amount": 4
+      }
+     ],
+     "status": "NOT_STARTED",
+     "position": 3
+    },
+    "tom": {
+     "requirement": [
+      {
+       "original_item": "MOONFLOWER",
+       "original_amount": 33338,
+       "item": "ENCHANTED_MOONFLOWER",
+       "amount": 208
+      }
+     ],
+     "status": "NOT_STARTED",
+     "position": 4
+    },
+    "xalx": {
+     "requirement": [
+      {
+       "original_item": "SUGAR",
+       "original_amount": 22608,
+       "item": "ENCHANTED_SUGAR",
+       "amount": 141
+      }
+     ],
+     "status": "NOT_STARTED",
+     "position": 5
+    }
+   },
+   "selected_barn_skin": "cabin",
+   "crop_upgrade_levels": {
+    "WHEAT": 5,
+    "MUSHROOM_COLLECTION": 5,
+    "SUGAR_CANE": 4,
+    "MELON": 4,
+    "PUMPKIN": 5,
+    "POTATO_ITEM": 4,
+    "CARROT_ITEM": 1
+   },
+   "unlocked_barn_skins": [
+    "spring_barn"
+   ],
+   "garden_upgrades": {
+    "GROWTH_SPEED": 4,
+    "PLOT_LIMIT": 2
+   },
+   "last_growth_stage_time": 1795529765719,
+   "greenhouse_slots": [
+    {
+     "x": 3,
+     "z": 3
+    },
+    {
+     "x": 2,
+     "z": 4
+    },
+    {
+     "x": 2,
+     "z": 5
+    },
+    {
+     "x": 3,
+     "z": 6
+    },
+    {
+     "x": 4,
+     "z": 7
+    },
+    {
+     "x": 5,
+     "z": 7
+    },
+    {
+     "x": 6,
+     "z": 7
+    },
+    {
+     "x": 6,
+     "z": 6
+    },
+    {
+     "x": 7,
+     "z": 5
+    },
+    {
+     "x": 7,
+     "z": 4
+    },
+    {
+     "x": 6,
+     "z": 3
+    },
+    {
+     "x": 5,
+     "z": 2
+    },
+    {
+     "x": 5,
+     "z": 1
+    },
+    {
+     "x": 3,
+     "z": 2
+    },
+    {
+     "x": 2,
+     "z": 2
+    },
+    {
+     "x": 2,
+     "z": 3
+    },
+    {
+     "x": 1,
+     "z": 4
+    },
+    {
+     "x": 1,
+     "z": 5
+    },
+    {
+     "x": 2,
+     "z": 6
+    },
+    {
+     "x": 3,
+     "z": 7
+    },
+    {
+     "x": 4,
+     "z": 8
+    },
+    {
+     "x": 5,
+     "z": 8
+    },
+    {
+     "x": 6,
+     "z": 8
+    },
+    {
+     "x": 7,
+     "z": 7
+    },
+    {
+     "x": 8,
+     "z": 5
+    },
+    {
+     "x": 8,
+     "z": 4
+    },
+    {
+     "x": 7,
+     "z": 3
+    },
+    {
+     "x": 6,
+     "z": 2
+    },
+    {
+     "x": 6,
+     "z": 1
+    },
+    {
+     "x": 5,
+     "z": 0
+    },
+    {
+     "x": 4,
+     "z": 0
+    },
+    {
+     "x": 4,
+     "z": 1
+    },
+    {
+     "x": 4,
+     "z": 2
+    },
+    {
+     "x": 3,
+     "z": 1
+    },
+    {
+     "x": 3,
+     "z": 0
+    },
+    {
+     "x": 2,
+     "z": 0
+    },
+    {
+     "x": 2,
+     "z": 1
+    },
+    {
+     "x": 1,
+     "z": 3
+    },
+    {
+     "x": 1,
+     "z": 2
+    },
+    {
+     "x": 0,
+     "z": 2
+    },
+    {
+     "x": 1,
+     "z": 1
+    },
+    {
+     "x": 1,
+     "z": 0
+    },
+    {
+     "x": 0,
+     "z": 0
+    },
+    {
+     "x": 0,
+     "z": 1
+    },
+    {
+     "x": 0,
+     "z": 3
+    },
+    {
+     "x": 0,
+     "z": 4
+    },
+    {
+     "x": 0,
+     "z": 5
+    },
+    {
+     "x": 0,
+     "z": 6
+    },
+    {
+     "x": 0,
+     "z": 7
+    },
+    {
+     "x": 3,
+     "z": 8
+    },
+    {
+     "x": 2,
+     "z": 7
+    },
+    {
+     "x": 1,
+     "z": 6
+    },
+    {
+     "x": 1,
+     "z": 7
+    },
+    {
+     "x": 0,
+     "z": 8
+    },
+    {
+     "x": 2,
+     "z": 8
+    },
+    {
+     "x": 0,
+     "z": 9
+    },
+    {
+     "x": 1,
+     "z": 8
+    },
+    {
+     "x": 1,
+     "z": 9
+    },
+    {
+     "x": 2,
+     "z": 9
+    },
+    {
+     "x": 3,
+     "z": 9
+    },
+    {
+     "x": 4,
+     "z": 9
+    },
+    {
+     "x": 5,
+     "z": 9
+    },
+    {
+     "x": 6,
+     "z": 9
+    },
+    {
+     "x": 7,
+     "z": 9
+    },
+    {
+     "x": 7,
+     "z": 1
+    },
+    {
+     "x": 7,
+     "z": 2
+    },
+    {
+     "x": 8,
+     "z": 2
+    },
+    {
+     "x": 9,
+     "z": 4
+    },
+    {
+     "x": 9,
+     "z": 5
+    },
+    {
+     "x": 8,
+     "z": 6
+    },
+    {
+     "x": 8,
+     "z": 7
+    },
+    {
+     "x": 7,
+     "z": 6
+    },
+    {
+     "x": 8,
+     "z": 8
+    },
+    {
+     "x": 9,
+     "z": 7
+    },
+    {
+     "x": 8,
+     "z": 9
+    },
+    {
+     "x": 7,
+     "z": 8
+    },
+    {
+     "x": 9,
+     "z": 9
+    },
+    {
+     "x": 9,
+     "z": 6
+    },
+    {
+     "x": 9,
+     "z": 8
+    },
+    {
+     "x": 9,
+     "z": 3
+    },
+    {
+     "x": 8,
+     "z": 3
+    },
+    {
+     "x": 9,
+     "z": 2
+    },
+    {
+     "x": 8,
+     "z": 1
+    },
+    {
+     "x": 6,
+     "z": 0
+    },
+    {
+     "x": 9,
+     "z": 1
+    },
+    {
+     "x": 9,
+     "z": 0
+    },
+    {
+     "x": 7,
+     "z": 0
+    },
+    {
+     "x": 8,
+     "z": 0
+    }
+   ]
+  }
+ }
+}

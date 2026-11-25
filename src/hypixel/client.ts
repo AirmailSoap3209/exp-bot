@@ -40,6 +40,12 @@ export interface ProfilesResponse {
   profiles: RawProfile[] | null;
 }
 
+/** Raw Garden as Hypixel returns it; null when the profile has no Garden yet. Typed by the normalizer. */
+export interface GardenResponse {
+  success: boolean;
+  garden: Record<string, unknown> | null;
+}
+
 export interface Fetched<T> {
   data: T;
   /** Epoch ms the data was fetched from the API. */
@@ -67,6 +73,7 @@ export class HypixelClient {
   private readonly fetchFn: typeof fetch;
   private readonly now: () => number;
   private readonly profiles: TtlCache<ProfilesResponse>;
+  private readonly gardens: TtlCache<GardenResponse>;
   private readonly resources: TtlCache<unknown>;
   private readonly names: TtlCache<{ uuid: string; name: string }>;
 
@@ -76,6 +83,7 @@ export class HypixelClient {
     this.limiter = new RateLimiter({ lowWater: opts.lowWater, now: this.now, sleep: opts.sleep });
     this.log = new RequestLog(opts.requestLogPath);
     this.profiles = new TtlCache(opts.profileTtlMs, this.now);
+    this.gardens = new TtlCache(opts.profileTtlMs, this.now);
     this.resources = new TtlCache(opts.resourceTtlMs, this.now);
     this.names = new TtlCache(opts.resourceTtlMs, this.now);
   }
@@ -101,6 +109,27 @@ export class HypixelClient {
     const r = await this.profiles.getOrLoad(
       id,
       () => this.keyed<ProfilesResponse>(`/v2/skyblock/profiles?uuid=${id}`),
+      opts,
+    );
+    return { data: r.value, fetchedAt: r.storedAt, fromCache: r.fromCache };
+  }
+
+  /**
+   * A profile's Garden (/v2/skyblock/garden). Keyed; cached like profiles. A profile that never
+   * opened the Garden answers 404 "No garden data": that comes back as `garden: null`.
+   */
+  async getGarden(profileId: string, opts: { skipCache?: boolean } = {}): Promise<Fetched<GardenResponse>> {
+    const id = normalizeUuid(profileId);
+    const r = await this.gardens.getOrLoad(
+      id,
+      async () => {
+        try {
+          return await this.keyed<GardenResponse>(`/v2/skyblock/garden?profile=${id}`);
+        } catch (err) {
+          if (err instanceof HypixelApiError && err.status === 404) return { success: true, garden: null };
+          throw err;
+        }
+      },
       opts,
     );
     return { data: r.value, fetchedAt: r.storedAt, fromCache: r.fromCache };

@@ -76,6 +76,7 @@ function validateAccess(raw: unknown, at: string): string[] {
       if (!isStr(area?.id) || !isStr(area?.name)) p.push(`${at}: each access area needs an id and a name`);
       if (area?.skills !== undefined && !isLevels(area.skills)) p.push(`${at}: access area ${String(area.id)} skills must map known skills to levels`);
       if (area?.sbLevel !== undefined && !(Number.isInteger(area.sbLevel) && (area.sbLevel as number) > 0)) p.push(`${at}: access area ${String(area.id)} sbLevel must be a positive integer`);
+      if (area?.hotm !== undefined && !(Number.isInteger(area.hotm) && (area.hotm as number) >= 1 && (area.hotm as number) <= 10)) p.push(`${at}: access area ${String(area.id)} hotm must be a tier from 1 to 10`);
       if (area?.other !== undefined && !isStrList(area.other)) p.push(`${at}: access area ${String(area.id)} other must be a string array`);
     }
   }

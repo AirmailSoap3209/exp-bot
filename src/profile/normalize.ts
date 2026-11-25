@@ -1,4 +1,4 @@
-import type { RawProfile } from '../hypixel/client.js';
+import type { GardenResponse, RawProfile } from '../hypixel/client.js';
 import { normalizeUuid } from '../hypixel/client.js';
 import { catacombsLevel, levelFromCumulative, slayerLevel } from './levels.js';
 import {
@@ -6,6 +6,7 @@ import {
   SKILLS,
   SLAYER_BOSSES,
   type CatacombsProgress,
+  type GardenProgress,
   type NormalizedProfile,
   type Section,
   type SkillId,
@@ -183,6 +184,8 @@ export function normalizeProfile(
   uuid: string,
   skillsResource: SkillsResource,
   fetchedAt: number,
+  /** The profile's Garden response (or the error fetching it); left out, the Garden section is unavailable. */
+  garden?: GardenResponse | Error,
 ): NormalizedProfile {
   const id = normalizeUuid(uuid);
   const m = profile.members[id];
@@ -207,6 +210,7 @@ export function normalizeProfile(
     jacob: readJacob(m),
     trophyFish: readTrophyFish(m),
     rift: readRift(m),
+    garden: readGarden(garden),
   };
 }
 
@@ -238,7 +242,36 @@ function readRift(m: Obj): NormalizedProfile['rift'] {
   const r = m.rift;
   if (!isObj(r)) return missing('No Rift data on this profile');
   const secured = at(r, 'gallery.secured_trophies');
-  return ok({ timecharms: Array.isArray(secured) ? secured.length : 0 });
+  // Rift Guide objectives the API shows (wiki Rift_Guide); check keys match rift.guide.<key> metrics.
+  const guide = new Set<string>();
+  for (const cat of stringSet(at(r, 'dead_cats.found_cats')) ?? []) guide.add(`montezuma.${cat}`);
+  const eyes = stringSet(at(r, 'wither_cage.killed_eyes')) ?? new Set<string>();
+  for (const eye of eyes) guide.add(`eye.${eye}`);
+  if (eyes.size) guide.add('porhtal'); // eyes can only be calmed after talking to Porhtal
+  if (at(r, 'enigma.bought_cloak') === true) guide.add('enigma_cloak');
+  if (at(r, 'dead_cats.talked_to_jacquelle') === true) guide.add('jacquelle');
+  if (at(r, 'west_village.crazy_kloon.quest_complete') === true) guide.add('kloon');
+  if (at(r, 'village_plaza.barry_center.received_reward') === true) guide.add('barry');
+  return ok({ timecharms: Array.isArray(secured) ? secured.length : 0, guide });
+}
+
+function readGarden(g: GardenResponse | Error | undefined): NormalizedProfile['garden'] {
+  if (g === undefined) return missing('Garden data was not loaded');
+  if (g instanceof Error) return missing(`Garden API request failed: ${g.message}`);
+  const data = g.garden;
+  // No Garden yet (the endpoint 404s): everything is at zero, which is exact.
+  if (!data) return ok<GardenProgress>({ xp: 0, plots: 0, uniqueVisitors: 0, offersAccepted: 0, cropUpgrades: {}, cropMilestones: {} });
+  const plots = data.unlocked_plots_ids;
+  const upgrades = data.crop_upgrade_levels;
+  const crops = data.resources_collected;
+  return ok({
+    xp: num(data.garden_experience),
+    plots: Array.isArray(plots) ? plots.length : 0,
+    uniqueVisitors: num(at(data, 'commission_data.unique_npcs_served')),
+    offersAccepted: num(at(data, 'commission_data.total_completed')),
+    cropUpgrades: isObj(upgrades) ? numberMap(upgrades) : {},
+    cropMilestones: isObj(crops) ? numberMap(crops) : {},
+  });
 }
 
 /** Picks a profile by cute name or ID, or the player's selected profile when none is given. */

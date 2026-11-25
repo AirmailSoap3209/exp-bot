@@ -101,5 +101,22 @@ export interface NormalizedProfile {
   }>;
   /** Trophy fish caught per "<fish>_<tier>" key. */
   trophyFish: Section<Record<string, number>>;
-  rift: Section<{ timecharms: number }>;
+  rift: Section<{
+    timecharms: number;
+    /** Rift Guide objectives the rift section proves done, as reader check keys (e.g. "montezuma.first"). */
+    guide: Set<string>;
+  }>;
+  /** From the separate Garden endpoint (/v2/skyblock/garden); unavailable when it wasn't loaded. */
+  garden: Section<GardenProgress>;
+}
+
+export interface GardenProgress {
+  xp: number;
+  plots: number;
+  uniqueVisitors: number;
+  offersAccepted: number;
+  /** Crop Upgrade tier per crop item ID. */
+  cropUpgrades: Record<string, number>;
+  /** Crops counted toward Crop Milestones (farmed in the Garden), per crop item ID. */
+  cropMilestones: Record<string, number>;
 }

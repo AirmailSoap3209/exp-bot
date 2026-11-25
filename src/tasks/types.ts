@@ -46,6 +46,11 @@ export interface AccessArea {
   skills?: Record<string, number>;
   /** SkyBlock level, checked against the profile. */
   sbLevel?: number;
+  /**
+   * Heart of the Mountain tier, checked against the profile's HOTM XP. Unlike the other checks it holds
+   * even when the area already shows progress (co-op collections), since it is the player's own unlock.
+   */
+  hotm?: number;
   /** Requirements the API doesn't show (HOTM tiers, quests, keys); met only when the profile shows progress in the area. */
   other?: string[];
 }

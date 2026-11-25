@@ -1,0 +1,288 @@
+{
+ "profileId": "d9de8637-265b-43e5-b458-777ec0e44244",
+ "response": {
+  "success": true,
+  "garden": {
+   "uuid": "d9de8637265b43e5b458777ec0e44244",
+   "commission_data": {
+    "visits": {
+     "jerry": 11,
+     "emissary_wilson": 8,
+     "farm_merchant": 7,
+     "ryu": 13,
+     "weaponsmith": 10,
+     "emissary_ceanna": 11,
+     "seymour": 7,
+     "leo": 6,
+     "lynn": 9,
+     "ophelia": 10,
+     "felix": 4,
+     "tom": 5,
+     "carpenter": 7,
+     "lift_operator": 3,
+     "liam": 8,
+     "fisherman": 4,
+     "anita": 5,
+     "beth": 5,
+     "jacob": 5,
+     "grandma_wolf": 7,
+     "jack": 4,
+     "lazy_miner": 8,
+     "emissary_sisko": 9,
+     "farmhand": 9,
+     "moby": 7,
+     "stella": 6,
+     "emissary_carlton": 5,
+     "duke": 5,
+     "end_dealer": 9,
+     "banker_broadjaw": 4,
+     "andrew": 1,
+     "mason": 4,
+     "rhys": 2,
+     "librarian": 5,
+     "puzzler": 4,
+     "plumber_joe": 2,
+     "tia": 7,
+     "alchemist": 4,
+     "jamie": 2,
+     "lumberjack": 4,
+     "mayor_cole": 3,
+     "adventurer": 6,
+     "emissary_fraiser": 4,
+     "vex": 2,
+     "friendly_hiker": 1,
+     "madame_eleanor": 1,
+     "vinyl_collector": 1,
+     "disguised_rats": 1,
+     "old_man_garry": 2
+    },
+    "completed": {
+     "jerry": 10,
+     "emissary_wilson": 5,
+     "farm_merchant": 3,
+     "ryu": 8,
+     "weaponsmith": 4,
+     "emissary_ceanna": 4,
+     "seymour": 3,
+     "leo": 4,
+     "lynn": 6,
+     "carpenter": 4,
+     "liam": 5,
+     "ophelia": 5,
+     "felix": 3,
+     "fisherman": 3,
+     "anita": 3,
+     "beth": 5,
+     "lift_operator": 2,
+     "grandma_wolf": 2,
+     "jacob": 1,
+     "stella": 3,
+     "moby": 2,
+     "jack": 1,
+     "tom": 3,
+     "andrew": 1,
+     "emissary_carlton": 2,
+     "farmhand": 4,
+     "emissary_sisko": 3,
+     "tia": 4,
+     "end_dealer": 3,
+     "plumber_joe": 1,
+     "duke": 2,
+     "alchemist": 2,
+     "jamie": 1,
+     "lumberjack": 3,
+     "mayor_cole": 3,
+     "vex": 1,
+     "mason": 1,
+     "adventurer": 4,
+     "puzzler": 1,
+     "emissary_fraiser": 2,
+     "banker_broadjaw": 1,
+     "old_man_garry": 1,
+     "lazy_miner": 1,
+     "librarian": 1
+    },
+    "total_completed": 131,
+    "unique_npcs_served": 44
+   },
+   "selected_barn_skin": "default_2",
+   "crop_upgrade_levels": {
+    "WHEAT": 4,
+    "CARROT_ITEM": 5,
+    "POTATO_ITEM": 5,
+    "PUMPKIN": 6,
+    "SUGAR_CANE": 5,
+    "MELON": 5,
+    "CACTUS": 5,
+    "INK_SACK:3": 4,
+    "MUSHROOM_COLLECTION": 5,
+    "NETHER_STALK": 6,
+    "MOONFLOWER": 5,
+    "DOUBLE_PLANT": 5,
+    "WILD_ROSE": 3
+   },
+   "unlocked_plots_ids": [
+    "beginner_1",
+    "intermediate_1",
+    "intermediate_2",
+    "beginner_4",
+    "beginner_3",
+    "beginner_2",
+    "intermediate_4",
+    "intermediate_3",
+    "advanced_5",
+    "advanced_9",
+    "advanced_7",
+    "advanced_8",
+    "advanced_4",
+    "advanced_12",
+    "advanced_11",
+    "advanced_10",
+    "advanced_6"
+   ],
+   "garden_upgrades": {},
+   "resources_collected": {
+    "WHEAT": 4007943,
+    "CARROT_ITEM": 4654452,
+    "POTATO_ITEM": 3707352,
+    "SUGAR_CANE": 482885,
+    "MELON": 14367362,
+    "PUMPKIN": 304457,
+    "CACTUS": 1274910,
+    "INK_SACK:3": 840972,
+    "MUSHROOM_COLLECTION": 1280052,
+    "NETHER_STALK": 1488863,
+    "MOONFLOWER": 1114622,
+    "DOUBLE_PLANT": 3770392,
+    "WILD_ROSE": 688640
+   },
+   "garden_experience": 40878,
+   "last_growth_stage_time": 1795491586305,
+   "composter_data": {
+    "organic_matter": 0,
+    "fuel_units": 0,
+    "compost_units": 0,
+    "compost_items": 0,
+    "conversion_ticks": 300,
+    "last_save": 1795491586345,
+    "upgrades": {}
+   },
+   "active_commissions": {},
+   "unlocked_barn_skins": [],
+   "greenhouse_slots": [
+    {
+     "x": 6,
+     "z": 6
+    },
+    {
+     "x": 7,
+     "z": 5
+    },
+    {
+     "x": 7,
+     "z": 4
+    },
+    {
+     "x": 6,
+     "z": 3
+    },
+    {
+     "x": 5,
+     "z": 2
+    },
+    {
+     "x": 4,
+     "z": 2
+    },
+    {
+     "x": 3,
+     "z": 3
+    },
+    {
+     "x": 2,
+     "z": 5
+    },
+    {
+     "x": 2,
+     "z": 4
+    },
+    {
+     "x": 2,
+     "z": 3
+    },
+    {
+     "x": 1,
+     "z": 4
+    },
+    {
+     "x": 1,
+     "z": 5
+    },
+    {
+     "x": 2,
+     "z": 6
+    },
+    {
+     "x": 3,
+     "z": 6
+    },
+    {
+     "x": 5,
+     "z": 7
+    },
+    {
+     "x": 6,
+     "z": 7
+    },
+    {
+     "x": 4,
+     "z": 7
+    },
+    {
+     "x": 3,
+     "z": 7
+    },
+    {
+     "x": 2,
+     "z": 7
+    },
+    {
+     "x": 1,
+     "z": 6
+    },
+    {
+     "x": 3,
+     "z": 2
+    },
+    {
+     "x": 1,
+     "z": 7
+    },
+    {
+     "x": 7,
+     "z": 6
+    },
+    {
+     "x": 7,
+     "z": 7
+    },
+    {
+     "x": 2,
+     "z": 2
+    },
+    {
+     "x": 7,
+     "z": 3
+    },
+    {
+     "x": 6,
+     "z": 2
+    },
+    {
+     "x": 4,
+     "z": 1
+    }
+   ]
+  }
+ }
+}

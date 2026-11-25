@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import type { ProfilesResponse } from '../../src/hypixel/client.js';
+import type { GardenResponse, ProfilesResponse } from '../../src/hypixel/client.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
 import { buildCatalogue, loadCatalogue } from '../../src/tasks/catalogue.js';
 import { decideTick, evaluateProgress, evaluateTask } from '../../src/tasks/progress.js';
@@ -23,11 +23,13 @@ describe('SkyBlock Leveling categories (wiki SkyBlock_Levels/Tasks, 2026-11-24)'
   it.each([
     ['dragons', undefined, 200], ['kuudra', undefined, 300], ['arachne', undefined, 60], ['mythological', undefined, 100],
     ['hotm', 'hotm.tiers', 1175], ['hotm', 'hotm.nucleus', 200], ['garden', 'garden.jacob', 130], ['garden', 'garden.anita', 250],
-    ['trophy_fishing', undefined, 1080], ['foraging_tasks', 'hotf', 725], ['foraging_tasks', 'safari', 220], ['rift', undefined, 800],
+    ['trophy_fishing', undefined, 1080], ['foraging_tasks', 'hotf', 725], ['foraging_tasks', 'safari', 220], ['rift', 'rift.timecharms', 800], ['rift', 'rift.guide', 189],
     ['quests', 'reputation', 150], ['events', 'events.spooky_brackets', 225], ['events', 'events.winter', 49],
     ['essence_shop', 'essence.crimson', 194], ['essence_shop', 'essence.diamond', 226], ['essence_shop', 'essence.forest', 171],
     ['essence_shop', 'essence.gold', 188], ['essence_shop', 'essence.spider', 126],
     ['exploration', 'harp', 236], ['exploration', 'dojo', 425],
+    ['garden', 'garden.level', 140], ['garden', 'garden.plots', 120], ['garden', 'garden.visitors.offers', 90],
+    ['garden', 'garden.visitors.unique', 48], ['garden', 'garden.crop_upgrades', 117], ['garden', 'garden.milestones', 598],
   ] as const)('%s %s totals %i XP, as the wiki lists', (category, group, xp) => expect(xpOf(category, group)).toBe(xp));
 
   it('chains tiers and points ID tasks at the completed-task list', () => {
@@ -89,5 +91,45 @@ describe('task IDs', () => {
     expect(() => buildCatalogue(meta, [{ file: 'tasks/events.json', entries: [noId] }])).toThrow(/task\.<ID> metric needs a hypixelTaskId/);
     expect(() => buildCatalogue(meta, [{ file: 'tasks/events.json', entries: [{ ...noId, requires: { metric: 'm', amount: 1 }, hypixelTaskIdUnconfirmed: true }] }]))
       .toThrow(/hypixelTaskIdUnconfirmed must be true, and only on a task with a hypixelTaskId/);
+  });
+});
+
+describe('Garden endpoint and Rift Guide', () => {
+  const withGarden = (player: string, file: string, name?: string) => {
+    const { uuid, response } = read<{ uuid: string; response: ProfilesResponse }>(`../fixtures/profiles-${player}.json`);
+    return normalizeProfile(pickProfile(response.profiles, name)!, uuid, skills, 0, read<{ response: GardenResponse }>(`../fixtures/${file}.json`).response);
+  };
+  const limeG = withGarden('floor7sweat', 'garden-Floor7Sweat-lime', 'lime');
+  const duckG = withGarden('ducksterr_', 'garden-ducksterr_-raspberry');
+  const status = (p: typeof limeG) => new Map(evaluateProgress(catalogue, p).progress.map((x) => [x.task.id, x]));
+
+  it('reads the Garden response', () => {
+    expect(limeG.garden).toMatchObject({ available: true, value: { xp: 40878, plots: 17, uniqueVisitors: 44, offersAccepted: 131 } });
+    expect(limeG.garden.available && limeG.garden.value.cropUpgrades.PUMPKIN).toBe(6);
+    expect(normalizeProfile(pickProfile(read<{ response: ProfilesResponse }>('../fixtures/profiles-ducksterr_.json').response.profiles)!,
+      read<{ uuid: string }>('../fixtures/profiles-ducksterr_.json').uuid, skills, 0, { success: true, garden: null }).garden)
+      .toMatchObject({ available: true, value: { xp: 0, plots: 0 } });
+    expect(lime.garden).toEqual({ available: false, reason: 'Garden data was not loaded' });
+  });
+
+  it('turns it into task status', () => {
+    const L = status(limeG);
+    expect(L.get('garden.level.level13')!.status).toBe('verified_complete'); // 40,878 >= 40,120
+    expect(L.get('garden.level.level14')).toMatchObject({ status: 'verified_incomplete', remaining: 50120 - 40878 });
+    expect(L.get('garden.plots.plot17')!.status).toBe('verified_complete');
+    expect(L.get('garden.plots.plot18')!.status).toBe('verified_incomplete');
+    expect(L.get('garden.crop_upgrades.pumpkin.tier6')!.status).toBe('verified_complete');
+    expect(L.get('garden.crop_upgrades.pumpkin.tier7')!.task.prerequisites).toEqual(['garden.crop_upgrades.pumpkin.tier6', 'garden.level.level13']);
+    expect(L.get('garden.milestones.wheat.tier1')!.task.activity).toBe('garden.crop.wheat');
+    // Without the Garden call, its tasks are unavailable rather than zero.
+    expect(status(lime).get('garden.level.level2')!.status).toBe('unavailable');
+  });
+
+  it('checks the Rift Guide objectives the rift section shows; the rest are ticked by hand', () => {
+    const D = status(duckG);
+    for (const id of ['rift.guide.wyld_woods.montezuma_s_first', 'rift.guide.village_plaza.eye_the_bankster', 'rift.guide.wyld_woods.wear_enigma_s_cloak', 'rift.guide.west_village.hacking_for_dummies'])
+      expect(D.get(id)!.status, id).toBe('verified_complete');
+    expect(D.get('rift.guide.black_lagoon.defeat_the_leech_supreme')).toMatchObject({ status: 'unavailable', task: { tracking: 'manual' } });
+    expect(status(limeG).get('rift.guide.village_plaza.eye_the_bankster')!.status).toBe('verified_incomplete');
   });
 });

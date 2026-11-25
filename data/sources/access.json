@@ -1,14 +1,14 @@
 {
   "source": "hypixelskyblock.minecraft.wiki, fetched 2026-11-24. Area pages: Spider's_Den, The_End, Crimson_Isle, Gold_Mine, Deep_Caverns, Dwarven_Mines, Crystal_Hollows, Glacite_Tunnels, The_Park, Mushroom_Desert, The_Garden, Galatea, Moonglade_Marsh, Torrhus_Canyon, Lotus_Atoll, Backwater_Bayou, Rift_Dimension, Stillgore_Château, Kuudra, Kuudra_Keys. Mobs: Catacombs_Mobs, Sea_Creatures. Items: Collections.",
-  "note": "skills and sbLevel are checked against the profile. 'other' requirements (Heart of the Mountain/Forest tiers, quests, tickets, keys) aren't in the API data, so an area with one counts as reachable only when the profile already shows progress there. One-time NPC talks (Captain Baha, Researcher Gilbert, Deer) are left out. Event areas (Jerry's Workshop, festivals) are not gated here.",
+  "note": "skills, sbLevel and hotm (Heart of the Mountain tier, from skill_tree XP) are checked against the profile; a hotm gate holds even when co-op collection progress shows in the area (Glacite, Tungsten and Umber need HOTM 7, per the user 2026-11-24). 'other' requirements (Heart of the Mountain/Forest tiers, quests, tickets, keys) aren't in the API data, so an area with one counts as reachable only when the profile already shows progress there. One-time NPC talks (Captain Baha, Researcher Gilbert, Deer) are left out. Event areas (Jerry's Workshop, festivals) are not gated here.",
   "areas": {
     "spiders_den": { "name": "Spider's Den", "skills": { "combat": 1 } },
     "the_end": { "name": "The End", "skills": { "combat": 12 } },
     "crimson_isle": { "name": "Crimson Isle", "skills": { "combat": 22 } },
     "deep_caverns": { "name": "Deep Caverns", "skills": { "mining": 5 } },
     "dwarven_mines": { "name": "Dwarven Mines", "skills": { "mining": 12 }, "other": ["Rhys's quest \"There are Dwarves?\""] },
-    "crystal_hollows": { "name": "Crystal Hollows", "skills": { "mining": 12 }, "other": ["Heart of the Mountain tier 4"] },
-    "glacite_tunnels": { "name": "Glacite Tunnels", "skills": { "mining": 12 }, "other": ["Heart of the Mountain tier 7", "the \"Beyond the Wall\" quest"] },
+    "crystal_hollows": { "name": "Crystal Hollows", "skills": { "mining": 12 }, "hotm": 4 },
+    "glacite_tunnels": { "name": "Glacite Tunnels", "skills": { "mining": 12 }, "hotm": 7 },
     "the_park": { "name": "The Park", "skills": { "foraging": 1 }, "note": "Park sub-areas are gated by quests or Foraging II-V; the wiki is unclear which applies now, so only Foraging I is checked" },
     "farming_islands": { "name": "The Farming Islands", "skills": { "farming": 1 } },
     "mushroom_desert": { "name": "Mushroom Desert", "skills": { "farming": 5 } },

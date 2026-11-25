@@ -67,6 +67,24 @@ describe('applyAccess', () => {
     expect(applyAccess([chili], profile({ combat: 30 }))[0]!.blocked).toBe('Needs an Inferno Minion (not shown in the API)');
   });
 
+  it('checks a Heart of the Mountain tier against HOTM XP, even when co-op progress shows', () => {
+    const tunnels: AccessArea = { id: 'glacite_tunnels', name: 'Glacite Tunnels', skills: { mining: 12 }, hotm: 7 };
+    const tier = (n: number, done: boolean): TaskProgress => {
+      const p = tp(`hotm${n}`, { anyOf: [] }, 0, done ? 'verified_complete' : 'verified_incomplete');
+      return { ...p, task: { ...p.task, group: 'hotm.tiers', tier: n, access: undefined } };
+    };
+    const hotmAt = (reached: number) => Array.from({ length: 10 }, (_, i) => tier(i + 1, i < reached));
+    const withHotm = (on: boolean) => ({ ...profile({ mining: 30 }), skillTree: on ? { available: true, value: { hotmXp: 0, hotfXp: 0 } } : { available: false, reason: 'x' } }) as NormalizedProfile;
+    const umber = tp('umber', { anyOf: [tunnels] }, 500, 'estimated'); // co-op members' umber
+    const fresh = tp('tungsten', { anyOf: [tunnels] });
+    const run = (reached: number, on = true) => blocked(applyAccess([umber, fresh, ...hotmAt(reached)], withHotm(on)));
+    expect(run(6)).toMatchObject({ umber: 'Needs Glacite Tunnels access: Heart of the Mountain 7', tungsten: 'Needs Glacite Tunnels access: Heart of the Mountain 7' });
+    expect(run(7)).toMatchObject({ umber: undefined, tungsten: undefined });
+    expect(run(0, false).tungsten).toBe('Needs Glacite Tunnels access: Heart of the Mountain 7 (no HOTM data to check)');
+    // Done stays done.
+    expect(blocked(applyAccess([{ ...umber, status: 'verified_complete' }, ...hotmAt(2)], withHotm(true))).umber).toBeUndefined();
+  });
+
   it('leaves done, unavailable and already-blocked tasks alone', () => {
     const done = tp('done', { anyOf: [crimson] }, 10, 'verified_complete');
     const none = { ...tp('none', { anyOf: [crimson] }), status: 'unavailable' as const, current: null };
@@ -81,6 +99,7 @@ describe('generated access data (hypixelskyblock.minecraft.wiki, 2026-11-24)', (
 
   it('gates collections, bestiary families and slayer bosses on where they are done', () => {
     expect(t('collections.glacite.tier1').access?.anyOf.map((a) => a.id)).toEqual(['glacite_tunnels']);
+    for (const item of ['glacite', 'tungsten', 'umber']) expect(t(`collections.${item}.tier1`).access?.anyOf[0]).toMatchObject({ hotm: 7 });
     expect(t('collections.gemstone_collection.tier1').access?.anyOf.map((a) => a.id)).toEqual(['crystal_hollows', 'crimson_isle']);
     expect(t('collections.chili_pepper.tier1').access?.other).toEqual(['an Inferno Minion running LEGENDARY Hypergolic fuel']);
     expect(t('collections.wheat.tier1').access).toBeUndefined();

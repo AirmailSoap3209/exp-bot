@@ -51,6 +51,30 @@ export function validateTask(raw: unknown, where: string): string[] {
     }
   }
   if (t.activity === null && t.minutes === undefined) p.push(`${at}: a task with no activity needs fixed minutes`);
+  if (t.access !== undefined) p.push(...validateAccess(t.access, at));
+  return p;
+}
+
+const SKILL_IDS = ['farming', 'mining', 'combat', 'foraging', 'fishing', 'enchanting', 'alchemy', 'carpentry', 'taming', 'hunting'];
+const isLevels = (v: unknown) =>
+  typeof v === 'object' && v !== null && Object.entries(v).every(([k, n]) => SKILL_IDS.includes(k) && Number.isInteger(n) && (n as number) > 0);
+const isStrList = (v: unknown) => Array.isArray(v) && v.every(isStr);
+
+function validateAccess(raw: unknown, at: string): string[] {
+  const a = raw as Record<string, unknown> | null;
+  if (typeof a !== 'object' || a === null) return [`${at}: access must be an object`];
+  const p: string[] = [];
+  if (!Array.isArray(a.anyOf)) p.push(`${at}: access.anyOf must be an array`);
+  else {
+    for (const area of a.anyOf as Record<string, unknown>[]) {
+      if (!isStr(area?.id) || !isStr(area?.name)) p.push(`${at}: each access area needs an id and a name`);
+      if (area?.skills !== undefined && !isLevels(area.skills)) p.push(`${at}: access area ${String(area.id)} skills must map known skills to levels`);
+      if (area?.sbLevel !== undefined && !(Number.isInteger(area.sbLevel) && (area.sbLevel as number) > 0)) p.push(`${at}: access area ${String(area.id)} sbLevel must be a positive integer`);
+      if (area?.other !== undefined && !isStrList(area.other)) p.push(`${at}: access area ${String(area.id)} other must be a string array`);
+    }
+  }
+  if (a.skills !== undefined && !isLevels(a.skills)) p.push(`${at}: access.skills must map known skills to levels`);
+  if (a.other !== undefined && !isStrList(a.other)) p.push(`${at}: access.other must be a string array`);
   return p;
 }
 

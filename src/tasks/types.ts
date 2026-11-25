@@ -29,6 +29,29 @@ export interface Task {
   hypixelTaskId?: string;
   /** Fixed time range for tasks that don't depend on gear. */
   minutes?: [number, number];
+  /** Where the task can be done and what it takes to get there (data/sources/access.json). */
+  access?: Access;
+}
+
+/** One place a task can be done, and what reaching it needs. */
+export interface AccessArea {
+  id: string;
+  name: string;
+  /** Skill levels, checked against the profile. */
+  skills?: Record<string, number>;
+  /** SkyBlock level, checked against the profile. */
+  sbLevel?: number;
+  /** Requirements the API doesn't show (HOTM tiers, quests, keys); met only when the profile shows progress in the area. */
+  other?: string[];
+}
+
+export interface Access {
+  /** Any one of these areas is enough. */
+  anyOf: AccessArea[];
+  /** Needed wherever the task is done, e.g. a sea creature's Fishing level. */
+  skills?: Record<string, number>;
+  /** Needed wherever the task is done and not in the API data. */
+  other?: string[];
 }
 
 export interface CategoryMeta {

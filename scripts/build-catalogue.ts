@@ -43,7 +43,23 @@ function task(t: Omit<Task, 'monetary' | 'tracking'> & Partial<Pick<Task, 'monet
   if (t.tier) out.tier = t.tier;
   if (t.hypixelTaskId) out.hypixelTaskId = t.hypixelTaskId;
   if (t.minutes) out.minutes = t.minutes;
+  if (t.access) out.access = t.access;
   return out;
+}
+
+// ---------- Access (data/sources/access.json, from hypixelskyblock.minecraft.wiki) ----------
+const accessSrc = read<any>('data/sources/access.json');
+const ACCESS_SRC = 'hypixelskyblock.minecraft.wiki, 2026-11-24 (data/sources/access.json)';
+
+/** An Access for any-of these area IDs plus requirements that hold everywhere; undefined when there's nothing to check. */
+function access(areaIds: string[], extra: { skills?: Record<string, number>; other?: string[] } = {}): Task['access'] {
+  const anyOf = areaIds.map((id) => {
+    const a = accessSrc.areas[id];
+    if (!a) throw new Error(`access.json: unknown area ${id}`);
+    return { id, name: a.name, ...(a.skills ? { skills: a.skills } : {}), ...(a.sbLevel ? { sbLevel: a.sbLevel } : {}), ...(a.other ? { other: a.other } : {}) };
+  });
+  if (!anyOf.length && !extra.skills && !extra.other) return undefined;
+  return { anyOf, ...(extra.skills ? { skills: extra.skills } : {}), ...(extra.other ? { other: extra.other } : {}) };
 }
 
 /** Tasks for one tiered source; each tier requires the one before it. */
@@ -91,6 +107,8 @@ function buildCollections(): Task[] {
     .flatMap(([cat, c]) => Object.entries(c.items).flatMap(([item, i]) => {
       collectionCategory.set(itemSlug(item), rateDefaults.collections.itemClass?.[item] ?? cat);
       const sorted = [...i.tiers].sort((a, b) => a.tier - b.tier);
+      const ca = accessSrc.collections[item] as { areas: string[]; other?: string[] } | undefined;
+      const itemAccess = ca ? access(ca.areas, ca.other ? { other: ca.other } : {}) : undefined;
       return tiers(sorted.length, (n, prev) => {
         const t = sorted[n - 1]!;
         const xp = sbXp(t.unlocks);
@@ -100,7 +118,7 @@ function buildCollections(): Task[] {
           description: `Collect ${t.amountRequired.toLocaleString('en-US')} ${i.name} (co-op total)`, xp,
           requires: { metric: `collections.${item}`, amount: t.amountRequired },
           prerequisites: prev ? [prev] : [], activity: `collect.${itemSlug(item)}`,
-          source, group: `collections.${itemSlug(item)}`, tier: t.tier,
+          source: itemAccess ? `${source}; access: ${ACCESS_SRC}` : source, group: `collections.${itemSlug(item)}`, tier: t.tier, access: itemAccess,
         });
       });
     }));
@@ -180,12 +198,24 @@ function buildBestiary(): { tasks: Task[]; families: { id: string; name: string;
     const maxTier = bracket.findIndex((x) => x >= f.cap) + 1 || bracket.length;
     const thresholds = bracket.slice(0, maxTier);
     out.push({ id, name: f.name, island: f.islandName, bracket: f.bracket, mobs: f.mobs, tiers: thresholds });
+    // Where the mob is found: an island default, overridden per family (sea creatures also need a Fishing level).
+    const o = accessSrc.bestiaryFamilies[id] as { area?: string | null; fishing?: number } | undefined;
+    const areaId = o && 'area' in o ? o.area : accessSrc.bestiaryIslands[f.islandName];
+    const famAccess = access(areaId ? [areaId] : [], o?.fishing ? { skills: { fishing: o.fishing } } : {});
+    // Dungeon mobs: the first floor they appear on must be reachable (same gates as entering that floor).
+    let floorGate: string[] = [];
+    if (f.islandName === 'Catacombs') {
+      const floor = accessSrc.catacombsMobFloors[slug(f.name)] as number | undefined;
+      if (floor === undefined) throw new Error(`access.json: no catacombsMobFloors entry for ${slug(f.name)}`);
+      const u = wiki.catacombs.unlocks;
+      floorGate = floor === 0 ? [`skills.combat.level${u.entranceCombatLevel}`] : [`catacombs.floor${floor - 1}`, `catacombs.level${u.floorCatacombsLevel[floor]}`];
+    }
     tasks.push(...tiers(maxTier, (tier, prev) => task({
       id: `bestiary.${id}.tier${tier}`, category: 'bestiary', name: `${f.name} Bestiary ${ROMAN[tier - 1] ?? tier}`,
       description: `Kill ${thresholds[tier - 1]!.toLocaleString('en-US')} ${f.name} in total`, xp: wiki.bestiary.xpPerFamilyTier,
       requires: { metric: `bestiary.family.${id}`, amount: thresholds[tier - 1]! },
-      prerequisites: prev ? [prev] : [], activity: `combat.${id}`, location: f.islandName,
-      source, group: `bestiary.${id}`, tier,
+      prerequisites: prev ? [prev] : floorGate, activity: `combat.${id}`, location: f.islandName,
+      source: famAccess || floorGate.length ? `${source}; access: ${ACCESS_SRC}` : source, group: `bestiary.${id}`, tier, access: famAccess,
     })));
   }
   // Milestones: one per 10 family tiers; +10 XP every 10 milestones.
@@ -219,19 +249,21 @@ function buildSlayer(): Task[] {
       return [...(combat ? [`skills.combat.level${combat}`] : []), ...(tier === 5 ? [`slayer.${boss}.level${u.tier5SlayerLevel}`] : [])];
     };
     const unlockNote = `; unlocks: ${u.source}`;
+    const bossArea = accessSrc.slayer[boss] as string | undefined;
+    const bossAccess = bossArea ? access([bossArea]) : undefined;
     const levels = tiers(cumulative.length, (lv, prev) => task({
       id: `slayer.${boss}.level${lv}`, category: 'slayer', name: `${b.name} Slayer level ${lv}`,
       description: `Reach ${cumulative[lv - 1]!.toLocaleString('en-US')} ${b.name} Slayer XP`, xp: s.levelXp[lv - 1],
       requires: { metric: `slayer.${boss}.xp`, amount: cumulative[lv - 1]! },
       prerequisites: prev ? [prev] : unlock, activity: `slayer.${boss}`, location: b.location,
-      source: `XP: ${WIKI}${levelNote}; thresholds: ${slayerTable.source}${unlock.length ? unlockNote : ''}`, group: `slayer.${boss}.level`, tier: lv,
+      source: `XP: ${WIKI}${levelNote}; thresholds: ${slayerTable.source}${unlock.length ? unlockNote : ''}`, group: `slayer.${boss}.level`, tier: lv, access: bossAccess,
     }));
     const kills = tiers(b.maxTier, (tier, prev) => task({
       id: `slayer.${boss}.tier${tier}`, category: 'slayer', name: `Defeat ${b.name} ${ROMAN[tier - 1]}`,
       description: `Defeat a tier ${ROMAN[tier - 1]} ${b.name} for the first time`, xp: s.bossTierXp[tier - 1],
       requires: { metric: `slayer.${boss}.kills.tier${tier}`, amount: 1 },
       prerequisites: [...(prev ? [prev] : unlock), ...gates(tier)], activity: `slayer.${boss}.t${tier}`, location: b.location,
-      source: `${WIKI}${unlock.length || gates(tier).length ? unlockNote : ''}`, group: `slayer.${boss}.tier`, tier,
+      source: `${WIKI}${unlock.length || gates(tier).length ? unlockNote : ''}`, group: `slayer.${boss}.tier`, tier, access: bossAccess,
       hypixelTaskId: `DEFEAT_${b.taskId}_SLAYER_${WORDS[tier - 1]}`,
     }));
     return [...levels, ...kills];
@@ -303,6 +335,16 @@ function buildRates(tasks: Task[], families: { id: string; bracket: number }[]):
   const tier10 = (b: number) => neuBest.brackets[String(b)]![9]!;
   const out: Record<string, Map<string, RateEntry>> = {};
   const put = (file: string, e: RateEntry) => ((out[file] ??= new Map()).set(e.activity, { ...e, source: e.source ?? src }));
+  // Minimum time per task: one boss, one dungeon run, one Kuudra run (rate-defaults minimumMinutes).
+  const r3 = (x: number) => Number(x.toPrecision(3));
+  const perBracket = (f: (k: Bracket) => Range) => Object.fromEntries(BRACKET_NAMES.map((k) => [k, f(k)])) as Record<Bracket, Range>;
+  const bossMin = perBracket((k) => { const [lo, hi] = d.slayerBoss.brackets[k] as Range; return [r3(1 / hi), r3(1 / lo)]; });
+  const runMin = perBracket((k) => {
+    const runs = Object.values(d.floors.minutesPerRun.normal as Record<string, Record<Bracket, Range>>).map((r) => r[k]);
+    return [Math.min(...runs.map((r) => r[0])), Math.min(...runs.map((r) => r[1]))];
+  });
+  const kuudraMin = only(d.minimumMinutes.kuudraRun);
+  const minNote = (what: string) => `; at least one ${what} per task (${d.minimumMinutes.basis.split('.')[0]})`;
 
   for (const t of tasks) {
     const a = t.activity;
@@ -313,10 +355,12 @@ function buildRates(tasks: Task[], families: { id: string; bracket: number }[]):
       const fam = a.slice('combat.'.length);
       const b = familyBracket.get(fam);
       if (b === undefined) throw new Error(`rates: no bestiary family for ${a}`);
+      const min = fam.startsWith('catacombs.') ? { m: runMin, what: 'dungeon run' } : fam.startsWith('kuudra.') ? { m: kuudraMin, what: `Kuudra run, ${d.minimumMinutes.kuudraRun.basis}` } : undefined;
       put('bestiary', {
         activity: a, unit: d.bestiary.unit, bracketBy: d.bestiary.bracketBy,
         brackets: scale(only(d.bestiary.base), tier10(b) / tier10(d.bestiary.baseBracket)),
-        source: `${why(d.bestiary.basis)}; scaled for NEU kill bracket ${b}`,
+        ...(min ? { minMinutes: min.m } : {}),
+        source: `${why(d.bestiary.basis)}; scaled for NEU kill bracket ${b}${min ? minNote(min.what) : ''}`,
       });
     } else if (parts[0] === 'collect') {
       const cat = collectionCategory.get(parts.slice(1).join('.'));
@@ -328,13 +372,13 @@ function buildRates(tasks: Task[], families: { id: string; bracket: number }[]):
       if (!b) throw new Error(`rates: no skill rate for ${a}`);
       put('skills', { activity: a, unit: d.skills.unit, bracketBy: `skill.${parts[1]}`, brackets: only(b), source: why(b.basis) });
     } else if (parts[0] === 'slayer' && parts.length === 2) {
-      put('slayer', { activity: a, unit: d.slayerXp.unit, bracketBy: `slayer.${parts[1]}`, brackets: only(d.slayerXp.byBoss[parts[1]!] ?? d.slayerXp.default), source: why(d.slayerXp.basis) });
+      put('slayer', { activity: a, unit: d.slayerXp.unit, bracketBy: `slayer.${parts[1]}`, brackets: only(d.slayerXp.byBoss[parts[1]!] ?? d.slayerXp.default), minMinutes: bossMin, source: why(d.slayerXp.basis) + minNote('boss') });
     } else if (parts[0] === 'slayer' && parts.length === 3) {
       put('slayer', { activity: a, unit: d.slayerBoss.unit, bracketBy: `slayer.${parts[1]}`, brackets: only(d.slayerBoss.brackets), source: why(d.slayerBoss.basis) });
     } else if (a === 'dungeons.catacombs') {
-      put('catacombs', { activity: a, unit: d.catacombsXp.unit, bracketBy: 'dungeons', brackets: only(d.catacombsXp.brackets), source: why(d.catacombsXp.basis) });
+      put('catacombs', { activity: a, unit: d.catacombsXp.unit, bracketBy: 'dungeons', brackets: only(d.catacombsXp.brackets), minMinutes: runMin, source: why(d.catacombsXp.basis) + minNote('dungeon run') });
     } else if (parts[0] === 'dungeons' && parts[1] === 'class') {
-      put('catacombs', { activity: a, unit: d.classXp.unit, bracketBy: 'dungeons', brackets: only(d.classXp.brackets), source: why(d.classXp.basis) });
+      put('catacombs', { activity: a, unit: d.classXp.unit, bracketBy: 'dungeons', brackets: only(d.classXp.brackets), minMinutes: runMin, source: why(d.classXp.basis) + minNote('dungeon run') });
     } else if (parts[0] === 'dungeons' && /^[fm]\d$/.test(parts[1] ?? '')) {
       // Stored as minutes per run (easier to check against the Speed time limits); rate = 1 / minutes.
       const floor = parts[1]!;

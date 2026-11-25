@@ -12,6 +12,10 @@
     "catacombs": [
       30,
       45
+    ],
+    "skill.enchanting": [
+      10,
+      30
     ]
   },
   "groups": {
@@ -29,5 +33,8 @@
       ],
       "combine": "min"
     }
+  },
+  "cutoffNotes": {
+    "skill.enchanting": "Experiments need Enchanting 10 (Experimentation Table, Superpairs Beginner); Supreme Superpairs needs 30 (hypixelskyblock.minecraft.wiki Experiments, 2026-11-24)"
   }
 }

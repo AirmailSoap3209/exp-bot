@@ -117,6 +117,21 @@ pm2 logs xp-bot
   - XP is exact (fixed rewards). Time is the sum of each step's range. Unreachable targets plan as far as eligible tasks go and say so. Stops at 5,000 steps.
   - Back-to-back tiers of one source show as one line ("Combat level 31→33"). 8 lines per page with Prev/Next.
 
+- [x] 10. Unlocks and access. Sources are hypixelskyblock.minecraft.wiki (the main source from now on), fetched 2026-11-24.
+  - **As prerequisites** (`data/sources/wiki-xp.json` `unlocks`; the planner can chain them):
+    - Slayer bosses unlock from a tier of the previous boss. Tiers II–V need Combat 5/10/15/25, and tier V also needs slayer level 7. Riftstalker is exempt.
+    - Dungeon floors need Combat 15 (Entrance) and Catacombs level 1–24, or 24–36 for Master Mode.
+    - Dungeon-mob bestiary needs access to the first floor the mob appears on.
+  - **Access checks** (`data/sources/access.json`, checked by `src/tasks/access.ts`):
+    - Islands need skill or SkyBlock levels: Crimson Isle Combat 22, Dwarven Mines Mining 12, Galatea Foraging 12, the Garden SkyBlock level 5, the Rift SkyBlock level 12, and so on.
+    - Sea creatures need their Fishing level. Island-locked collections need their area.
+    - Kuudra needs Crimson Isle access, Elle's quest step and a key.
+    - Requirements the API doesn't show (Heart of the Mountain/Forest tiers, quests, Safari Tickets, keys) count as met only when the profile already shows progress in that area. A task with progress of its own is never blocked. Missing skill data counts as unmet.
+    - Unlike prerequisites, these don't open up during an `/xp target` plan.
+    - Not gated: event areas (festivals, Jerry's Workshop), Obsidian and Ice. Golem, Terracotta, Wither Guard and Wither Miner have no floor on the wiki, so they only need the Entrance.
+  - **Minimum time per task** (`minMinutes` on rates, from `rate-defaults.json` `minimumMinutes`): one slayer boss for slayer XP, one dungeon run for Catacombs/class XP and dungeon-mob bestiary, one Kuudra run for Kuudra bestiary. The Kuudra run time is an estimate, because the wiki only gives per-wave timers.
+  - **Enchanting** uses its own bracket cut-offs (10/30). Below 10 there are no Experiments, so the rate is enchanting at a table (~100–600 XP/min, estimate). The daily Experiment limit isn't modelled.
+
 ## API check findings (2026-11-24)
 
 - **`leveling.completed_tasks` exists**, but only holds one-time tasks: slayer first kills (`DEFEAT_ZOMBIE_SLAYER_ONE`), floor completions (`COMPLETE_CATACOMBS0`–`7`, `COMPLETE_MASTER_CATACOMBS1`–`7`), objectives, songs, essence perks, Abiphone, bank. Skills, collections, bestiary, minions and fairy souls never appear, so those need their own readers. A task entry can carry the Hypixel task ID so "verified complete" comes straight from the list.

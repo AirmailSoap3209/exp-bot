@@ -10,6 +10,8 @@ export interface RateEntry {
   brackets: Record<Bracket, Range>;
   /** A bracket group ("combat", "dungeons") or one input ("skill.farming", "slayer.zombie", "catacombs"). */
   bracketBy: string;
+  /** Shortest a task on this activity can take, per bracket: one boss, one run. Estimates never go below it. */
+  minMinutes?: Record<Bracket, Range>;
   source?: string;
 }
 
@@ -31,6 +33,12 @@ export function validateRate(raw: unknown, where: string): string[] {
     const range = r.brackets?.[b];
     if (!Array.isArray(range) || range.length !== 2 || !range.every((x) => typeof x === 'number' && x > 0) || range[0] > range[1]) {
       p.push(`${at}: brackets.${b} must be [low, high] with 0 < low <= high`);
+    }
+    if (r.minMinutes !== undefined) {
+      const m = r.minMinutes[b];
+      if (!Array.isArray(m) || m.length !== 2 || !m.every((x) => typeof x === 'number' && x > 0) || m[0] > m[1]) {
+        p.push(`${at}: minMinutes.${b} must be [low, high] with 0 < low <= high`);
+      }
     }
   }
   return p;

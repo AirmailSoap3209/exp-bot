@@ -1,5 +1,6 @@
 import type { NormalizedProfile } from '../profile/types.js';
 import type { Catalogue } from './catalogue.js';
+import { applyAccess } from './access.js';
 import { readerFor } from './readers/index.js';
 import type { Task } from './types.js';
 
@@ -128,7 +129,7 @@ export function evaluateProgress(catalogue: Catalogue, profile: NormalizedProfil
     progress.push(p);
     if (clearTick) ticksToClear.push(task.id);
   }
-  return { progress, ticksToClear };
+  return { progress: applyAccess(progress, profile), ticksToClear };
 }
 
 export type TickDecision =

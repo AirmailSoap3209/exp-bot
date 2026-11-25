@@ -51,7 +51,14 @@ export function estimateTask(p: TaskProgress, profile: NormalizedProfile, ctx: E
 
   const amount = p.remaining ?? p.required;
   const unit = entry.unit.replace(/\/min$/, '');
-  const toMinutes = (rate: Range): Range => [amount / rate[1], amount / rate[0]];
+  // Activities that pay out per boss or per run never take less than one (entry.minMinutes),
+  // taken from the bracket in use, or the profile's bracket for measured and typed rates.
+  const toMinutes = (rate: Range, bracket?: Bracket): Range => {
+    const m: Range = [amount / rate[1], amount / rate[0]];
+    if (!entry.minMinutes) return m;
+    const floor = entry.minMinutes[bracket ?? resolveBracket(entry.bracketBy, profile, ctx.book.brackets).bracket];
+    return [Math.max(m[0], floor[0]), Math.max(m[1], floor[1])];
+  };
 
   const session = ctx.sessionRates?.[task.activity];
   if (session && session > 0) {
@@ -66,9 +73,9 @@ export function estimateTask(p: TaskProgress, profile: NormalizedProfile, ctx: E
     }
     const bracket = override.bracket as Bracket;
     const rate = entry.brackets[bracket];
-    if (rate) return finish(toMinutes(rate), { source: 'override', bracket, unit, rate });
+    if (rate) return finish(toMinutes(rate, bracket), { source: 'override', bracket, unit, rate });
   }
   const bracketInfo = resolveBracket(entry.bracketBy, profile, ctx.book.brackets);
   const rate = entry.brackets[bracketInfo.bracket];
-  return finish(toMinutes(rate), { source: 'default', bracket: bracketInfo.bracket, bracketInfo, unit, rate });
+  return finish(toMinutes(rate, bracketInfo.bracket), { source: 'default', bracket: bracketInfo.bracket, bracketInfo, unit, rate });
 }

@@ -65,7 +65,7 @@
       "combat": { "early": [800, 2500], "mid": [5000, 12000], "late": [12000, 25000], "basis": "Endermen 100-200k/h early; T3 Revenants 600-700k/h mid; golem rushing/ghosts 0.8-1.4M/h late (skykingsCombat)" },
       "foraging": { "early": [1000, 1670], "mid": [3330, 5000], "late": [8330, 16700], "basis": "60-100k / 200-300k / 0.5-1M per hour after the July 2026 Fig nerf (user answers 2026-11-24, wikiForagingNerf)" },
       "fishing": { "early": [167, 500], "mid": [1670, 4170], "late": [6670, 16700], "basis": "10-30k / 100-250k / 0.4-1M per hour (user answers 2026-11-24)" },
-      "enchanting": { "early": [10000, 29000], "mid": [40000, 160000], "late": [130000, 190000], "basis": "experiments: 3 charges/day, each = Chronomatron + Ultrasequencer + Superpairs at the best tier your level allows (early ~50-97k/game, mid ~207-530k, late ~530-630k incl. Metaphysical at 50), done in ~10 min/day (user answers 2026-11-24, wikiExperiments). Per active minute: a long goal spans many days of 10 minutes. Bought extra games (Bits) not counted." },
+      "enchanting": { "early": [100, 600], "mid": [10000, 29000], "late": [40000, 160000], "basis": "Enchanting cut-offs are 10/30 (data/rates/brackets.json). Early (below 10): no Experiments yet (the Experimentation Table and Superpairs Beginner need Enchanting X); enchanting at a table gives 3.5 x levels^1.5 XP (575 at 30 levels) and Experience Bottles 8-12 XP, so ~100-600 XP/min (estimate). Mid (10-29): Experiments at Beginner-Grand, 50-100k XP per Superpairs plus add-ons. Late (30+): Supreme and up, 200-400k per Superpairs plus add-ons. Per active minute; Experiments are limited to a few charges a day, which is not modelled (hypixelskyblock.minecraft.wiki Experimentation_Table, Experiments, Enchanting, Experience_Bottle, 2026-11-24; earlier: user answers 2026-11-24)." },
       "alchemy": { "early": [200, 800], "mid": [2000, 6000], "late": [10000, 30000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" },
       "carpentry": { "early": [100, 500], "mid": [1000, 3000], "late": [5000, 15000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" },
       "taming": { "early": [200, 800], "mid": [1500, 5000], "late": [8000, 25000], "basis": "PLACEHOLDER: players rarely level this outside the Derpy mayor, who doubles skill XP; mayor bonuses are not modelled (user answers 2026-11-24)" },
@@ -121,6 +121,10 @@
         "7": { "early": [14, 25], "mid": [6, 10], "late": [4, 5] }
       }
     }
+  },
+  "minimumMinutes": {
+    "basis": "Some activities only pay out in whole units, so a task never takes less than one: a slayer boss (slayer XP), a dungeon run (Catacombs and class XP, dungeon-mob bestiary) or a Kuudra run (Kuudra bestiary). Slayer: 1 / slayerBoss bosses/min. Dungeons: the shortest floor run in floors.minutesPerRun for the bracket.",
+    "kuudraRun": { "early": [8, 15], "mid": [5, 9], "late": [4, 6], "basis": "estimate: the wiki Kuudra page gives per-wave timers (35 s Basic to 15 s Infernal) but no run length" }
   },
   "minionTierMinutes": [[1, 3], [1, 3], [1, 4], [1, 4], [1, 5], [2, 9], [4, 17], [7, 34], [14, 68], [27, 137], [55, 273], [110, 546]],
   "minionNote": "estimate: material needs roughly double per tier (~80 base items for I up to ~160k for XII), gathered at 300-1,500 items/min, plus 1-2 min to craft"

@@ -32,6 +32,7 @@ import { summarize } from '../tasks/progress.js';
 import type { Command } from './index.js';
 import { overviewEmbed } from './overview.js';
 import * as session from './session.js';
+import { splitMessage } from './split.js';
 import * as settings from './settings.js';
 import { NotLinkedError, resolveTarget, type Target } from './target.js';
 
@@ -271,7 +272,9 @@ async function optimizePage(i: ButtonInteraction): Promise<void> {
 async function privately(i: ChatInputCommandInteraction, run: () => Promise<string>): Promise<void> {
   await i.deferReply({ flags: MessageFlags.Ephemeral });
   try {
-    await i.editReply({ content: await run() });
+    const [first, ...rest] = splitMessage(await run());
+    await i.editReply({ content: first });
+    for (const part of rest) await i.followUp({ content: part, flags: MessageFlags.Ephemeral });
   } catch (err) {
     await i.editReply({ content: userError(err) });
   }

@@ -117,10 +117,11 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
     await userData.setActivityLink(key, open.activity, l.metric, blended);
     const name = metricLabel(catalogue, l.metric);
     const status = linkStatus(blended);
-    if (status === 'inconsistent') noisy.push(`${name} (${fmt(l.ratio)} per ${per}, last time ${fmt(prev!.history[0]!.rate)})`);
+    if (status === 'inconsistent') noisy.push(`${name} +${fmt(l.delta)} (${fmt(l.ratio)} per ${per}, last time ${fmt(prev!.history[0]!.rate)})`);
     else (status === 'ready' ? learned : pending).push(`${name} +${fmt(l.delta)} (**${fmt(blended.rate)}** per ${per})`);
   }
-  const cap = (list: string[]) => (list.length > 8 ? [...list.slice(0, 8), `…and ${list.length - 8} more`] : list);
+  // Every gain gets its own line; xp.ts splits the reply across messages if it runs long.
+  const bullets = (list: string[]) => list.map((x) => `• ${x}`).join('\n');
   return [
     `**${label}** session saved: +${fmt(m.delta)} ${unit} in ${Math.round(m.minutes)} min = **${fmt(m.rate)} ${unit}/min**.`,
     previous
@@ -128,9 +129,9 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
       : `First session for this activity: **${fmt(next.rate)} ${unit}/min**.`,
     '`/xp optimize` now uses this rate for your linked profile.',
     ratioLines.length ? `Combo ratios saved (used for ⚡ rows on your linked profile):\n${ratioLines.join('\n')}` : '',
-    learned.length ? `Linked to **${label}** (seen in ${LINK_MIN_SESSIONS}+ sessions, now part of its ⚡ combo):\n${cap(learned).map((x) => `• ${x}`).join('\n')}` : '',
-    pending.length ? `Also went up (saved; counts toward ⚡ combos once it moves by a similar amount in another **${label}** session): ${cap(pending).join(', ')}` : '',
-    noisy.length ? `Not linked, because the amount per ${per} didn't match last session (probably a minion, co-op mate or something done on the side): ${cap(noisy).join(', ')}` : '',
+    learned.length ? `Linked to **${label}** (seen in ${LINK_MIN_SESSIONS}+ sessions, now part of its ⚡ combo):\n${bullets(learned)}` : '',
+    pending.length ? `Also went up (saved; counts toward ⚡ combos once it moves by a similar amount in another **${label}** session):\n${bullets(pending)}` : '',
+    noisy.length ? `Not linked, because the amount per ${per} didn't match last session (probably a minion, co-op mate or something done on the side):\n${bullets(noisy)}` : '',
   ].filter(Boolean).join('\n');
 }
 

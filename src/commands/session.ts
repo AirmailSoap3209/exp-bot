@@ -7,7 +7,8 @@ import {
 } from '../sessions/sessions.js';
 import { profileKey, userData, type OpenSession } from '../storage/userData.js';
 import { catalogue, combos, rateBook } from '../tasks/instance.js';
-import { activities, searchActivities, type Choice } from '../tasks/search.js';
+import { METRIC_VALUES } from '../tasks/readers/values.js';
+import { activities, findMetric, searchActivities, searchMetrics, type Choice } from '../tasks/search.js';
 import { NotLinkedError } from './target.js';
 
 const fmt = (n: number) => (Math.abs(n) >= 100 ? Math.round(n).toLocaleString('en-US') : Number(n.toPrecision(3)).toLocaleString('en-US'));
@@ -30,10 +31,14 @@ export async function start(i: ChatInputCommandInteraction): Promise<string> {
     return `\`${activity}\` can't be measured in a session. Pick an activity from the autocomplete list.`;
   }
 
+  const key = profileKey(link.uuid, link.profileId);
+  const ignoreInput = i.options.getString('ignore');
+  const ignoreNote = ignoreInput ? (await addIgnored(key, ignoreInput)).message : '';
+
   const open = await userData.getOpenSession(i.user.id);
   if (open) {
     if (minutesSince(open.startedAt) <= MAX_SESSION_MINUTES) {
-      return `You already have a **${labelOf(open.activity)}** session running (${Math.round(minutesSince(open.startedAt))} min). End or cancel it first.`;
+      return [ignoreNote, `You already have a **${labelOf(open.activity)}** session running (${Math.round(minutesSince(open.startedAt))} min). End or cancel it first.`].filter(Boolean).join('\n');
     }
     await userData.closeSession(i.user.id); // expired: drop it without saving
   }
@@ -49,13 +54,16 @@ export async function start(i: ChatInputCommandInteraction): Promise<string> {
     startedAt: Date.now(), snapshot,
   };
   await userData.startSession(i.user.id, session);
+  const ignored = await userData.getIgnored(key);
   const learns = combos.filter((c) => c.primary === activity)
-    .flatMap((c) => c.yields.filter((y) => snapshot[y.metric] !== undefined).map((y) => `${metricLabel(catalogue, y.metric)} (${c.name})`));
+    .flatMap((c) => c.yields.filter((y) => snapshot[y.metric] !== undefined && !ignored.has(y.metric)).map((y) => `${metricLabel(catalogue, y.metric)} (${c.name})`));
   return [
+    ignoreNote,
     `Session started: **${labelOf(activity)}** on ${link.name} · ${link.profileName}.`,
     `Starting value: ${fmt(value)} ${unitOf(activity)}.`,
     learns.length ? `It also measures how much ${learns.join(', ')} you get per ${unitOf(activity).replace(/s$/, '')}, for ⚡ combo rows.` : '',
     `Anything else that goes up while you play (skill XP, collections, bestiary, HOTM XP…) is linked to this activity, and becomes part of its ⚡ combo once it shows up in ${LINK_MIN_SESSIONS} sessions.`,
+    ignored.size ? `Ignored: ${[...ignored].map((m) => metricLabel(catalogue, m)).join(', ')}.` : '',
     `Play for at least ${MIN_SESSION_MINUTES} min, then run \`/xp session end\`. The API lags a few minutes, so wait a moment after you stop. Sessions expire after ${MAX_SESSION_MINUTES / 60} h.`,
   ].filter(Boolean).join('\n');
 }
@@ -89,7 +97,9 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
   await userData.setSessionRate(key, open.activity, next);
 
   // Combos built on this activity learn each yield's ratio from what moved alongside it.
-  const ratios = measureRatios(combos, open.activity, open.snapshot, snapshot, m.delta);
+  // Ignored stats are never measured or linked, only listed.
+  const ignored = await userData.getIgnored(key);
+  const ratios = measureRatios(combos, open.activity, open.snapshot, snapshot, m.delta).filter((r) => !ignored.has(r.metric));
   const saved = await userData.getComboRatios(key);
   const ratioLines: string[] = [];
   for (const r of ratios) {
@@ -105,7 +115,9 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
   // Everything else that went up is linked to this activity. A link joins the activity's combo
   // (or makes one) once it has moved in LINK_MIN_SESSIONS sessions with ratios that agree.
   const ratioMetrics = new Set(ratios.map((r) => r.metric));
-  const linked = measureLinks(open.metric, open.snapshot, snapshot, m.delta).filter((l) => !ratioMetrics.has(l.metric));
+  const allLinks = measureLinks(open.metric, open.snapshot, snapshot, m.delta).filter((l) => !ratioMetrics.has(l.metric));
+  const linked = allLinks.filter((l) => !ignored.has(l.metric));
+  const skipped = allLinks.filter((l) => ignored.has(l.metric)).map((l) => `${metricLabel(catalogue, l.metric)} +${fmt(l.delta)}`);
   const savedLinks = (await userData.getActivityLinks(key))[open.activity] ?? {};
   const learned: string[] = [];
   const pending: string[] = [];
@@ -132,6 +144,7 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
     learned.length ? `Linked to **${label}** (seen in ${LINK_MIN_SESSIONS}+ sessions, now part of its ⚡ combo):\n${bullets(learned)}` : '',
     pending.length ? `Also went up (saved; counts toward ⚡ combos once it moves by a similar amount in another **${label}** session):\n${bullets(pending)}` : '',
     noisy.length ? `Not linked, because the amount per ${per} didn't match last session (probably a minion, co-op mate or something done on the side):\n${bullets(noisy)}` : '',
+    skipped.length ? `Ignored (not saved; \`/xp session unignore\` to track again):\n${bullets(skipped)}` : '',
   ].filter(Boolean).join('\n');
 }
 
@@ -169,6 +182,8 @@ export async function status(i: ChatInputCommandInteraction): Promise<string> {
       return used.length ? [`• ${labelOf(activity)}: ${used.slice(0, 4).map(([metric, r]) => `${metricLabel(catalogue, metric)} ${fmt(r.rate)} per ${unitOf(activity).replace(/s$/, '')}`).join(', ')}${used.length > 4 ? ` +${used.length - 4} more` : ''}`] : [];
     });
     if (linkLines.length) lines.push('', `Linked in your sessions (part of ⚡ combos):`, ...linkLines.slice(0, 15));
+    const ignored = await userData.getIgnored(profileKey(link.uuid, link.profileId));
+    if (ignored.size) lines.push('', 'Ignored in your sessions (`/xp session unignore` to track again):', ...[...ignored].map((m) => `• ${metricLabel(catalogue, m)}`));
   }
   return lines.join('\n');
 }
@@ -178,9 +193,53 @@ export async function cancel(i: ChatInputCommandInteraction): Promise<string> {
   return closed ? `Cancelled the **${labelOf(closed.activity)}** session. Nothing saved.` : 'No session is running.';
 }
 
-export function autocomplete(i: AutocompleteInteraction): Choice[] {
+/** Ignores (or stops ignoring) a stat in the caller's sessions, for their linked profile. */
+export async function ignore(i: ChatInputCommandInteraction, on: boolean): Promise<string> {
+  const link = await userData.getLink(i.user.id);
+  if (!link) throw new NotLinkedError();
+  const key = profileKey(link.uuid, link.profileId);
+  const input = i.options.getString('stat', true);
+  if (on) return (await addIgnored(key, input)).message;
+  const ignored = await userData.getIgnored(key);
+  const metric = findMetric(catalogue, input, (m) => ignored.has(m));
+  if (!metric) return `\`${input}\` isn't on your ignore list.${ignored.size ? ` Ignored now: ${[...ignored].map((m) => metricLabel(catalogue, m)).join(', ')}.` : ''}`;
+  await userData.setIgnored(key, metric, false);
+  return `Sessions on ${link.name} · ${link.profileName} track **${metricLabel(catalogue, metric)}** again. Links saved before you ignored it count again too.`;
+}
+
+/** Resolves typed input to a readable stat and adds it to the ignore list. */
+async function addIgnored(key: string, input: string): Promise<{ metric?: string; message: string }> {
+  const metric = findMetric(catalogue, input, (m) => readableMetrics().has(m));
+  if (!metric) return { message: `Couldn't find a stat called \`${input}\`. Pick one from the autocomplete list.` };
+  const name = metricLabel(catalogue, metric);
+  const added = await userData.setIgnored(key, metric, true);
+  return {
+    metric,
+    message: added
+      ? `Ignoring **${name}** in all your sessions on this profile: it's never linked to an activity or added to a ⚡ combo, and links already saved for it stop counting. Undo with \`/xp session unignore\`.`
+      : `**${name}** is already ignored.`,
+  };
+}
+
+let readable: Set<string> | undefined;
+/** Stats a session snapshot can read, so ones worth ignoring. */
+function readableMetrics(): Set<string> {
+  return (readable ??= new Set(catalogue.tasks.filter((t) => METRIC_VALUES[t.category]).map((t) => t.requires.metric)));
+}
+
+export async function autocomplete(i: AutocompleteInteraction): Promise<Choice[]> {
   const focused = i.options.getFocused(true);
-  if (focused.name !== 'activity') return [];
-  const ok = measurableActivities(catalogue, rateBook);
-  return searchActivities(catalogue, focused.value, (id) => ok.has(id));
+  if (focused.name === 'activity') {
+    const ok = measurableActivities(catalogue, rateBook);
+    return searchActivities(catalogue, focused.value, (id) => ok.has(id));
+  }
+  if (focused.name === 'ignore' || (focused.name === 'stat' && i.options.getSubcommand() === 'ignore')) {
+    return searchMetrics(catalogue, focused.value, (m) => readableMetrics().has(m));
+  }
+  if (focused.name === 'stat') {
+    const link = await userData.getLink(i.user.id);
+    const ignored = link ? await userData.getIgnored(profileKey(link.uuid, link.profileId)) : new Set<string>();
+    return searchMetrics(catalogue, focused.value, (m) => ignored.has(m));
+  }
+  return [];
 }

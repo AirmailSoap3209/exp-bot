@@ -61,6 +61,8 @@ interface Stores {
     ratios?: Record<string, Record<string, Record<string, StoredSessionRate>>>;
     /** Metrics seen moving with an activity: profile key -> activity -> metric -> blended ratio. Missing in older files. */
     links?: Record<string, Record<string, Record<string, StoredSessionRate>>>;
+    /** Metrics the player told sessions to ignore: profile key -> metrics. Missing in older files. */
+    ignored?: Record<string, string[]>;
   }>;
 }
 
@@ -141,6 +143,22 @@ export class UserData {
     return this.s.sessions.update((d) => {
       ((d.links ??= {})[key] ??= {})[activity] ??= {};
       d.links[key]![activity]![metric] = ratio;
+    });
+  }
+
+  /** Metrics sessions never link or measure for this profile (a quest done on the side, a minion). */
+  async getIgnored(key: string): Promise<Set<string>> {
+    return new Set((await this.s.sessions.read()).ignored?.[key] ?? []);
+  }
+
+  /** Adds or removes an ignored metric; returns whether anything changed. */
+  setIgnored(key: string, metric: string, ignore: boolean): Promise<boolean> {
+    return this.s.sessions.update((d) => {
+      const list = ((d.ignored ??= {})[key] ??= []);
+      const has = list.includes(metric);
+      if (has === ignore) return false;
+      d.ignored[key] = ignore ? [...list, metric] : list.filter((m) => m !== metric);
+      return true;
     });
   }
 

@@ -8,6 +8,7 @@ import type { GardenResponse, ProfilesResponse } from '../../src/hypixel/client.
 import { withLearnedLinks } from '../../src/combos/learned.js';
 import { loadCombos } from '../../src/combos/combos.js';
 import { metricLabel } from '../../src/optimizer/category.js';
+import { findMetric } from '../../src/tasks/search.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
 import type { NormalizedProfile } from '../../src/profile/types.js';
 import {
@@ -207,6 +208,23 @@ describe('linked metrics from sessions', () => {
     expect(linkStatus(blend(honey, 0.004, 40, 'c'))).toBe('ready');
     // Links saved before history was kept count on sessions alone.
     expect(linkStatus({ rate: 0.2, sessions: 2 })).toBe('ready');
+  });
+
+  it('ignores stats the player names, remembered per profile', async () => {
+    expect(findMetric(catalogue, 'honeycomb')).toBe('collections.HONEYCOMB');
+    expect(findMetric(catalogue, 'HOTM XP')).toBe('hotm.xp');
+    expect(findMetric(catalogue, '  ')).toBeUndefined();
+    const u = new UserData(await mkdtemp(join(tmpdir(), 'xpbot-ignore-')));
+    expect(await u.setIgnored('k', 'collections.HONEYCOMB', true)).toBe(true);
+    expect(await u.setIgnored('k', 'collections.HONEYCOMB', true)).toBe(false);
+    expect([...await u.getIgnored('k')]).toEqual(['collections.HONEYCOMB']);
+    expect((await u.getIgnored('other')).size).toBe(0);
+    const links = { 'collect.mithril_ore': { 'collections.HONEYCOMB': { rate: 0.01, sessions: 3 }, 'hotm.xp': { rate: 0.2, sessions: 2 } } };
+    const mined = (ignored: Set<string>) => withLearnedLinks(loadCombos(catalogue, book), links, catalogue, book, (a) => a, ignored)
+      .find((c) => c.id === 'combo.mine.mithril_ore')!.yields.map((y) => y.metric);
+    expect(mined(await u.getIgnored('k'))).toEqual(['skills.mining.xp', 'hotm.xp']);
+    expect(await u.setIgnored('k', 'collections.HONEYCOMB', false)).toBe(true);
+    expect(mined(await u.getIgnored('k'))).toEqual(['skills.mining.xp', 'collections.HONEYCOMB', 'hotm.xp']);
   });
 
   it('labels metrics by what they count', () => {

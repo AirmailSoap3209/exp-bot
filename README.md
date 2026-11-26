@@ -169,7 +169,9 @@ pm2 logs xp-bot
     - On your linked profile a measured ratio replaces the data file's, as ±15% around it, with the low end still used for claims. ⚡ rows then say "your measured ratios".
   - [x] Sessions learn links: everything else that goes up during a session (skill XP, collections, bestiary, HOTM/HOTF XP, Garden XP and crop milestones) is saved as a ratio to the session's activity, under `links` in `sessions.json`. E.g. a Mithril session saves Mining XP and HOTM XP per Mithril.
     - A link joins scoring once it has moved in 2 sessions of that activity (one session can't tell a link from a minion or a co-op mate). It's added to the activity's combo, or makes a "<activity> (from your sessions)" combo when there's none. Linked profile only, like measured rates.
-    - `/xp session end` lists what was linked and what's waiting for a second session; `/xp session status` lists the links in use.
+    - Its ratio in the latest 2 sessions must also agree within 3×; otherwise `/xp session end` lists it as "Not linked".
+    - `/xp session end` lists every gain as its own bullet (what was linked, what's waiting for a second session, what didn't match), split across messages if it passes Discord's 2,000 characters; `/xp session status` lists the links in use.
+    - Ignore list: `/xp session start ... ignore:<stat>` or `/xp session ignore stat:<stat>` (e.g. Honeycomb from a side quest) stops a stat from being measured or linked on that profile, and drops links already saved for it; `/xp session unignore` undoes it. Stored under `ignored` in `sessions.json`.
   - [x] `/xp target` reuses a combo's row until one of its metrics changes (`PlanState.revisionKey`), so 138 combos plan quickly; the final plan is still replayed with every combo re-scored.
     - Yields that didn't move aren't saved: a zero usually means API lag, not a true zero.
     - Anything else done during the session counts too, so stick to the one activity.

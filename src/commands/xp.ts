@@ -117,8 +117,9 @@ async function estimateContext(t: Target): Promise<EstimateContext> {
  */
 async function combosOf(t: Target): Promise<Combo[]> {
   if (!t.isLinked) return combos;
-  const links = await userData.getActivityLinks(profileKey(t.loaded.profile.uuid, t.loaded.profile.profileId));
-  return withLearnedLinks(combos, links, catalogue, rateBook, (a) => activityLabel(catalogue, a));
+  const key = profileKey(t.loaded.profile.uuid, t.loaded.profile.profileId);
+  const [links, ignored] = await Promise.all([userData.getActivityLinks(key), userData.getIgnored(key)]);
+  return withLearnedLinks(combos, links, catalogue, rateBook, (a) => activityLabel(catalogue, a), ignored);
 }
 
 /** Names a list, at most `max` of them. */
@@ -353,7 +354,16 @@ export const xp: Command = {
       g.setName('session').setDescription('Measure your own rate for an activity')
         .addSubcommand((s) =>
           s.setName('start').setDescription('Snapshot your linked profile and start timing an activity')
-            .addStringOption((o) => o.setName('activity').setDescription('What you are about to do').setRequired(true).setAutocomplete(true)),
+            .addStringOption((o) => o.setName('activity').setDescription('What you are about to do').setRequired(true).setAutocomplete(true))
+            .addStringOption((o) => o.setName('ignore').setDescription('A stat sessions should always ignore, e.g. Honeycomb from a side quest').setAutocomplete(true)),
+        )
+        .addSubcommand((s) =>
+          s.setName('ignore').setDescription('Always ignore a stat in your sessions (e.g. Honeycomb from a side quest)')
+            .addStringOption((o) => o.setName('stat').setDescription('The stat to ignore').setRequired(true).setAutocomplete(true)),
+        )
+        .addSubcommand((s) =>
+          s.setName('unignore').setDescription('Stop ignoring a stat in your sessions')
+            .addStringOption((o) => o.setName('stat').setDescription('The stat to track again').setRequired(true).setAutocomplete(true)),
         )
         .addSubcommand((s) => s.setName('end').setDescription('Snapshot again and save the measured rate (15 min minimum)'))
         .addSubcommand((s) => s.setName('status').setDescription('The running session and your measured rates'))
@@ -368,6 +378,8 @@ export const xp: Command = {
         case 'end': return privately(i, () => session.end(i));
         case 'status': return privately(i, () => session.status(i));
         case 'cancel': return privately(i, () => session.cancel(i));
+        case 'ignore': return privately(i, () => session.ignore(i, true));
+        case 'unignore': return privately(i, () => session.ignore(i, false));
       }
     }
     switch (i.options.getSubcommand()) {
@@ -392,7 +404,7 @@ export const xp: Command = {
   },
 
   async autocomplete(i: AutocompleteInteraction) {
-    if (i.options.getSubcommandGroup(false) === 'session') return i.respond(session.autocomplete(i));
+    if (i.options.getSubcommandGroup(false) === 'session') return i.respond(await session.autocomplete(i));
     if (i.options.getSubcommand() === 'task') return i.respond(searchTasks(catalogue.tasks, i.options.getFocused()));
     await i.respond(await settings.autocomplete(i));
   },

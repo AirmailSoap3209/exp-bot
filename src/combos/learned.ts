@@ -20,7 +20,8 @@ export interface StoredLink {
  *    own measured ratio, from the combo ratios);
  *  - on an activity with no combo, it makes a new one, "<activity> (from your sessions)".
  * Learned yields use the blended ratio ±15%, like measured rates, and are marked `learned`.
- * Links to metrics no task uses, or to the activity's own metric, are ignored.
+ * Links to metrics no task uses, to the activity's own metric, or that the player ignored
+ * (/xp session ignore) are left out.
  */
 export function withLearnedLinks(
   combos: readonly Combo[],
@@ -28,6 +29,7 @@ export function withLearnedLinks(
   catalogue: Catalogue,
   book: RateBook,
   labelOf: (activity: string) => string,
+  ignored: ReadonlySet<string> = new Set(),
 ): Combo[] {
   const used = new Set(catalogue.tasks.map((t) => t.requires.metric));
   const out = combos.map((c) => ({ ...c, yields: [...c.yields] }));
@@ -36,7 +38,7 @@ export function withLearnedLinks(
     const own = [...new Set(catalogue.tasks.filter((t) => t.activity === activity && !t.monetary).map((t) => t.requires.metric))];
     if (!own.length) continue;
     const learned: ComboYield[] = Object.entries(byMetric)
-      .filter(([metric, l]) => linkStatus(l) === 'ready' && used.has(metric) && !own.includes(metric))
+      .filter(([metric, l]) => linkStatus(l) === 'ready' && used.has(metric) && !own.includes(metric) && !ignored.has(metric))
       .map(([metric, l]) => ({ metric, per: spread(l.rate), basis: `measured in ${l.sessions} of your sessions`, learned: true }));
     if (!learned.length) continue;
     const existing = out.filter((c) => c.primary === activity);

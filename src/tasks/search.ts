@@ -1,4 +1,4 @@
-import { sourceName } from '../optimizer/category.js';
+import { metricLabel, sourceName } from '../optimizer/category.js';
 import { sourceOf } from '../optimizer/eligible.js';
 import type { Catalogue } from './catalogue.js';
 import type { Task } from './types.js';
@@ -64,6 +64,37 @@ export function activityLabel(catalogue: Catalogue, activity: string): string {
 export function searchActivities(catalogue: Catalogue, query: string, include: (id: string) => boolean = () => true): Choice[] {
   return rank(activities(catalogue).filter((a) => include(a.id)), (a) => `${a.id} ${a.label}`, query, (a, b) => a.id.localeCompare(b.id))
     .map((a) => ({ name: clip(`${a.id} · ${a.label}`), value: a.id }));
+}
+
+const metricCache = new WeakMap<Catalogue, { id: string; label: string }[]>();
+/** Every metric a task measures, with its label ("Honeycomb collection", "Mining XP"). */
+export function metrics(catalogue: Catalogue): { id: string; label: string }[] {
+  let list = metricCache.get(catalogue);
+  if (!list) {
+    const seen = new Set<string>();
+    list = [];
+    for (const t of catalogue.tasks) {
+      const id = t.requires.metric;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      list.push({ id, label: metricLabel(catalogue, id) });
+    }
+    metricCache.set(catalogue, list);
+  }
+  return list;
+}
+
+export function searchMetrics(catalogue: Catalogue, query: string, include: (id: string) => boolean = () => true): Choice[] {
+  return rank(metrics(catalogue).filter((m) => include(m.id)), (m) => `${m.label} ${m.id}`, query, (a, b) => a.label.localeCompare(b.label))
+    .map((m) => ({ name: clip(m.label), value: m.id }));
+}
+
+/** Resolves typed metric input: an ID, an exact label, or the best search match ("honeycomb"). */
+export function findMetric(catalogue: Catalogue, input: string, include: (id: string) => boolean = () => true): string | undefined {
+  const s = input.trim().toLowerCase();
+  if (!s) return undefined;
+  const all = metrics(catalogue).filter((m) => include(m.id));
+  return (all.find((m) => m.id.toLowerCase() === s) ?? all.find((m) => m.label.toLowerCase() === s))?.id ?? searchMetrics(catalogue, input, include)[0]?.value;
 }
 
 /** One XP source: every tier of one group ("Wheat collection", "Revenant Horror Slayer"). */

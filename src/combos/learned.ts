@@ -1,6 +1,6 @@
 import { spread } from '../estimate/estimate.js';
 import type { RateBook } from '../estimate/rates.js';
-import { LINK_MIN_SESSIONS } from '../sessions/sessions.js';
+import { linkStatus } from '../sessions/sessions.js';
 import type { Catalogue } from '../tasks/catalogue.js';
 import type { Combo, ComboYield } from './combos.js';
 
@@ -8,11 +8,14 @@ import type { Combo, ComboYield } from './combos.js';
 export interface StoredLink {
   rate: number;
   sessions: number;
+  /** Newest first; older files may lack it. */
+  history?: readonly { rate: number }[];
 }
 
 /**
  * Combos with what the player's own sessions showed moving alongside each activity
- * (e.g. Mining XP while mining Mithril). A link counts once it moved in LINK_MIN_SESSIONS sessions:
+ * (e.g. Mining XP while mining Mithril). A link counts once linkStatus says it's ready (moved in
+ * LINK_MIN_SESSIONS sessions with ratios that agree):
  *  - on an activity that already has a combo, it's added as another yield (data yields keep their
  *    own measured ratio, from the combo ratios);
  *  - on an activity with no combo, it makes a new one, "<activity> (from your sessions)".
@@ -33,7 +36,7 @@ export function withLearnedLinks(
     const own = [...new Set(catalogue.tasks.filter((t) => t.activity === activity && !t.monetary).map((t) => t.requires.metric))];
     if (!own.length) continue;
     const learned: ComboYield[] = Object.entries(byMetric)
-      .filter(([metric, l]) => l.sessions >= LINK_MIN_SESSIONS && l.rate > 0 && used.has(metric) && !own.includes(metric))
+      .filter(([metric, l]) => linkStatus(l) === 'ready' && used.has(metric) && !own.includes(metric))
       .map(([metric, l]) => ({ metric, per: spread(l.rate), basis: `measured in ${l.sessions} of your sessions`, learned: true }));
     if (!learned.length) continue;
     const existing = out.filter((c) => c.primary === activity);

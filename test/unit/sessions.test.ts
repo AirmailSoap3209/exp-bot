@@ -7,10 +7,11 @@ import { loadRates } from '../../src/estimate/rates.js';
 import type { GardenResponse, ProfilesResponse } from '../../src/hypixel/client.js';
 import { withLearnedLinks } from '../../src/combos/learned.js';
 import { loadCombos } from '../../src/combos/combos.js';
+import { metricLabel } from '../../src/optimizer/category.js';
 import { normalizeProfile, pickProfile, type SkillsResource } from '../../src/profile/normalize.js';
 import type { NormalizedProfile } from '../../src/profile/types.js';
 import {
-  activityMetric, blend, BLEND_WEIGHT, changes, LINK_MIN_SESSIONS, measurableActivities, measure, measureLinks, measureRatios, takeSnapshot,
+  activityMetric, blend, BLEND_WEIGHT, changes, LINK_MAX_SPREAD, LINK_MIN_SESSIONS, linkStatus, measurableActivities, measure, measureLinks, measureRatios, takeSnapshot,
 } from '../../src/sessions/sessions.js';
 import { UserData, type OpenSession } from '../../src/storage/userData.js';
 import { loadCatalogue } from '../../src/tasks/catalogue.js';
@@ -191,6 +192,29 @@ describe('linked metrics from sessions', () => {
       name: 'Hard Stone (from your sessions)', primary: 'collect.hard_stone', primaryMetrics: ['collections.HARD_STONE'], yields: [{ metric: 'skills.mining.xp', learned: true }],
     }); // its own metric is never a yield
     expect(combos.find((c) => c.id === 'combo.mine.mithril_ore')!.yields).toHaveLength(1); // the shared list is untouched
+  });
+
+  it(`links only when the latest sessions agree within ${LINK_MAX_SPREAD}x, so background gains stay out`, () => {
+    const one = blend(undefined, 0.144, 48, 'a');
+    expect(linkStatus(one)).toBe('pending');
+    expect(linkStatus(blend(one, 0.2, 30, 'b'))).toBe('ready');
+    // Honeycomb from a minion: 0.019 per item one session, 0.003 the next.
+    const honey = blend(blend(undefined, 0.019, 24, 'a'), 0.003, 48, 'b');
+    expect(linkStatus(honey)).toBe('inconsistent');
+    expect(withLearnedLinks(loadCombos(catalogue, book), { 'collect.mithril_ore': { 'collections.HONEYCOMB': honey } }, catalogue, book, (a) => a)
+      .find((c) => c.id === 'combo.mine.mithril_ore')!.yields.map((y) => y.metric)).toEqual(['skills.mining.xp']);
+    // A later session that agrees again brings it back.
+    expect(linkStatus(blend(honey, 0.004, 40, 'c'))).toBe('ready');
+    // Links saved before history was kept count on sessions alone.
+    expect(linkStatus({ rate: 0.2, sessions: 2 })).toBe('ready');
+  });
+
+  it('labels metrics by what they count', () => {
+    expect(metricLabel(catalogue, 'hotm.xp')).toBe('HOTM XP');
+    expect(metricLabel(catalogue, 'skills.mining.xp')).toBe('Mining XP');
+    expect(metricLabel(catalogue, 'slayer.blaze.xp')).toBe('Inferno Demonlord Slayer XP');
+    expect(metricLabel(catalogue, 'garden.crop_milestone.WHEAT')).toBe('Wheat Crop milestone');
+    expect(metricLabel(catalogue, 'collections.HARD_STONE')).toBe('Hard Stone collection');
   });
 
   it('stores links per profile and activity, and reads old combo IDs as their new ones', async () => {

@@ -3,7 +3,7 @@ import { metricLabel } from '../optimizer/category.js';
 import { loadProfile } from '../profile/load.js';
 import { yieldPer } from '../combos/combos.js';
 import {
-  activityMetric, blend, LINK_MIN_SESSIONS, MAX_SESSION_MINUTES, measurableActivities, measure, measureLinks, measureRatios, MIN_SESSION_MINUTES, takeSnapshot,
+  activityMetric, blend, LINK_MIN_SESSIONS, linkStatus, MAX_SESSION_MINUTES, measurableActivities, measure, measureLinks, measureRatios, MIN_SESSION_MINUTES, takeSnapshot,
 } from '../sessions/sessions.js';
 import { profileKey, userData, type OpenSession } from '../storage/userData.js';
 import { catalogue, combos, rateBook } from '../tasks/instance.js';
@@ -103,17 +103,22 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
       ` (this session ${fmt(r.ratio)}${prev ? `, ${blended.sessions} sessions` : ''}; data ${fmt(data[0])}${data[1] !== data[0] ? `–${fmt(data[1])}` : ''})`);
   }
   // Everything else that went up is linked to this activity. A link joins the activity's combo
-  // (or makes one) once it has moved in LINK_MIN_SESSIONS sessions.
+  // (or makes one) once it has moved in LINK_MIN_SESSIONS sessions with ratios that agree.
   const ratioMetrics = new Set(ratios.map((r) => r.metric));
   const linked = measureLinks(open.metric, open.snapshot, snapshot, m.delta).filter((l) => !ratioMetrics.has(l.metric));
   const savedLinks = (await userData.getActivityLinks(key))[open.activity] ?? {};
   const learned: string[] = [];
   const pending: string[] = [];
+  const noisy: string[] = [];
+  const per = unit.replace(/s$/, '');
   for (const l of linked) {
-    const blended = blend(savedLinks[l.metric], l.ratio, m.minutes, new Date().toISOString());
+    const prev = savedLinks[l.metric];
+    const blended = blend(prev, l.ratio, m.minutes, new Date().toISOString());
     await userData.setActivityLink(key, open.activity, l.metric, blended);
-    const line = `${metricLabel(catalogue, l.metric)} +${fmt(l.delta)} (**${fmt(blended.rate)}** per ${unit.replace(/s$/, '')})`;
-    (blended.sessions >= LINK_MIN_SESSIONS ? learned : pending).push(line);
+    const name = metricLabel(catalogue, l.metric);
+    const status = linkStatus(blended);
+    if (status === 'inconsistent') noisy.push(`${name} (${fmt(l.ratio)} per ${per}, last time ${fmt(prev!.history[0]!.rate)})`);
+    else (status === 'ready' ? learned : pending).push(`${name} +${fmt(l.delta)} (**${fmt(blended.rate)}** per ${per})`);
   }
   const cap = (list: string[]) => (list.length > 8 ? [...list.slice(0, 8), `…and ${list.length - 8} more`] : list);
   return [
@@ -124,7 +129,8 @@ export async function end(i: ChatInputCommandInteraction): Promise<string> {
     '`/xp optimize` now uses this rate for your linked profile.',
     ratioLines.length ? `Combo ratios saved (used for ⚡ rows on your linked profile):\n${ratioLines.join('\n')}` : '',
     learned.length ? `Linked to **${label}** (seen in ${LINK_MIN_SESSIONS}+ sessions, now part of its ⚡ combo):\n${cap(learned).map((x) => `• ${x}`).join('\n')}` : '',
-    pending.length ? `Also went up (saved; counts toward ⚡ combos once it moves again in another **${label}** session): ${cap(pending).join(', ')}` : '',
+    pending.length ? `Also went up (saved; counts toward ⚡ combos once it moves by a similar amount in another **${label}** session): ${cap(pending).join(', ')}` : '',
+    noisy.length ? `Not linked, because the amount per ${per} didn't match last session (probably a minion, co-op mate or something done on the side): ${cap(noisy).join(', ')}` : '',
   ].filter(Boolean).join('\n');
 }
 
@@ -158,7 +164,7 @@ export async function status(i: ChatInputCommandInteraction): Promise<string> {
     if (ratioLines.length) lines.push('', 'Measured combo ratios:', ...ratioLines.slice(0, 15));
     const links = await userData.getActivityLinks(profileKey(link.uuid, link.profileId));
     const linkLines = Object.entries(links).flatMap(([activity, byMetric]) => {
-      const used = Object.entries(byMetric).filter(([, r]) => r.sessions >= LINK_MIN_SESSIONS).sort((a, b) => b[1].sessions - a[1].sessions);
+      const used = Object.entries(byMetric).filter(([, r]) => linkStatus(r) === 'ready').sort((a, b) => b[1].sessions - a[1].sessions);
       return used.length ? [`• ${labelOf(activity)}: ${used.slice(0, 4).map(([metric, r]) => `${metricLabel(catalogue, metric)} ${fmt(r.rate)} per ${unitOf(activity).replace(/s$/, '')}`).join(', ')}${used.length > 4 ? ` +${used.length - 4} more` : ''}`] : [];
     });
     if (linkLines.length) lines.push('', `Linked in your sessions (part of ⚡ combos):`, ...linkLines.slice(0, 15));

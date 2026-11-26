@@ -72,7 +72,7 @@ describe('readable names', () => {
   ])('sourceName(%j) = %j', (name, expected) => expect(sourceName(name)).toBe(expected));
 
   it('labels metrics and activities for messages', () => {
-    expect(metricLabel(catalogue, 'skills.combat.xp')).toBe('Combat');
+    expect(metricLabel(catalogue, 'skills.combat.xp')).toBe('Combat XP');
     expect(metricLabel(catalogue, 'collections.ROTTEN_FLESH')).toBe('Rotten Flesh collection');
     expect(metricLabel(catalogue, 'nope')).toBe('nope');
     expect(activities(catalogue).find((a) => a.id === 'slayer.zombie')?.label).toBe('Revenant Horror Slayer');

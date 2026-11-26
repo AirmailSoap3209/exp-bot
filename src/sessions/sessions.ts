@@ -115,6 +115,23 @@ export function measureRatios(
 
 /** A session links a metric to its activity for scoring only once it has moved in this many sessions. */
 export const LINK_MIN_SESSIONS = 2;
+/**
+ * ...and its ratio in the latest LINK_MIN_SESSIONS sessions agrees within this factor. A real link
+ * (Mining XP per Mithril) holds roughly steady; a minion or co-op mate adding to a collection gives
+ * a ratio that swings with session length and whatever else was going on.
+ */
+export const LINK_MAX_SPREAD = 3;
+
+export type LinkStatus = 'ready' | 'pending' | 'inconsistent';
+
+/** Whether a stored link counts toward combos yet. Links saved before history was kept count on sessions alone. */
+export function linkStatus(l: { rate: number; sessions: number; history?: readonly { rate: number }[] }): LinkStatus {
+  if (!(l.rate > 0) || l.sessions < LINK_MIN_SESSIONS) return 'pending';
+  const recent = (l.history ?? []).slice(0, LINK_MIN_SESSIONS).map((h) => h.rate);
+  if (recent.length < LINK_MIN_SESSIONS) return 'ready';
+  const lo = Math.min(...recent);
+  return lo > 0 && Math.max(...recent) / lo <= LINK_MAX_SPREAD ? 'ready' : 'inconsistent';
+}
 
 /** One metric that went up alongside the session's activity, per unit of the activity's own metric. */
 export interface LinkMeasurement {

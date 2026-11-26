@@ -44,10 +44,24 @@ export function categoryView(
 
 /** Readable name for a metric, from the first task that uses it ("Combat level 43" -> "Combat"). */
 export function metricLabel(catalogue: Catalogue, metric: string): string {
+  if (METRIC_NAMES[metric]) return METRIC_NAMES[metric];
   const t = catalogue.tasks.find((x) => x.requires.metric === metric);
   if (!t) return metric;
-  return t.group ? sourceName(t.name) : t.name;
+  const name = t.group ? sourceName(t.name) : t.name;
+  // A metric counts an amount, not tiers: "Mining" -> "Mining XP", "Wheat Crop" -> "Wheat Crop milestone".
+  if (metric.endsWith('.xp')) return `${name} XP`;
+  if (metric.startsWith('garden.crop_milestone.')) return `${name} milestone`;
+  return name;
 }
+
+/** Metrics whose tasks are named after tiers ("Heart of the Mountain tier 5"), not what's counted. */
+const METRIC_NAMES: Record<string, string> = {
+  'hotm.xp': 'HOTM XP',
+  'hotf.xp': 'HOTF XP',
+  'garden.visitors_accepted': 'Visitor offers accepted',
+  'garden.visitors_unique': 'Unique visitors served',
+  'garden.plots': 'Garden plots',
+};
 
 /** A tiered task's name without its tier: "Combat level 43" -> "Combat", "Wheat collection X" -> "Wheat collection". */
 export function sourceName(name: string): string {

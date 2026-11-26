@@ -218,7 +218,15 @@
       },
       "GEMSTONE_COLLECTION": {
         "name": "gemstones",
-        "xp": 70
+        "xp": 70,
+        "base": [3, 5],
+        "baseBasis": "wiki Gemstone: 3-5 Rough per block by default",
+        "pristine": {
+          "early": [0, 2],
+          "mid": [2, 5],
+          "late": [5, 10],
+          "basis": "wiki Pristine: each 1 Pristine is a 1% chance per Rough to drop a Flawed instead, worth 80 Rough, so drops x (1 + 79 x Pristine/100); Pristine per bracket is an estimate (checked against a measured 3.14 Mining XP per gemstone)"
+        }
       }
     },
     "foraging": {

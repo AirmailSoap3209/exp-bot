@@ -1,4 +1,25 @@
 {
   "note": "Hand-tuned rates. Entries here replace the generated rate for that activity, and catalogue:build never touches this file. Same shape as entries in the other rate files.",
-  "rates": []
+  "rates": [
+    {
+      "activity": "collect.gemstone_collection",
+      "unit": "items/min",
+      "bracketBy": "skill.mining",
+      "brackets": {
+        "early": [
+          200,
+          600
+        ],
+        "mid": [
+          600,
+          2500
+        ],
+        "late": [
+          2500,
+          8000
+        ]
+      },
+      "source": "hand-tuned 2026-11-25: blocks/min x 3-5 Rough per block x (1 + 79 x Pristine/100) x (1 + (Mining + Gemstone Fortune)/100) (wiki Gemstone, Pristine). Mid ~40-80 blocks/min, Pristine 2-5, fortune 100-300; one measured session gave 1,721/min (~77 blocks/min). The generic mining-collection default (150-500) ignored base drops and Pristine."
+    }
+  ]
 }

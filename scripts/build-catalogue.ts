@@ -464,21 +464,26 @@ function buildGatheringCombos(rates: Record<string, RateEntry[]>, tasks: Task[])
   const r3 = (x: number) => Number(x.toPrecision(3));
   const VERB: Record<string, [string, string]> = { farming: ['farm', 'Farm'], mining: ['mine', 'Mine'], foraging: ['chop', 'Chop'] };
   const combos: unknown[] = [];
-  for (const [skill, items] of Object.entries(src.gathering as Record<string, Record<string, { name: string; xp: number; base?: Range }>>)) {
+  type Gathered = { name: string; xp: number; base?: Range; baseBasis?: string; pristine?: Record<string, Range> & { basis: string } };
+  for (const [skill, items] of Object.entries(src.gathering as Record<string, Record<string, Gathered>>)) {
     const f = src.fortune[skill];
     for (const [item, g] of Object.entries(items)) {
       const suffix = item.toLowerCase().replace(/:/g, '-');
       const primary = `collect.${suffix}`;
       if (!rated.has(primary)) throw new Error(`combo-sources: no rate for ${primary}`);
       const [bLo, bHi] = g.base ?? [1, 1];
+      // Pristine (gemstones only): a Flawed drop is worth 80 Rough, so items x (1 + 79 x Pristine/100).
+      const pristine = (k: string): Range => (g.pristine ? (g.pristine[k] as Range).map((p) => 1 + (79 * p) / 100) as Range : [1, 1]);
       const per = Object.fromEntries(BRACKET_NAMES.map((k) => {
         const [fLo, fHi] = f[k] as Range;
-        return [k, [r3(g.xp / (bHi * (1 + fHi / 100))), r3(g.xp / (bLo * (1 + fLo / 100)))]];
+        const [pLo, pHi] = pristine(k);
+        return [k, [r3(g.xp / (bHi * pHi * (1 + fHi / 100))), r3(g.xp / (bLo * pLo * (1 + fLo / 100)))]];
       }));
-      const baseNote = g.base ? `, ${bLo === bHi ? bLo : `${bLo}-${bHi}`} items per block (${src.baseBasis[skill]})` : '';
+      const baseNote = g.base ? `, ${bLo === bHi ? bLo : `${bLo}-${bHi}`} items per block (${g.baseBasis ?? src.baseBasis[skill]})` : '';
+      const pristineNote = g.pristine ? `; Pristine ${BRACKET_NAMES.map((k) => `${k} ${g.pristine![k]!.join('-')}`).join(', ')} (${g.pristine.basis})` : '';
       const yields: unknown[] = [{
         metric: `skills.${skill}.xp`, per,
-        basis: `${g.xp} ${skill[0]!.toUpperCase()}${skill.slice(1)} XP per block${baseNote}; fortune ${BRACKET_NAMES.map((k) => `${k} ${f[k].join('-')}`).join(', ')} (${f.basis})`,
+        basis: `${g.xp} ${skill[0]!.toUpperCase()}${skill.slice(1)} XP per block${baseNote}; fortune ${BRACKET_NAMES.map((k) => `${k} ${f[k].join('-')}`).join(', ')} (${f.basis})${pristineNote}`,
       }];
       const milestone = `garden.crop_milestone.${item}`;
       const garden = skill === 'farming' && metrics.has(milestone);
